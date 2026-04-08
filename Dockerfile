@@ -8,9 +8,12 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
+# Build-tools nodig voor better-sqlite3 (native module)
+RUN apk add --no-cache python3 make g++
+
 # Kopieer package files en installeer dependencies
 COPY package*.json ./
-RUN npm ci --production=false
+RUN npm install
 
 # Kopieer broncode en bouw de app
 COPY . .
