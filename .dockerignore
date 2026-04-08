@@ -3,6 +3,5 @@ npm-debug.log
 .env
 config/
 .git
-.gitignore
 README.md
 docker-compose.yml
