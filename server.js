@@ -191,6 +191,45 @@ app.get("/api/trending/:type", async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+// Genre lijsten
+app.get("/api/genres/:type", async (req, res) => {
+  try {
+    const type = req.params.type === "tv" ? "tv" : "movie";
+    const data = await tmdbFetch(`/genre/${type}/list`);
+    res.json(data);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// Discover per genre
+app.get("/api/discover/:type", async (req, res) => {
+  try {
+    const type = req.params.type === "tv" ? "tv" : "movie";
+    const { genre, page = 1, sort = "popularity.desc" } = req.query;
+    const params = { page, sort_by: sort };
+    if (genre) params.with_genres = genre;
+    const data = await tmdbFetch(`/discover/${type}`, params);
+    res.json(data);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// Speciale collecties
+app.get("/api/collection/:type/:collection", async (req, res) => {
+  try {
+    const type = req.params.type === "tv" ? "tv" : "movie";
+    const col = req.params.collection;
+    let endpoint = "";
+    if (col === "popular") endpoint = `/${type}/popular`;
+    else if (col === "top_rated") endpoint = `/${type}/top_rated`;
+    else if (col === "upcoming" && type === "movie") endpoint = "/movie/upcoming";
+    else if (col === "now_playing" && type === "movie") endpoint = "/movie/now_playing";
+    else if (col === "airing_today" && type === "tv") endpoint = "/tv/airing_today";
+    else if (col === "on_the_air" && type === "tv") endpoint = "/tv/on_the_air";
+    else return res.status(400).json({ error: "Ongeldige collectie" });
+    const data = await tmdbFetch(endpoint, { page: req.query.page || 1 });
+    res.json(data);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
 app.get("/api/details/:type/:id", async (req, res) => {
   try {
     const { type, id } = req.params;

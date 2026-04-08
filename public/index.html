@@ -8,310 +8,160 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
     :root {
-      --bg: #0b0e17;
-      --surface: #141826;
-      --surface-hover: #1c2138;
-      --border: #232840;
-      --text: #e4e6f0;
-      --text-dim: #7a7f9a;
-      --accent: #6366f1;
-      --accent-glow: rgba(99,102,241,.25);
-      --green: #22c55e;
-      --green-glow: rgba(34,197,94,.15);
-      --amber: #f59e0b;
-      --red: #ef4444;
-      --red-glow: rgba(239,68,68,.15);
+      --bg: #0b0e17; --surface: #141826; --surface-hover: #1c2138;
+      --border: #232840; --text: #e4e6f0; --text-dim: #7a7f9a;
+      --accent: #6366f1; --accent-glow: rgba(99,102,241,.25);
+      --green: #22c55e; --green-glow: rgba(34,197,94,.15);
+      --amber: #f59e0b; --red: #ef4444; --red-glow: rgba(239,68,68,.15);
       --radius: 12px;
     }
+    body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
 
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    /* ── Navbar ── */
+    /* ── Nav ── */
     nav {
-      position: sticky; top: 0; z-index: 100;
-      display: flex; align-items: center; gap: 16px;
-      padding: 0 32px; height: 64px;
-      background: rgba(11,14,23,.85);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
+      position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:16px;
+      padding:0 32px;height:64px;background:rgba(11,14,23,.85);
+      backdrop-filter:blur(16px);border-bottom:1px solid var(--border);
     }
-    .logo {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 900; font-size: 22px;
-      background: linear-gradient(135deg, var(--accent), #a78bfa);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      letter-spacing: -0.5px;
-    }
-    .nav-links { display: flex; gap: 4px; margin-left: 24px; }
-    .nav-links button {
-      background: none; border: none; color: var(--text-dim);
-      font: 500 14px/1 'DM Sans', sans-serif;
-      padding: 8px 16px; border-radius: 8px; cursor: pointer;
-      transition: all .2s;
-    }
-    .nav-links button:hover, .nav-links button.active {
-      color: var(--text); background: var(--surface);
-    }
-    .search-wrapper {
-      margin-left: auto; position: relative; width: 320px;
-    }
-    .search-wrapper input {
-      width: 100%; padding: 10px 16px 10px 40px;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 10px; color: var(--text); font-size: 14px;
-      outline: none; transition: border-color .2s;
-    }
-    .search-wrapper input:focus { border-color: var(--accent); }
-    .search-wrapper svg {
-      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
-      width: 18px; height: 18px; stroke: var(--text-dim);
-    }
+    .logo{font-family:'Outfit',sans-serif;font-weight:900;font-size:22px;background:linear-gradient(135deg,var(--accent),#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.5px}
+    .nav-links{display:flex;gap:4px;margin-left:24px}
+    .nav-links button{background:none;border:none;color:var(--text-dim);font:500 14px/1 'DM Sans',sans-serif;padding:8px 16px;border-radius:8px;cursor:pointer;transition:all .2s}
+    .nav-links button:hover,.nav-links button.active{color:var(--text);background:var(--surface)}
+    .search-wrapper{margin-left:auto;position:relative;width:320px}
+    .search-wrapper input{width:100%;padding:10px 16px 10px 40px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;outline:none;transition:border-color .2s}
+    .search-wrapper input:focus{border-color:var(--accent)}
+    .search-wrapper svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;stroke:var(--text-dim)}
 
-    /* ── Main ── */
-    main { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+    main{max-width:1200px;margin:0 auto;padding:32px 24px}
+    .section-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:24px;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+    .section-title .badge{font-size:12px;font-weight:500;background:var(--accent-glow);color:var(--accent);padding:4px 10px;border-radius:20px}
 
-    .section-title {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 700; font-size: 24px;
-      margin-bottom: 20px;
-      display: flex; align-items: center; gap: 10px;
+    /* ── Sub-nav / category tabs ── */
+    .sub-nav{display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap}
+    .sub-nav button{
+      background:var(--surface);border:1px solid var(--border);color:var(--text-dim);
+      font:500 13px/1 'DM Sans',sans-serif;padding:8px 18px;border-radius:20px;
+      cursor:pointer;transition:all .2s;white-space:nowrap;
     }
-    .section-title .badge {
-      font-size: 12px; font-weight: 500;
-      background: var(--accent-glow); color: var(--accent);
-      padding: 4px 10px; border-radius: 20px;
+    .sub-nav button:hover{border-color:var(--text-dim);color:var(--text)}
+    .sub-nav button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+
+    /* ── Genre chips ── */
+    .genre-bar{display:flex;gap:8px;margin-bottom:24px;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+    .genre-bar::-webkit-scrollbar{height:4px}
+    .genre-bar::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+    .genre-chip{
+      background:var(--surface);border:1px solid var(--border);color:var(--text-dim);
+      font:500 12px/1 'DM Sans',sans-serif;padding:7px 14px;border-radius:16px;
+      cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0;
     }
+    .genre-chip:hover{border-color:var(--text-dim);color:var(--text)}
+    .genre-chip.active{background:var(--accent-glow);border-color:var(--accent);color:var(--accent)}
 
     /* ── Grid ── */
-    .media-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 20px;
-    }
-    .card {
-      background: var(--surface); border-radius: var(--radius);
-      overflow: hidden; cursor: pointer;
-      border: 1px solid transparent;
-      transition: transform .25s, border-color .25s, box-shadow .25s;
-    }
-    .card:hover {
-      transform: translateY(-4px);
-      border-color: var(--accent);
-      box-shadow: 0 12px 32px rgba(0,0,0,.4), 0 0 0 1px var(--accent);
-    }
-    .card-poster {
-      aspect-ratio: 2/3; width: 100%;
-      object-fit: cover; display: block;
-      background: var(--surface-hover);
-    }
-    .card-body { padding: 12px; }
-    .card-title {
-      font-weight: 700; font-size: 14px;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .card-meta {
-      font-size: 12px; color: var(--text-dim);
-      margin-top: 4px; display: flex; align-items: center; gap: 6px;
-    }
-    .card-meta .type-badge {
-      font-size: 10px; text-transform: uppercase; font-weight: 700;
-      padding: 2px 6px; border-radius: 4px;
-      background: var(--accent-glow); color: var(--accent);
-    }
-    .card-meta .type-badge.tv { background: var(--green-glow); color: var(--green); }
+    .media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:20px}
+    .card{background:var(--surface);border-radius:var(--radius);overflow:hidden;cursor:pointer;border:1px solid transparent;transition:transform .25s,border-color .25s,box-shadow .25s}
+    .card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 12px 32px rgba(0,0,0,.4),0 0 0 1px var(--accent)}
+    .card-poster{aspect-ratio:2/3;width:100%;object-fit:cover;display:block;background:var(--surface-hover)}
+    .card-body{padding:12px}
+    .card-title{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .card-meta{font-size:12px;color:var(--text-dim);margin-top:4px;display:flex;align-items:center;gap:6px}
+    .type-badge{font-size:10px;text-transform:uppercase;font-weight:700;padding:2px 6px;border-radius:4px;background:var(--accent-glow);color:var(--accent)}
+    .type-badge.tv{background:var(--green-glow);color:var(--green)}
 
-    /* ── Detail modal ── */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0; z-index: 200;
-      background: rgba(0,0,0,.7); backdrop-filter: blur(8px);
-      align-items: center; justify-content: center;
+    /* ── Horizontal scroll row ── */
+    .media-row{display:flex;gap:16px;overflow-x:auto;padding-bottom:12px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+    .media-row::-webkit-scrollbar{height:5px}
+    .media-row::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+    .media-row .card{min-width:170px;max-width:170px;flex-shrink:0}
+    .row-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;margin-top:32px}
+    .row-header:first-child{margin-top:0}
+    .row-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:20px}
+    .row-more{font-size:13px;color:var(--accent);cursor:pointer;border:none;background:none;font-family:'DM Sans',sans-serif;font-weight:500}
+    .row-more:hover{text-decoration:underline}
+
+    /* ── Load more button ── */
+    .load-more-wrap{text-align:center;margin-top:28px}
+    .btn-load-more{
+      padding:10px 32px;border-radius:10px;font:600 14px/1 'DM Sans',sans-serif;
+      border:1px solid var(--border);background:var(--surface);color:var(--text);
+      cursor:pointer;transition:all .2s;
     }
-    .modal-overlay.open { display: flex; }
-    .modal {
-      background: var(--surface); border-radius: 16px;
-      width: 90%; max-width: 720px; max-height: 85vh;
-      overflow-y: auto; position: relative;
-      border: 1px solid var(--border);
-      box-shadow: 0 32px 64px rgba(0,0,0,.5);
-    }
-    .modal-backdrop-img {
-      height: 260px; width: 100%; object-fit: cover;
-      border-radius: 16px 16px 0 0; display: block;
-      filter: brightness(.6);
-    }
-    .modal-content { padding: 24px 28px 28px; position: relative; }
-    .modal-poster {
-      width: 120px; height: 180px; border-radius: 10px;
-      object-fit: cover; border: 3px solid var(--surface);
-      position: absolute; top: -90px; left: 28px;
-      box-shadow: 0 8px 24px rgba(0,0,0,.5);
-    }
-    .modal-info { margin-left: 148px; margin-top: -80px; }
-    .modal-title {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 700; font-size: 26px; line-height: 1.2;
-    }
-    .modal-subtitle { color: var(--text-dim); font-size: 14px; margin-top: 4px; }
-    .modal-overview {
-      margin-top: 20px; font-size: 14px; line-height: 1.7; color: var(--text-dim);
-    }
-    .modal-actions { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
-    .btn {
-      padding: 10px 24px; border-radius: 10px;
-      font: 600 14px/1 'DM Sans', sans-serif;
-      border: none; cursor: pointer; transition: all .2s;
-    }
-    .btn-primary { background: var(--accent); color: #fff; }
-    .btn-primary:hover { filter: brightness(1.15); }
-    .btn-primary:disabled { background: var(--surface-hover); color: var(--text-dim); cursor: default; }
-    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
-    .btn-outline:hover { border-color: var(--text-dim); }
-    .modal-close {
-      position: absolute; top: 16px; right: 16px; z-index: 10;
-      background: rgba(0,0,0,.5); border: none; color: #fff;
-      width: 36px; height: 36px; border-radius: 50%;
-      font-size: 20px; cursor: pointer; backdrop-filter: blur(4px);
-    }
+    .btn-load-more:hover{border-color:var(--accent);color:var(--accent)}
+
+    /* ── Modal ── */
+    .modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);align-items:center;justify-content:center}
+    .modal-overlay.open{display:flex}
+    .modal{background:var(--surface);border-radius:16px;width:90%;max-width:720px;max-height:85vh;overflow-y:auto;position:relative;border:1px solid var(--border);box-shadow:0 32px 64px rgba(0,0,0,.5)}
+    .modal-backdrop-img{height:260px;width:100%;object-fit:cover;border-radius:16px 16px 0 0;display:block;filter:brightness(.6)}
+    .modal-content{padding:24px 28px 28px;position:relative}
+    .modal-poster{width:120px;height:180px;border-radius:10px;object-fit:cover;border:3px solid var(--surface);position:absolute;top:-90px;left:28px;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+    .modal-info{margin-left:148px;margin-top:-80px}
+    .modal-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:26px;line-height:1.2}
+    .modal-subtitle{color:var(--text-dim);font-size:14px;margin-top:4px}
+    .modal-overview{margin-top:20px;font-size:14px;line-height:1.7;color:var(--text-dim)}
+    .modal-actions{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap}
+    .btn{padding:10px 24px;border-radius:10px;font:600 14px/1 'DM Sans',sans-serif;border:none;cursor:pointer;transition:all .2s}
+    .btn-primary{background:var(--accent);color:#fff}
+    .btn-primary:hover{filter:brightness(1.15)}
+    .btn-primary:disabled{background:var(--surface-hover);color:var(--text-dim);cursor:default}
+    .btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}
+    .btn-outline:hover{border-color:var(--text-dim)}
+    .modal-close{position:absolute;top:16px;right:16px;z-index:10;background:rgba(0,0,0,.5);border:none;color:#fff;width:36px;height:36px;border-radius:50%;font-size:20px;cursor:pointer;backdrop-filter:blur(4px)}
 
     /* ── Status badges ── */
-    .status { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 6px; }
-    .status-pending { background: rgba(245,158,11,.15); color: var(--amber); }
-    .status-approved { background: var(--accent-glow); color: var(--accent); }
-    .status-available { background: var(--green-glow); color: var(--green); }
-    .status-declined { background: var(--red-glow); color: var(--red); }
+    .status{font-size:12px;font-weight:600;padding:4px 10px;border-radius:6px}
+    .status-pending{background:rgba(245,158,11,.15);color:var(--amber)}
+    .status-approved{background:var(--accent-glow);color:var(--accent)}
+    .status-available{background:var(--green-glow);color:var(--green)}
+    .status-declined{background:var(--red-glow);color:var(--red)}
 
-    /* ── Requests tabel ── */
-    .requests-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
-    .requests-table th {
-      text-align: left; font-size: 12px; font-weight: 500;
-      color: var(--text-dim); padding: 0 16px 8px;
-      text-transform: uppercase; letter-spacing: .5px;
-    }
-    .requests-table td { padding: 14px 16px; background: var(--surface); font-size: 14px; }
-    .requests-table tr td:first-child { border-radius: 10px 0 0 10px; }
-    .requests-table tr td:last-child { border-radius: 0 10px 10px 0; }
-    .req-title-cell { display: flex; align-items: center; gap: 12px; }
-    .req-thumb { width: 40px; height: 56px; border-radius: 6px; object-fit: cover; flex-shrink: 0; }
-    .req-actions select {
-      background: var(--bg); color: var(--text); border: 1px solid var(--border);
-      padding: 6px 10px; border-radius: 6px; font-size: 12px; cursor: pointer;
-    }
+    /* ── Requests table ── */
+    .requests-table{width:100%;border-collapse:separate;border-spacing:0 8px}
+    .requests-table th{text-align:left;font-size:12px;font-weight:500;color:var(--text-dim);padding:0 16px 8px;text-transform:uppercase;letter-spacing:.5px}
+    .requests-table td{padding:14px 16px;background:var(--surface);font-size:14px}
+    .requests-table tr td:first-child{border-radius:10px 0 0 10px}
+    .requests-table tr td:last-child{border-radius:0 10px 10px 0}
+    .req-title-cell{display:flex;align-items:center;gap:12px}
+    .req-thumb{width:40px;height:56px;border-radius:6px;object-fit:cover;flex-shrink:0}
+    .req-actions select{background:var(--bg);color:var(--text);border:1px solid var(--border);padding:6px 10px;border-radius:6px;font-size:12px;cursor:pointer}
 
-    /* ── Settings page ── */
-    .settings-page { max-width: 720px; }
-    .settings-group {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px; margin-bottom: 20px;
-    }
-    .settings-group-header {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 18px;
-    }
-    .settings-group-title {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 700; font-size: 18px;
-      display: flex; align-items: center; gap: 10px;
-    }
-    .settings-group-title .icon {
-      width: 36px; height: 36px; border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px;
-    }
-    .icon-tmdb { background: rgba(1,180,228,.15); }
-    .icon-jellyfin { background: rgba(0,164,220,.15); }
-    .icon-plex { background: rgba(229,160,13,.15); }
-    .icon-radarr { background: rgba(255,165,0,.15); }
-    .icon-sonarr { background: rgba(52,152,219,.15); }
+    /* ── Settings ── */
+    .settings-page{max-width:720px}
+    .settings-group{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:20px}
+    .settings-group-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    .settings-group-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:18px;display:flex;align-items:center;gap:10px}
+    .settings-group-title .icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+    .icon-tmdb{background:rgba(1,180,228,.15)}.icon-jellyfin{background:rgba(0,164,220,.15)}.icon-plex{background:rgba(229,160,13,.15)}.icon-radarr{background:rgba(255,165,0,.15)}.icon-sonarr{background:rgba(52,152,219,.15)}
+    .form-row{margin-bottom:14px}.form-row:last-child{margin-bottom:0}
+    .form-label{display:block;font-size:13px;font-weight:500;color:var(--text-dim);margin-bottom:6px}
+    .form-input{width:100%;padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:'DM Sans',monospace;outline:none;transition:border-color .2s}
+    .form-input:focus{border-color:var(--accent)}.form-input::placeholder{color:var(--text-dim);opacity:.5}
+    .form-hint{font-size:12px;color:var(--text-dim);margin-top:4px;opacity:.7}
+    .btn-test{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;border:1px solid var(--border);background:var(--surface-hover);color:var(--text);cursor:pointer;transition:all .2s}
+    .btn-test:hover{border-color:var(--accent);color:var(--accent)}
+    .btn-test.testing{opacity:.5;pointer-events:none}
+    .btn-test.success{border-color:var(--green);color:var(--green);background:var(--green-glow)}
+    .btn-test.fail{border-color:var(--red);color:var(--red);background:var(--red-glow)}
+    .settings-footer{display:flex;gap:12px;align-items:center;margin-top:8px}
+    .save-status{font-size:13px;font-weight:500;opacity:0;transition:opacity .3s}
+    .save-status.visible{opacity:1}.save-status.ok{color:var(--green)}.save-status.err{color:var(--red)}
 
-    .form-row { margin-bottom: 14px; }
-    .form-row:last-child { margin-bottom: 0; }
-    .form-label {
-      display: block; font-size: 13px; font-weight: 500;
-      color: var(--text-dim); margin-bottom: 6px;
-    }
-    .form-input {
-      width: 100%; padding: 10px 14px;
-      background: var(--bg); border: 1px solid var(--border);
-      border-radius: 8px; color: var(--text); font-size: 14px;
-      font-family: 'DM Sans', monospace;
-      outline: none; transition: border-color .2s;
-    }
-    .form-input:focus { border-color: var(--accent); }
-    .form-input::placeholder { color: var(--text-dim); opacity: .5; }
+    /* ── Misc ── */
+    .empty-state{text-align:center;padding:80px 20px;color:var(--text-dim)}
+    .empty-state svg{width:64px;height:64px;stroke:var(--border);margin-bottom:16px}
+    .spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:40px auto}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .setup-banner{background:linear-gradient(135deg,rgba(99,102,241,.12),rgba(167,139,250,.08));border:1px solid rgba(99,102,241,.25);border-radius:var(--radius);padding:20px 24px;margin-bottom:28px;display:flex;align-items:center;gap:16px}
+    .setup-banner-icon{width:48px;height:48px;border-radius:12px;background:var(--accent-glow);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+    .setup-banner-text{flex:1}.setup-banner-text strong{display:block;font-size:15px;margin-bottom:2px}.setup-banner-text span{font-size:13px;color:var(--text-dim)}
 
-    .form-hint {
-      font-size: 12px; color: var(--text-dim); margin-top: 4px; opacity: .7;
-    }
-
-    .btn-test {
-      padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600;
-      border: 1px solid var(--border); background: var(--surface-hover);
-      color: var(--text); cursor: pointer; transition: all .2s;
-    }
-    .btn-test:hover { border-color: var(--accent); color: var(--accent); }
-    .btn-test.testing { opacity: .5; pointer-events: none; }
-    .btn-test.success { border-color: var(--green); color: var(--green); background: var(--green-glow); }
-    .btn-test.fail { border-color: var(--red); color: var(--red); background: var(--red-glow); }
-
-    .settings-footer {
-      display: flex; gap: 12px; align-items: center;
-      margin-top: 8px;
-    }
-    .save-status {
-      font-size: 13px; font-weight: 500;
-      opacity: 0; transition: opacity .3s;
-    }
-    .save-status.visible { opacity: 1; }
-    .save-status.ok { color: var(--green); }
-    .save-status.err { color: var(--red); }
-
-    /* ── Empty / Loading ── */
-    .empty-state { text-align: center; padding: 80px 20px; color: var(--text-dim); }
-    .empty-state svg { width: 64px; height: 64px; stroke: var(--border); margin-bottom: 16px; }
-    .spinner {
-      width: 32px; height: 32px; border: 3px solid var(--border);
-      border-top-color: var(--accent); border-radius: 50%;
-      animation: spin .7s linear infinite; margin: 40px auto;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── Setup banner ── */
-    .setup-banner {
-      background: linear-gradient(135deg, rgba(99,102,241,.12), rgba(167,139,250,.08));
-      border: 1px solid rgba(99,102,241,.25);
-      border-radius: var(--radius); padding: 20px 24px;
-      margin-bottom: 28px; display: flex; align-items: center; gap: 16px;
-    }
-    .setup-banner-icon {
-      width: 48px; height: 48px; border-radius: 12px;
-      background: var(--accent-glow);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 24px; flex-shrink: 0;
-    }
-    .setup-banner-text { flex: 1; }
-    .setup-banner-text strong { display: block; font-size: 15px; margin-bottom: 2px; }
-    .setup-banner-text span { font-size: 13px; color: var(--text-dim); }
-    .setup-banner .btn { flex-shrink: 0; }
-
-    /* ── Responsive ── */
-    @media (max-width: 640px) {
-      nav { padding: 0 16px; gap: 8px; }
-      .search-wrapper { width: 160px; }
-      .nav-links button { padding: 8px 10px; font-size: 13px; }
-      .media-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
-      .modal { width: 96%; }
-      .modal-info { margin-left: 0; margin-top: 12px; }
-      .modal-poster { position: static; margin: -60px auto 0; display: block; }
-      .settings-group { padding: 18px; }
+    @media(max-width:640px){
+      nav{padding:0 16px;gap:8px}.search-wrapper{width:160px}.nav-links button{padding:8px 10px;font-size:13px}
+      .media-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+      .modal{width:96%}.modal-info{margin-left:0;margin-top:12px}.modal-poster{position:static;margin:-60px auto 0;display:block}
+      .settings-group{padding:18px}.sub-nav{gap:4px}.genre-bar{gap:6px}
     }
   </style>
 </head>
@@ -321,6 +171,8 @@
   <div class="logo">MediaSeerr</div>
   <div class="nav-links">
     <button class="active" data-page="discover" onclick="navigate('discover')">Ontdekken</button>
+    <button data-page="movies" onclick="navigate('movies')">🎬 Films</button>
+    <button data-page="tv" onclick="navigate('tv')">📺 Series</button>
     <button data-page="requests" onclick="navigate('requests')">Verzoeken</button>
     <button data-page="settings" onclick="navigate('settings')">⚙ Instellingen</button>
   </div>
@@ -341,17 +193,26 @@ const TMDB_IMG = "https://image.tmdb.org/t/p";
 let currentPage = "discover";
 let searchTimeout = null;
 let settings = {};
+let genresMovie = [];
+let genresTv = [];
+let activeGenre = null;
+let browseType = "movie";
+let browsePage = 1;
+let browseCollection = null;
 
-// ══════════════════════════════════
-//  NAVIGATION
-// ══════════════════════════════════
+// ══════════════════════════
+//  NAV
+// ══════════════════════════
 function navigate(page) {
   currentPage = page;
-  document.querySelectorAll(".nav-links button").forEach(b =>
-    b.classList.toggle("active", b.dataset.page === page)
-  );
+  activeGenre = null;
+  browsePage = 1;
+  browseCollection = null;
+  document.querySelectorAll(".nav-links button").forEach(b => b.classList.toggle("active", b.dataset.page === page));
   document.getElementById("searchInput").value = "";
   if (page === "discover") loadDiscover();
+  else if (page === "movies") { browseType = "movie"; loadBrowse(); }
+  else if (page === "tv") { browseType = "tv"; loadBrowse(); }
   else if (page === "requests") loadRequests();
   else if (page === "settings") loadSettings();
 }
@@ -362,10 +223,8 @@ document.getElementById("searchInput").addEventListener("input", (e) => {
   const q = e.target.value.trim();
   if (!q) { if (currentPage === "discover") loadDiscover(); return; }
   searchTimeout = setTimeout(() => {
-    currentPage = "discover";
-    document.querySelectorAll(".nav-links button").forEach(b =>
-      b.classList.toggle("active", b.dataset.page === "discover")
-    );
+    currentPage = "search";
+    document.querySelectorAll(".nav-links button").forEach(b => b.classList.remove("active"));
     searchMedia(q);
   }, 400);
 });
@@ -374,8 +233,7 @@ async function searchMedia(query) {
   const app = document.getElementById("app");
   app.innerHTML = '<div class="spinner"></div>';
   try {
-    const res = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
-    const data = await res.json();
+    const data = await fetch(`/api/search?query=${encodeURIComponent(query)}`).then(r=>r.json());
     app.innerHTML = `
       <div class="section-title">Resultaten <span class="badge">${data.results.length}</span></div>
       <div class="media-grid">${data.results.map(cardHTML).join("")}</div>
@@ -385,56 +243,173 @@ async function searchMedia(query) {
   }
 }
 
-// ══════════════════════════════════
-//  DISCOVER
-// ══════════════════════════════════
+// ══════════════════════════
+//  DISCOVER (homepage)
+// ══════════════════════════
 async function loadDiscover() {
   const app = document.getElementById("app");
   app.innerHTML = '<div class="spinner"></div>';
 
-  // Check of TMDB geconfigureerd is
   try {
-    const s = await fetch("/api/settings").then(r => r.json());
+    const s = await fetch("/api/settings").then(r=>r.json());
     settings = s;
     if (!s.tmdb_api_key) {
-      app.innerHTML = `
-        <div class="setup-banner">
-          <div class="setup-banner-icon">🔑</div>
-          <div class="setup-banner-text">
-            <strong>Welkom bij MediaSeerr!</strong>
-            <span>Stel eerst je TMDB API key in om films en series te kunnen zoeken.</span>
-          </div>
-          <button class="btn btn-primary" onclick="navigate('settings')">Instellingen openen</button>
-        </div>
-      `;
+      app.innerHTML = `<div class="setup-banner">
+        <div class="setup-banner-icon">🔑</div>
+        <div class="setup-banner-text"><strong>Welkom bij MediaSeerr!</strong><span>Stel eerst je TMDB API key in om films en series te kunnen zoeken.</span></div>
+        <button class="btn btn-primary" onclick="navigate('settings')">Instellingen openen</button>
+      </div>`;
       return;
     }
   } catch {}
 
   try {
-    const [movies, shows] = await Promise.all([
-      fetch("/api/trending/movie").then(r => r.json()),
-      fetch("/api/trending/tv").then(r => r.json()),
+    const [trendMovie, trendTv, popMovie, topMovie, popTv, topTv] = await Promise.all([
+      fetch("/api/trending/movie").then(r=>r.json()),
+      fetch("/api/trending/tv").then(r=>r.json()),
+      fetch("/api/collection/movie/popular").then(r=>r.json()),
+      fetch("/api/collection/movie/top_rated").then(r=>r.json()),
+      fetch("/api/collection/tv/popular").then(r=>r.json()),
+      fetch("/api/collection/tv/top_rated").then(r=>r.json()),
     ]);
+
     app.innerHTML = `
-      <div class="section-title">Trending Films</div>
-      <div class="media-grid">${movies.results.slice(0, 12).map(m => cardHTML({ ...m, media_type: "movie" })).join("")}</div>
-      <div class="section-title" style="margin-top:40px">Trending Series</div>
-      <div class="media-grid">${shows.results.slice(0, 12).map(s => cardHTML({ ...s, media_type: "tv" })).join("")}</div>
+      ${rowHTML("🔥 Trending Films", trendMovie.results.slice(0,15), "movie")}
+      ${rowHTML("🔥 Trending Series", trendTv.results.slice(0,15), "tv")}
+      ${rowHTML("🎬 Populaire Films", popMovie.results.slice(0,15), "movie")}
+      ${rowHTML("⭐ Best Beoordeelde Films", topMovie.results.slice(0,15), "movie")}
+      ${rowHTML("📺 Populaire Series", popTv.results.slice(0,15), "tv")}
+      ${rowHTML("⭐ Best Beoordeelde Series", topTv.results.slice(0,15), "tv")}
     `;
   } catch {
-    app.innerHTML = '<div class="empty-state"><p>Kan trending niet laden.<br>Controleer je TMDB API key in <a href="#" onclick="navigate(\'settings\')" style="color:var(--accent)">Instellingen</a>.</p></div>';
+    app.innerHTML = '<div class="empty-state"><p>Kan niet laden.<br>Controleer je TMDB API key in <a href="#" onclick="navigate(\'settings\')" style="color:var(--accent)">Instellingen</a>.</p></div>';
   }
 }
 
-// ══════════════════════════════════
+function rowHTML(title, items, type) {
+  return `
+    <div class="row-header"><span class="row-title">${title}</span></div>
+    <div class="media-row">${items.map(i => cardHTML({ ...i, media_type: type })).join("")}</div>
+  `;
+}
+
+// ══════════════════════════
+//  BROWSE (Films / Series)
+// ══════════════════════════
+async function loadBrowse() {
+  const app = document.getElementById("app");
+  app.innerHTML = '<div class="spinner"></div>';
+
+  // Laad genres als dat nog niet gebeurd is
+  try {
+    if (browseType === "movie" && !genresMovie.length) {
+      genresMovie = (await fetch("/api/genres/movie").then(r=>r.json())).genres || [];
+    }
+    if (browseType === "tv" && !genresTv.length) {
+      genresTv = (await fetch("/api/genres/tv").then(r=>r.json())).genres || [];
+    }
+  } catch {}
+
+  const genres = browseType === "movie" ? genresMovie : genresTv;
+  const typeLabel = browseType === "movie" ? "Films" : "Series";
+
+  // Collectie tabs
+  const collections = browseType === "movie"
+    ? [
+        { id: null, label: "Alles" },
+        { id: "popular", label: "Populair" },
+        { id: "top_rated", label: "Best Beoordeeld" },
+        { id: "now_playing", label: "Nu in de Bioscoop" },
+        { id: "upcoming", label: "Binnenkort" },
+      ]
+    : [
+        { id: null, label: "Alles" },
+        { id: "popular", label: "Populair" },
+        { id: "top_rated", label: "Best Beoordeeld" },
+        { id: "airing_today", label: "Vandaag op TV" },
+        { id: "on_the_air", label: "Nu Uitgezonden" },
+      ];
+
+  let endpoint;
+  if (browseCollection) {
+    endpoint = `/api/collection/${browseType}/${browseCollection}?page=${browsePage}`;
+  } else {
+    endpoint = `/api/discover/${browseType}?page=${browsePage}${activeGenre ? '&genre=' + activeGenre : ''}`;
+  }
+
+  try {
+    const data = await fetch(endpoint).then(r=>r.json());
+
+    app.innerHTML = `
+      <div class="section-title">${browseType === "movie" ? "🎬" : "📺"} ${typeLabel}</div>
+
+      <div class="sub-nav" id="collectionTabs">
+        ${collections.map(c => `
+          <button class="${browseCollection === c.id && !activeGenre ? 'active' : ''}" onclick="selectCollection(${c.id ? `'${c.id}'` : 'null'})">${c.label}</button>
+        `).join("")}
+      </div>
+
+      <div class="genre-bar" id="genreBar">
+        <span class="genre-chip ${!activeGenre && !browseCollection ? 'active' : ''}" onclick="selectGenre(null)">Alle genres</span>
+        ${genres.map(g => `
+          <span class="genre-chip ${activeGenre == g.id ? 'active' : ''}" onclick="selectGenre(${g.id})">${g.name}</span>
+        `).join("")}
+      </div>
+
+      <div class="media-grid" id="browseGrid">
+        ${(data.results || []).map(i => cardHTML({ ...i, media_type: browseType })).join("")}
+      </div>
+
+      ${data.results && data.results.length >= 20 ? `
+        <div class="load-more-wrap">
+          <button class="btn-load-more" onclick="loadMoreBrowse()">Meer laden</button>
+        </div>
+      ` : ''}
+    `;
+  } catch {
+    app.innerHTML = '<div class="empty-state"><p>Kan niet laden. Controleer je TMDB API key.</p></div>';
+  }
+}
+
+function selectGenre(genreId) {
+  activeGenre = genreId;
+  browseCollection = null;
+  browsePage = 1;
+  loadBrowse();
+}
+
+function selectCollection(colId) {
+  browseCollection = colId;
+  activeGenre = null;
+  browsePage = 1;
+  loadBrowse();
+}
+
+async function loadMoreBrowse() {
+  browsePage++;
+  let endpoint;
+  if (browseCollection) {
+    endpoint = `/api/collection/${browseType}/${browseCollection}?page=${browsePage}`;
+  } else {
+    endpoint = `/api/discover/${browseType}?page=${browsePage}${activeGenre ? '&genre=' + activeGenre : ''}`;
+  }
+  try {
+    const data = await fetch(endpoint).then(r=>r.json());
+    const grid = document.getElementById("browseGrid");
+    if (grid && data.results) {
+      grid.insertAdjacentHTML("beforeend", data.results.map(i => cardHTML({ ...i, media_type: browseType })).join(""));
+    }
+  } catch {}
+}
+
+// ══════════════════════════
 //  REQUESTS
-// ══════════════════════════════════
+// ══════════════════════════
 async function loadRequests() {
   const app = document.getElementById("app");
   app.innerHTML = '<div class="spinner"></div>';
   try {
-    const rows = await fetch("/api/requests").then(r => r.json());
+    const rows = await fetch("/api/requests").then(r=>r.json());
     if (!rows.length) {
       app.innerHTML = `<div class="empty-state">
         <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5"><path d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
@@ -446,344 +421,204 @@ async function loadRequests() {
       <div class="section-title">Media Verzoeken <span class="badge">${rows.length}</span></div>
       <table class="requests-table">
         <thead><tr><th>Media</th><th>Type</th><th>Status</th><th>Datum</th><th>Actie</th></tr></thead>
-        <tbody>
-          ${rows.map(r => `
-            <tr>
-              <td><div class="req-title-cell">
-                <img class="req-thumb" src="${r.poster_path ? TMDB_IMG + '/w92' + r.poster_path : ''}" alt="" />
-                <span>${esc(r.title)}</span>
-              </div></td>
-              <td><span class="type-badge ${r.media_type}">${r.media_type === 'movie' ? 'Film' : 'Serie'}</span></td>
-              <td><span class="status status-${r.status}">${statusLabel(r.status)}</span></td>
-              <td style="color:var(--text-dim);font-size:13px">${new Date(r.requested_at).toLocaleDateString('nl-NL')}</td>
-              <td class="req-actions">
-                <select onchange="updateStatus(${r.id}, this.value)">
-                  ${['pending','approved','available','declined'].map(s =>
-                    `<option value="${s}" ${s===r.status?'selected':''}>${statusLabel(s)}</option>`
-                  ).join('')}
-                </select>
-              </td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    `;
+        <tbody>${rows.map(r => `
+          <tr>
+            <td><div class="req-title-cell">
+              <img class="req-thumb" src="${r.poster_path ? TMDB_IMG+'/w92'+r.poster_path : ''}" alt="" />
+              <span>${esc(r.title)}</span>
+            </div></td>
+            <td><span class="type-badge ${r.media_type}">${r.media_type==='movie'?'Film':'Serie'}</span></td>
+            <td><span class="status status-${r.status}">${statusLabel(r.status)}</span></td>
+            <td style="color:var(--text-dim);font-size:13px">${new Date(r.requested_at).toLocaleDateString('nl-NL')}</td>
+            <td class="req-actions">
+              <select onchange="updateStatus(${r.id},this.value)">
+                ${['pending','approved','available','declined'].map(s=>`<option value="${s}" ${s===r.status?'selected':''}>${statusLabel(s)}</option>`).join('')}
+              </select>
+            </td>
+          </tr>
+        `).join('')}</tbody>
+      </table>`;
   } catch {
     app.innerHTML = '<div class="empty-state"><p>Fout bij ophalen verzoeken.</p></div>';
   }
 }
 
-async function updateStatus(id, status) {
-  await fetch(`/api/requests/${id}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ status }),
-  });
+async function updateStatus(id,status){
+  await fetch(`/api/requests/${id}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({status})});
   loadRequests();
 }
+function statusLabel(s){return{pending:"In afwachting",approved:"Goedgekeurd",available:"Beschikbaar",declined:"Afgewezen"}[s]||s}
 
-function statusLabel(s) {
-  return { pending: "In afwachting", approved: "Goedgekeurd", available: "Beschikbaar", declined: "Afgewezen" }[s] || s;
-}
-
-// ══════════════════════════════════
-//  SETTINGS PAGE
-// ══════════════════════════════════
+// ══════════════════════════
+//  SETTINGS
+// ══════════════════════════
 async function loadSettings() {
   const app = document.getElementById("app");
   app.innerHTML = '<div class="spinner"></div>';
+  try { settings = await fetch("/api/settings").then(r=>r.json()); } catch { settings = {}; }
 
-  try {
-    settings = await fetch("/api/settings").then(r => r.json());
-  } catch {
-    settings = {};
-  }
+  const field = (key, label, placeholder, hint) => `
+    <div class="form-row">
+      <label class="form-label">${label}</label>
+      <input class="form-input" id="set_${key}" type="${key.includes('key')||key.includes('token')?'password':'text'}" value="${esc(settings[key]||'')}" placeholder="${placeholder}" />
+      ${hint ? `<div class="form-hint">${hint}</div>` : ''}
+    </div>`;
 
-  app.innerHTML = `
-    <div class="settings-page">
-      <div class="section-title">⚙ Instellingen</div>
+  app.innerHTML = `<div class="settings-page">
+    <div class="section-title">⚙ Instellingen</div>
 
-      <!-- TMDB -->
-      <div class="settings-group">
-        <div class="settings-group-header">
-          <div class="settings-group-title">
-            <span class="icon icon-tmdb">🎬</span> TMDB (The Movie Database)
-          </div>
-          <button class="btn-test" onclick="testConnection('tmdb', this)">Verbinding testen</button>
-        </div>
-        <div class="form-row">
-          <label class="form-label">API Key</label>
-          <input class="form-input" id="set_tmdb_api_key" type="password" value="${esc(settings.tmdb_api_key || '')}" placeholder="Plak hier je TMDB API key" />
-          <div class="form-hint">Gratis aan te maken op <a href="https://www.themoviedb.org/settings/api" target="_blank" style="color:var(--accent)">themoviedb.org/settings/api</a></div>
-        </div>
+    <div class="settings-group">
+      <div class="settings-group-header">
+        <div class="settings-group-title"><span class="icon icon-tmdb">🎬</span> TMDB</div>
+        <button class="btn-test" onclick="testConnection('tmdb',this)">Verbinding testen</button>
       </div>
-
-      <!-- Jellyfin -->
-      <div class="settings-group">
-        <div class="settings-group-header">
-          <div class="settings-group-title">
-            <span class="icon icon-jellyfin">🟦</span> Jellyfin
-          </div>
-          <button class="btn-test" onclick="testConnection('jellyfin', this)">Verbinding testen</button>
-        </div>
-        <div class="form-row">
-          <label class="form-label">Server URL</label>
-          <input class="form-input" id="set_jellyfin_url" type="text" value="${esc(settings.jellyfin_url || '')}" placeholder="http://jellyfin:8096" />
-        </div>
-        <div class="form-row">
-          <label class="form-label">API Key</label>
-          <input class="form-input" id="set_jellyfin_api_key" type="password" value="${esc(settings.jellyfin_api_key || '')}" placeholder="Jellyfin API key" />
-          <div class="form-hint">Te vinden in Jellyfin &rarr; Dashboard &rarr; API Keys</div>
-        </div>
-      </div>
-
-      <!-- Plex -->
-      <div class="settings-group">
-        <div class="settings-group-header">
-          <div class="settings-group-title">
-            <span class="icon icon-plex">🟨</span> Plex
-          </div>
-          <button class="btn-test" onclick="testConnection('plex', this)">Verbinding testen</button>
-        </div>
-        <div class="form-row">
-          <label class="form-label">Server URL</label>
-          <input class="form-input" id="set_plex_url" type="text" value="${esc(settings.plex_url || '')}" placeholder="http://plex:32400" />
-        </div>
-        <div class="form-row">
-          <label class="form-label">Token</label>
-          <input class="form-input" id="set_plex_token" type="password" value="${esc(settings.plex_token || '')}" placeholder="Plex auth token" />
-          <div class="form-hint">Zie <a href="https://support.plex.tv/articles/204059436/" target="_blank" style="color:var(--accent)">Plex support</a> voor het vinden van je token</div>
-        </div>
-      </div>
-
-      <!-- Radarr -->
-      <div class="settings-group">
-        <div class="settings-group-header">
-          <div class="settings-group-title">
-            <span class="icon icon-radarr">🟧</span> Radarr (Films)
-          </div>
-          <button class="btn-test" onclick="testConnection('radarr', this)">Verbinding testen</button>
-        </div>
-        <div class="form-row">
-          <label class="form-label">Server URL</label>
-          <input class="form-input" id="set_radarr_url" type="text" value="${esc(settings.radarr_url || '')}" placeholder="http://radarr:7878" />
-        </div>
-        <div class="form-row">
-          <label class="form-label">API Key</label>
-          <input class="form-input" id="set_radarr_api_key" type="password" value="${esc(settings.radarr_api_key || '')}" placeholder="Radarr API key" />
-          <div class="form-hint">Te vinden in Radarr &rarr; Settings &rarr; General &rarr; API Key</div>
-        </div>
-      </div>
-
-      <!-- Sonarr -->
-      <div class="settings-group">
-        <div class="settings-group-header">
-          <div class="settings-group-title">
-            <span class="icon icon-sonarr">🟦</span> Sonarr (Series)
-          </div>
-          <button class="btn-test" onclick="testConnection('sonarr', this)">Verbinding testen</button>
-        </div>
-        <div class="form-row">
-          <label class="form-label">Server URL</label>
-          <input class="form-input" id="set_sonarr_url" type="text" value="${esc(settings.sonarr_url || '')}" placeholder="http://sonarr:8989" />
-        </div>
-        <div class="form-row">
-          <label class="form-label">API Key</label>
-          <input class="form-input" id="set_sonarr_api_key" type="password" value="${esc(settings.sonarr_api_key || '')}" placeholder="Sonarr API key" />
-          <div class="form-hint">Te vinden in Sonarr &rarr; Settings &rarr; General &rarr; API Key</div>
-        </div>
-      </div>
-
-      <!-- Save -->
-      <div class="settings-footer">
-        <button class="btn btn-primary" onclick="saveSettings()" id="saveBtn">💾 Instellingen opslaan</button>
-        <span class="save-status" id="saveStatus"></span>
-      </div>
+      ${field("tmdb_api_key","API Key","Plak hier je TMDB API key",'Gratis via <a href="https://www.themoviedb.org/settings/api" target="_blank" style="color:var(--accent)">themoviedb.org</a>')}
     </div>
-  `;
 
-  // Toggle password visibility on click
-  document.querySelectorAll('.form-input[type="password"]').forEach(input => {
-    input.addEventListener("focus", () => input.type = "text");
-    input.addEventListener("blur", () => input.type = "password");
+    <div class="settings-group">
+      <div class="settings-group-header">
+        <div class="settings-group-title"><span class="icon icon-jellyfin">🟦</span> Jellyfin</div>
+        <button class="btn-test" onclick="testConnection('jellyfin',this)">Verbinding testen</button>
+      </div>
+      ${field("jellyfin_url","Server URL","http://jellyfin:8096","")}
+      ${field("jellyfin_api_key","API Key","Jellyfin API key","Dashboard &rarr; API Keys")}
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-group-header">
+        <div class="settings-group-title"><span class="icon icon-plex">🟨</span> Plex</div>
+        <button class="btn-test" onclick="testConnection('plex',this)">Verbinding testen</button>
+      </div>
+      ${field("plex_url","Server URL","http://plex:32400","")}
+      ${field("plex_token","Token","Plex auth token",'Zie <a href="https://support.plex.tv/articles/204059436/" target="_blank" style="color:var(--accent)">Plex support</a>')}
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-group-header">
+        <div class="settings-group-title"><span class="icon icon-radarr">🟧</span> Radarr (Films)</div>
+        <button class="btn-test" onclick="testConnection('radarr',this)">Verbinding testen</button>
+      </div>
+      ${field("radarr_url","Server URL","http://radarr:7878","")}
+      ${field("radarr_api_key","API Key","Radarr API key","Settings &rarr; General &rarr; API Key")}
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-group-header">
+        <div class="settings-group-title"><span class="icon icon-sonarr">🟦</span> Sonarr (Series)</div>
+        <button class="btn-test" onclick="testConnection('sonarr',this)">Verbinding testen</button>
+      </div>
+      ${field("sonarr_url","Server URL","http://sonarr:8989","")}
+      ${field("sonarr_api_key","API Key","Sonarr API key","Settings &rarr; General &rarr; API Key")}
+    </div>
+
+    <div class="settings-footer">
+      <button class="btn btn-primary" onclick="saveSettings()" id="saveBtn">💾 Opslaan</button>
+      <span class="save-status" id="saveStatus"></span>
+    </div>
+  </div>`;
+
+  document.querySelectorAll('.form-input[type="password"]').forEach(input=>{
+    input.addEventListener("focus",()=>input.type="text");
+    input.addEventListener("blur",()=>input.type="password");
   });
 }
 
-async function saveSettings() {
-  const btn = document.getElementById("saveBtn");
-  const status = document.getElementById("saveStatus");
-  btn.disabled = true;
-  btn.textContent = "⏳ Opslaan...";
-
-  const payload = {};
-  const keys = [
-    "tmdb_api_key",
-    "jellyfin_url", "jellyfin_api_key",
-    "plex_url", "plex_token",
-    "radarr_url", "radarr_api_key",
-    "sonarr_url", "sonarr_api_key",
-  ];
-  for (const key of keys) {
-    const el = document.getElementById("set_" + key);
-    if (el) payload[key] = el.value.trim();
+async function saveSettings(){
+  const btn=document.getElementById("saveBtn"),st=document.getElementById("saveStatus");
+  btn.disabled=true;btn.textContent="⏳ Opslaan...";
+  const payload={};
+  for(const key of ["tmdb_api_key","jellyfin_url","jellyfin_api_key","plex_url","plex_token","radarr_url","radarr_api_key","sonarr_url","sonarr_api_key"]){
+    const el=document.getElementById("set_"+key);if(el)payload[key]=el.value.trim();
   }
-
-  try {
-    const res = await fetch("/api/settings", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    const data = await res.json();
-    if (data.success) {
-      settings = data.settings;
-      status.textContent = "✓ Opgeslagen!";
-      status.className = "save-status visible ok";
-    } else {
-      throw new Error(data.error);
-    }
-  } catch (err) {
-    status.textContent = "✗ Fout: " + err.message;
-    status.className = "save-status visible err";
-  }
-
-  btn.disabled = false;
-  btn.textContent = "💾 Instellingen opslaan";
-  setTimeout(() => { status.className = "save-status"; }, 4000);
+  try{
+    const data=await fetch("/api/settings",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)}).then(r=>r.json());
+    if(data.success){settings=data.settings;st.textContent="✓ Opgeslagen!";st.className="save-status visible ok";}
+    else throw new Error(data.error);
+  }catch(err){st.textContent="✗ "+err.message;st.className="save-status visible err";}
+  btn.disabled=false;btn.textContent="💾 Opslaan";
+  setTimeout(()=>{st.className="save-status"},4000);
 }
 
-async function testConnection(service, btn) {
-  btn.className = "btn-test testing";
-  btn.textContent = "Testen...";
-
-  // Sla eerst op zodat de server de nieuwste values heeft
-  const payload = {};
-  const keys = [
-    "tmdb_api_key",
-    "jellyfin_url", "jellyfin_api_key",
-    "plex_url", "plex_token",
-    "radarr_url", "radarr_api_key",
-    "sonarr_url", "sonarr_api_key",
-  ];
-  for (const key of keys) {
-    const el = document.getElementById("set_" + key);
-    if (el) payload[key] = el.value.trim();
+async function testConnection(service,btn){
+  btn.className="btn-test testing";btn.textContent="Testen...";
+  const payload={};
+  for(const key of ["tmdb_api_key","jellyfin_url","jellyfin_api_key","plex_url","plex_token","radarr_url","radarr_api_key","sonarr_url","sonarr_api_key"]){
+    const el=document.getElementById("set_"+key);if(el)payload[key]=el.value.trim();
   }
-  await fetch("/api/settings", {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-
-  try {
-    const res = await fetch("/api/settings/test", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ service }),
-    });
-    const data = await res.json();
-    if (data.ok) {
-      btn.className = "btn-test success";
-      btn.textContent = "✓ Verbonden!";
-    } else {
-      btn.className = "btn-test fail";
-      btn.textContent = "✗ " + (data.error || "Mislukt");
-    }
-  } catch {
-    btn.className = "btn-test fail";
-    btn.textContent = "✗ Netwerkfout";
-  }
-
-  setTimeout(() => {
-    btn.className = "btn-test";
-    btn.textContent = "Verbinding testen";
-  }, 4000);
+  await fetch("/api/settings",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+  try{
+    const data=await fetch("/api/settings/test",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({service})}).then(r=>r.json());
+    if(data.ok){btn.className="btn-test success";btn.textContent="✓ Verbonden!";}
+    else{btn.className="btn-test fail";btn.textContent="✗ "+(data.error||"Mislukt");}
+  }catch{btn.className="btn-test fail";btn.textContent="✗ Netwerkfout";}
+  setTimeout(()=>{btn.className="btn-test";btn.textContent="Verbinding testen"},4000);
 }
 
-// ══════════════════════════════════
+// ══════════════════════════
 //  CARDS & MODAL
-// ══════════════════════════════════
-function cardHTML(item) {
-  const title = item.title || item.name || "Onbekend";
-  const year = (item.release_date || item.first_air_date || "").slice(0, 4);
-  const poster = item.poster_path ? `${TMDB_IMG}/w342${item.poster_path}` : "";
-  const type = item.media_type || "movie";
+// ══════════════════════════
+function cardHTML(item){
+  const title=item.title||item.name||"Onbekend";
+  const year=(item.release_date||item.first_air_date||"").slice(0,4);
+  const poster=item.poster_path?`${TMDB_IMG}/w342${item.poster_path}`:"";
+  const type=item.media_type||browseType||"movie";
+  const rating=item.vote_average?item.vote_average.toFixed(1):"";
   return `
-    <div class="card" onclick="openDetail('${type}', ${item.id})">
+    <div class="card" onclick="openDetail('${type}',${item.id})">
       <img class="card-poster" src="${poster}" alt="${esc(title)}" loading="lazy" onerror="this.style.display='none'" />
       <div class="card-body">
         <div class="card-title">${esc(title)}</div>
         <div class="card-meta">
-          <span class="type-badge ${type}">${type === 'movie' ? 'Film' : 'Serie'}</span>
-          ${year}
+          <span class="type-badge ${type}">${type==='movie'?'Film':'Serie'}</span>
+          ${year}${rating?' · ⭐ '+rating:''}
         </div>
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
-async function openDetail(type, id) {
-  const modal = document.getElementById("modal");
-  const content = document.getElementById("modalContent");
+async function openDetail(type,id){
+  const modal=document.getElementById("modal"),content=document.getElementById("modalContent");
   modal.classList.add("open");
-  content.innerHTML = '<div class="spinner" style="margin:60px auto"></div>';
-  try {
-    const d = await fetch(`/api/details/${type}/${id}`).then(r => r.json());
-    const title = d.title || d.name;
-    const year = (d.release_date || d.first_air_date || "").slice(0, 4);
-    const genres = (d.genres || []).map(g => g.name).join(", ");
-    const backdrop = d.backdrop_path ? `${TMDB_IMG}/w1280${d.backdrop_path}` : "";
-    const poster = d.poster_path ? `${TMDB_IMG}/w342${d.poster_path}` : "";
-    const hasRequest = d._request;
-    const rating = d.vote_average ? d.vote_average.toFixed(1) : "—";
-
-    content.innerHTML = `
+  content.innerHTML='<div class="spinner" style="margin:60px auto"></div>';
+  try{
+    const d=await fetch(`/api/details/${type}/${id}`).then(r=>r.json());
+    const title=d.title||d.name,year=(d.release_date||d.first_air_date||"").slice(0,4);
+    const genres=(d.genres||[]).map(g=>g.name).join(", ");
+    const backdrop=d.backdrop_path?`${TMDB_IMG}/w1280${d.backdrop_path}`:"";
+    const poster=d.poster_path?`${TMDB_IMG}/w342${d.poster_path}`:"";
+    const hasReq=d._request,rating=d.vote_average?d.vote_average.toFixed(1):"—";
+    content.innerHTML=`
       <button class="modal-close" onclick="closeModal()">✕</button>
-      ${backdrop ? `<img class="modal-backdrop-img" src="${backdrop}" alt="" />` : '<div style="height:100px"></div>'}
+      ${backdrop?`<img class="modal-backdrop-img" src="${backdrop}" alt="" />`:'<div style="height:100px"></div>'}
       <div class="modal-content">
-        ${poster ? `<img class="modal-poster" src="${poster}" alt="" />` : ''}
+        ${poster?`<img class="modal-poster" src="${poster}" alt="" />`:''}
         <div class="modal-info">
           <div class="modal-title">${esc(title)}</div>
           <div class="modal-subtitle">${year} &middot; ${genres} &middot; ⭐ ${rating}</div>
         </div>
-        <div class="modal-overview">${esc(d.overview || "Geen beschrijving beschikbaar.")}</div>
+        <div class="modal-overview">${esc(d.overview||"Geen beschrijving beschikbaar.")}</div>
         <div class="modal-actions">
-          ${hasRequest
-            ? `<span class="status status-${hasRequest.status}">${statusLabel(hasRequest.status)}</span>`
-            : `<button class="btn btn-primary" onclick="requestMedia('${type}', ${id}, '${esc(title).replace(/'/g,"\\'")}', '${d.poster_path || ""}')">🎬 Aanvragen</button>`
-          }
+          ${hasReq?`<span class="status status-${hasReq.status}">${statusLabel(hasReq.status)}</span>`
+            :`<button class="btn btn-primary" onclick="requestMedia('${type}',${id},'${esc(title).replace(/'/g,"\\'")}','${d.poster_path||""}')">🎬 Aanvragen</button>`}
           <button class="btn btn-outline" onclick="closeModal()">Sluiten</button>
         </div>
-      </div>
-    `;
-  } catch {
-    content.innerHTML = '<div class="empty-state"><p>Kan details niet laden.</p></div>';
-  }
+      </div>`;
+  }catch{content.innerHTML='<div class="empty-state"><p>Kan details niet laden.</p></div>';}
 }
 
-function closeModal() { document.getElementById("modal").classList.remove("open"); }
-document.getElementById("modal").addEventListener("click", (e) => { if (e.target.id === "modal") closeModal(); });
+function closeModal(){document.getElementById("modal").classList.remove("open")}
+document.getElementById("modal").addEventListener("click",(e)=>{if(e.target.id==="modal")closeModal()});
 
-async function requestMedia(type, id, title, posterPath) {
-  try {
-    const res = await fetch("/api/requests", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ tmdb_id: id, media_type: type, title, poster_path: posterPath, overview: "" }),
-    });
-    if (res.ok) openDetail(type, id);
-    else { const err = await res.json(); alert(err.error || "Fout bij aanvragen"); }
-  } catch { alert("Netwerkfout bij aanvragen"); }
+async function requestMedia(type,id,title,posterPath){
+  try{
+    const res=await fetch("/api/requests",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({tmdb_id:id,media_type:type,title,poster_path:posterPath,overview:""})});
+    if(res.ok)openDetail(type,id);else{const err=await res.json();alert(err.error||"Fout");}
+  }catch{alert("Netwerkfout bij aanvragen")}
 }
 
-// ── Helpers ──
-function esc(str) {
-  const d = document.createElement("div");
-  d.textContent = str || "";
-  return d.innerHTML;
-}
+function esc(str){const d=document.createElement("div");d.textContent=str||"";return d.innerHTML}
 
-// ── Init ──
+// Init
 loadDiscover();
 </script>
 </body>
