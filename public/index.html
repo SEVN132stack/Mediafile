@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MediaSeerr</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0b0e17;
+      --surface: #141826;
+      --surface-hover: #1c2138;
+      --border: #232840;
+      --text: #e4e6f0;
+      --text-dim: #7a7f9a;
+      --accent: #6366f1;
+      --accent-glow: rgba(99,102,241,.25);
+      --green: #22c55e;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Navbar ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; gap: 16px;
+      padding: 0 32px; height: 64px;
+      background: rgba(11,14,23,.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 900; font-size: 22px;
+      background: linear-gradient(135deg, var(--accent), #a78bfa);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+    .nav-links { display: flex; gap: 4px; margin-left: 24px; }
+    .nav-links button {
+      background: none; border: none; color: var(--text-dim);
+      font: 500 14px/1 'DM Sans', sans-serif;
+      padding: 8px 16px; border-radius: 8px; cursor: pointer;
+      transition: all .2s;
+    }
+    .nav-links button:hover, .nav-links button.active {
+      color: var(--text); background: var(--surface);
+    }
+    .search-wrapper {
+      margin-left: auto; position: relative; width: 320px;
+    }
+    .search-wrapper input {
+      width: 100%; padding: 10px 16px 10px 40px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--text); font-size: 14px;
+      outline: none; transition: border-color .2s;
+    }
+    .search-wrapper input:focus { border-color: var(--accent); }
+    .search-wrapper svg {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      width: 18px; height: 18px; stroke: var(--text-dim);
+    }
+
+    /* ── Main ── */
+    main { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+
+    .section-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700; font-size: 24px;
+      margin-bottom: 20px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title .badge {
+      font-size: 12px; font-weight: 500;
+      background: var(--accent-glow); color: var(--accent);
+      padding: 4px 10px; border-radius: 20px;
+    }
+
+    /* ── Grid ── */
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: var(--surface); border-radius: var(--radius);
+      overflow: hidden; cursor: pointer;
+      border: 1px solid transparent;
+      transition: transform .25s, border-color .25s, box-shadow .25s;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: 0 12px 32px rgba(0,0,0,.4), 0 0 0 1px var(--accent);
+    }
+    .card-poster {
+      aspect-ratio: 2/3; width: 100%;
+      object-fit: cover; display: block;
+      background: var(--surface-hover);
+    }
+    .card-body { padding: 12px; }
+    .card-title {
+      font-weight: 700; font-size: 14px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .card-meta {
+      font-size: 12px; color: var(--text-dim);
+      margin-top: 4px; display: flex; align-items: center; gap: 6px;
+    }
+    .card-meta .type-badge {
+      font-size: 10px; text-transform: uppercase; font-weight: 700;
+      padding: 2px 6px; border-radius: 4px;
+      background: var(--accent-glow); color: var(--accent);
+    }
+    .card-meta .type-badge.tv { background: rgba(34,197,94,.15); color: var(--green); }
+
+    /* ── Detail modal ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,.7); backdrop-filter: blur(8px);
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface); border-radius: 16px;
+      width: 90%; max-width: 720px; max-height: 85vh;
+      overflow-y: auto; position: relative;
+      border: 1px solid var(--border);
+      box-shadow: 0 32px 64px rgba(0,0,0,.5);
+    }
+    .modal-backdrop {
+      height: 260px; width: 100%; object-fit: cover;
+      border-radius: 16px 16px 0 0; display: block;
+      filter: brightness(.6);
+    }
+    .modal-content { padding: 24px 28px 28px; position: relative; }
+    .modal-poster {
+      width: 120px; height: 180px; border-radius: 10px;
+      object-fit: cover; border: 3px solid var(--surface);
+      position: absolute; top: -90px; left: 28px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.5);
+    }
+    .modal-info { margin-left: 148px; margin-top: -80px; }
+    .modal-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700; font-size: 26px; line-height: 1.2;
+    }
+    .modal-subtitle {
+      color: var(--text-dim); font-size: 14px; margin-top: 4px;
+    }
+    .modal-overview {
+      margin-top: 20px; margin-left: 0;
+      font-size: 14px; line-height: 1.7; color: var(--text-dim);
+    }
+    .modal-actions { margin-top: 20px; display: flex; gap: 10px; }
+    .btn {
+      padding: 10px 24px; border-radius: 10px;
+      font: 600 14px/1 'DM Sans', sans-serif;
+      border: none; cursor: pointer; transition: all .2s;
+    }
+    .btn-primary {
+      background: var(--accent); color: #fff;
+    }
+    .btn-primary:hover { filter: brightness(1.15); }
+    .btn-primary:disabled {
+      background: var(--surface-hover); color: var(--text-dim); cursor: default;
+    }
+    .btn-outline {
+      background: transparent; border: 1px solid var(--border); color: var(--text);
+    }
+    .btn-outline:hover { border-color: var(--text-dim); }
+    .modal-close {
+      position: absolute; top: 16px; right: 16px; z-index: 10;
+      background: rgba(0,0,0,.5); border: none; color: #fff;
+      width: 36px; height: 36px; border-radius: 50%;
+      font-size: 20px; cursor: pointer; backdrop-filter: blur(4px);
+    }
+
+    /* ── Status badges ── */
+    .status { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 6px; }
+    .status-pending { background: rgba(245,158,11,.15); color: var(--amber); }
+    .status-approved { background: rgba(99,102,241,.15); color: var(--accent); }
+    .status-available { background: rgba(34,197,94,.15); color: var(--green); }
+    .status-declined { background: rgba(239,68,68,.15); color: var(--red); }
+
+    /* ── Requests tabel ── */
+    .requests-table {
+      width: 100%; border-collapse: separate; border-spacing: 0 8px;
+    }
+    .requests-table th {
+      text-align: left; font-size: 12px; font-weight: 500;
+      color: var(--text-dim); padding: 0 16px 8px;
+      text-transform: uppercase; letter-spacing: .5px;
+    }
+    .requests-table td {
+      padding: 14px 16px; background: var(--surface);
+      font-size: 14px;
+    }
+    .requests-table tr td:first-child { border-radius: 10px 0 0 10px; }
+    .requests-table tr td:last-child { border-radius: 0 10px 10px 0; }
+    .req-title-cell { display: flex; align-items: center; gap: 12px; }
+    .req-thumb {
+      width: 40px; height: 56px; border-radius: 6px;
+      object-fit: cover; flex-shrink: 0;
+    }
+    .req-actions select {
+      background: var(--bg); color: var(--text); border: 1px solid var(--border);
+      padding: 6px 10px; border-radius: 6px; font-size: 12px; cursor: pointer;
+    }
+
+    /* ── Empty / Loading ── */
+    .empty-state {
+      text-align: center; padding: 80px 20px; color: var(--text-dim);
+    }
+    .empty-state svg { width: 64px; height: 64px; stroke: var(--border); margin-bottom: 16px; }
+    .spinner {
+      width: 32px; height: 32px; border: 3px solid var(--border);
+      border-top-color: var(--accent); border-radius: 50%;
+      animation: spin .7s linear infinite; margin: 40px auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      nav { padding: 0 16px; }
+      .search-wrapper { width: 180px; }
+      .media-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+      .modal { width: 96%; }
+      .modal-info { margin-left: 0; margin-top: 12px; }
+      .modal-poster { position: static; margin: -60px auto 0; display: block; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+  <div class="logo">MediaSeerr</div>
+  <div class="nav-links">
+    <button class="active" onclick="navigate('discover')">Ontdekken</button>
+    <button onclick="navigate('requests')">Verzoeken</button>
+  </div>
+  <div class="search-wrapper">
+    <svg fill="none" viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="searchInput" placeholder="Zoek films en series…" />
+  </div>
+</nav>
+
+<!-- Main -->
+<main id="app">
+  <div class="spinner"></div>
+</main>
+
+<!-- Detail Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+const TMDB_IMG = "https://image.tmdb.org/t/p";
+let currentPage = "discover";
+let searchTimeout = null;
+
+// ── Navigation ──
+function navigate(page) {
+  currentPage = page;
+  document.querySelectorAll(".nav-links button").forEach(b => b.classList.remove("active"));
+  document.querySelector(`.nav-links button:nth-child(${page === "discover" ? 1 : 2})`).classList.add("active");
+  if (page === "discover") loadDiscover();
+  else loadRequests();
+}
+
+// ── Search ──
+document.getElementById("searchInput").addEventListener("input", (e) => {
+  clearTimeout(searchTimeout);
+  const q = e.target.value.trim();
+  if (!q) { loadDiscover(); return; }
+  searchTimeout = setTimeout(() => searchMedia(q), 400);
+});
+
+async function searchMedia(query) {
+  const app = document.getElementById("app");
+  app.innerHTML = '<div class="spinner"></div>';
+  try {
+    const res = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
+    const data = await res.json();
+    app.innerHTML = `
+      <div class="section-title">Resultaten <span class="badge">${data.results.length}</span></div>
+      <div class="media-grid">${data.results.map(cardHTML).join("")}</div>
+    `;
+  } catch {
+    app.innerHTML = '<div class="empty-state"><p>Kan niet zoeken. Is TMDB_API_KEY ingesteld?</p></div>';
+  }
+}
+
+// ── Discover ──
+async function loadDiscover() {
+  const app = document.getElementById("app");
+  app.innerHTML = '<div class="spinner"></div>';
+  try {
+    const [movies, shows] = await Promise.all([
+      fetch("/api/trending/movie").then(r => r.json()),
+      fetch("/api/trending/tv").then(r => r.json()),
+    ]);
+    app.innerHTML = `
+      <div class="section-title">Trending Films</div>
+      <div class="media-grid">${movies.results.slice(0, 12).map(m => cardHTML({ ...m, media_type: "movie" })).join("")}</div>
+      <div class="section-title" style="margin-top:40px">Trending Series</div>
+      <div class="media-grid">${shows.results.slice(0, 12).map(s => cardHTML({ ...s, media_type: "tv" })).join("")}</div>
+    `;
+  } catch {
+    app.innerHTML = '<div class="empty-state"><p>Kan trending niet laden.<br>Controleer je TMDB_API_KEY.</p></div>';
+  }
+}
+
+// ── Requests ──
+async function loadRequests() {
+  const app = document.getElementById("app");
+  app.innerHTML = '<div class="spinner"></div>';
+  try {
+    const res = await fetch("/api/requests");
+    const rows = await res.json();
+    if (!rows.length) {
+      app.innerHTML = `<div class="empty-state">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5"><path d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+        <p>Nog geen verzoeken.<br>Zoek iets en vraag het aan!</p>
+      </div>`;
+      return;
+    }
+    app.innerHTML = `
+      <div class="section-title">Media Verzoeken <span class="badge">${rows.length}</span></div>
+      <table class="requests-table">
+        <thead><tr><th>Media</th><th>Type</th><th>Status</th><th>Datum</th><th>Actie</th></tr></thead>
+        <tbody>
+          ${rows.map(r => `
+            <tr>
+              <td><div class="req-title-cell">
+                <img class="req-thumb" src="${r.poster_path ? TMDB_IMG + '/w92' + r.poster_path : ''}" alt="" />
+                <span>${esc(r.title)}</span>
+              </div></td>
+              <td><span class="type-badge ${r.media_type}">${r.media_type === 'movie' ? 'Film' : 'Serie'}</span></td>
+              <td><span class="status status-${r.status}">${statusLabel(r.status)}</span></td>
+              <td style="color:var(--text-dim);font-size:13px">${new Date(r.requested_at).toLocaleDateString('nl-NL')}</td>
+              <td class="req-actions">
+                <select onchange="updateStatus(${r.id}, this.value)">
+                  ${['pending','approved','available','declined'].map(s =>
+                    `<option value="${s}" ${s===r.status?'selected':''}>${statusLabel(s)}</option>`
+                  ).join('')}
+                </select>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+  } catch {
+    app.innerHTML = '<div class="empty-state"><p>Fout bij ophalen verzoeken.</p></div>';
+  }
+}
+
+async function updateStatus(id, status) {
+  await fetch(`/api/requests/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ status }),
+  });
+  loadRequests();
+}
+
+function statusLabel(s) {
+  return { pending: "In afwachting", approved: "Goedgekeurd", available: "Beschikbaar", declined: "Afgewezen" }[s] || s;
+}
+
+// ── Card HTML ──
+function cardHTML(item) {
+  const title = item.title || item.name || "Onbekend";
+  const year = (item.release_date || item.first_air_date || "").slice(0, 4);
+  const poster = item.poster_path ? `${TMDB_IMG}/w342${item.poster_path}` : "";
+  const type = item.media_type || "movie";
+  return `
+    <div class="card" onclick="openDetail('${type}', ${item.id})">
+      <img class="card-poster" src="${poster}" alt="${esc(title)}" loading="lazy" onerror="this.style.display='none'" />
+      <div class="card-body">
+        <div class="card-title">${esc(title)}</div>
+        <div class="card-meta">
+          <span class="type-badge ${type}">${type === 'movie' ? 'Film' : 'Serie'}</span>
+          ${year}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ── Detail Modal ──
+async function openDetail(type, id) {
+  const modal = document.getElementById("modal");
+  const content = document.getElementById("modalContent");
+  modal.classList.add("open");
+  content.innerHTML = '<div class="spinner" style="margin:60px auto"></div>';
+  try {
+    const res = await fetch(`/api/details/${type}/${id}`);
+    const d = await res.json();
+    const title = d.title || d.name;
+    const year = (d.release_date || d.first_air_date || "").slice(0, 4);
+    const genres = (d.genres || []).map(g => g.name).join(", ");
+    const backdrop = d.backdrop_path ? `${TMDB_IMG}/w1280${d.backdrop_path}` : "";
+    const poster = d.poster_path ? `${TMDB_IMG}/w342${d.poster_path}` : "";
+    const hasRequest = d._request;
+    const rating = d.vote_average ? d.vote_average.toFixed(1) : "—";
+
+    content.innerHTML = `
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      ${backdrop ? `<img class="modal-backdrop" src="${backdrop}" alt="" />` : '<div style="height:100px"></div>'}
+      <div class="modal-content">
+        ${poster ? `<img class="modal-poster" src="${poster}" alt="" />` : ''}
+        <div class="modal-info">
+          <div class="modal-title">${esc(title)}</div>
+          <div class="modal-subtitle">${year} &middot; ${genres} &middot; ⭐ ${rating}</div>
+        </div>
+        <div class="modal-overview">${esc(d.overview || "Geen beschrijving beschikbaar.")}</div>
+        <div class="modal-actions">
+          ${hasRequest
+            ? `<span class="status status-${hasRequest.status}">${statusLabel(hasRequest.status)}</span>`
+            : `<button class="btn btn-primary" onclick="requestMedia('${type}', ${id}, '${esc(title)}', '${d.poster_path || ""}')">
+                🎬 Aanvragen
+              </button>`
+          }
+          <button class="btn btn-outline" onclick="closeModal()">Sluiten</button>
+        </div>
+      </div>
+    `;
+  } catch {
+    content.innerHTML = '<div class="empty-state"><p>Kan details niet laden.</p></div>';
+  }
+}
+
+function closeModal() {
+  document.getElementById("modal").classList.remove("open");
+}
+document.getElementById("modal").addEventListener("click", (e) => {
+  if (e.target.id === "modal") closeModal();
+});
+
+// ── Request media ──
+async function requestMedia(type, id, title, posterPath) {
+  try {
+    const res = await fetch("/api/requests", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tmdb_id: id,
+        media_type: type,
+        title: title,
+        poster_path: posterPath,
+        overview: "",
+      }),
+    });
+    if (res.ok) {
+      openDetail(type, id); // Herlaad detail
+    } else {
+      const err = await res.json();
+      alert(err.error || "Fout bij aanvragen");
+    }
+  } catch {
+    alert("Netwerkfout bij aanvragen");
+  }
+}
+
+// ── Helpers ──
+function esc(str) {
+  const d = document.createElement("div");
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+// ── Init ──
+loadDiscover();
+</script>
+</body>
+</html>
