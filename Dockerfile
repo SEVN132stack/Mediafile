@@ -15,9 +15,8 @@ RUN apk add --no-cache python3 make g++
 COPY package*.json ./
 RUN npm install
 
-# Kopieer broncode en bouw de app
+# Kopieer broncode
 COPY . .
-RUN npm run build
 
 # --- Stage 2: Production ---
 FROM node:20-alpine AS production
@@ -35,7 +34,6 @@ WORKDIR /app
 # Kopieer alleen productie-bestanden uit de build stage
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/server.js ./
 

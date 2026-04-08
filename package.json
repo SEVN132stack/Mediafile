@@ -5,8 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js",
-    "build": "echo 'Static frontend — no build step needed'"
+    "dev": "node server.js"
   },
   "dependencies": {
     "express": "^4.21.0",
