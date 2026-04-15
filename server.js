@@ -226,7 +226,7 @@ app.get("/api/discover/:type", auth, async (req,res) => { try{const t=req.params
 app.get("/api/collection/:type/:collection", auth, async (req,res) => { try{const t=req.params.type==="tv"?"tv":"movie";const c=req.params.collection;const map={popular:`/${t}/popular`,top_rated:`/${t}/top_rated`,upcoming:"/movie/upcoming",now_playing:"/movie/now_playing",airing_today:"/tv/airing_today",on_the_air:"/tv/on_the_air"};if(!map[c])return res.status(400).json({error:"Ongeldig"});res.json(await tmdbFetch(map[c],{page:req.query.page||1}))}catch(e){res.status(500).json({error:e.message})} });
 
 app.get("/api/details/:type/:id", auth, async (req,res) => {
-  try { const{type,id}=req.params; const d=await tmdbFetch(`/${type}/${id}`,{append_to_response:"credits,recommendations,videos"});
+  try { const{type,id}=req.params; const d=await tmdbFetch(`/${type}/${id}`,{append_to_response:"credits,recommendations,videos",include_video_language:"nl,en,null"});
     d._request=db.prepare("SELECT * FROM requests WHERE tmdb_id=? AND media_type=?").get(id,type)||null; res.json(d);
   } catch(e){res.status(500).json({error:e.message})}
 });
