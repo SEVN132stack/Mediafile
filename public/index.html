@@ -575,10 +575,9 @@
             }
 
             .modal-top {
-                display: flex;
-                gap: 20px;
-                align-items: flex-end;
-                margin-bottom: 20px
+                position: relative;
+                margin-bottom: 20px;
+                min-height: 100px
             }
 
             .modal-poster {
@@ -587,15 +586,18 @@
                 border-radius: 10px;
                 object-fit: cover;
                 border: 3px solid var(--surface);
-                flex-shrink: 0;
                 box-shadow: 0 8px 24px rgba(0,0,0,.5);
-                margin-top: -60px
+                position: absolute;
+                top: -70px;
+                left: 0;
+                z-index: 10
             }
 
             .modal-header-block {
-                flex: 1;
+                padding-left: 140px;
                 min-width: 0;
-                padding-bottom: 4px
+                padding-bottom: 4px;
+                padding-top: 8px
             }
 
             .modal-title {
@@ -1355,9 +1357,9 @@
                 .nav-links button { padding: 6px 8px; font-size: 12px }
                 .media-grid { grid-template-columns: repeat(auto-fill,minmax(140px,1fr)); gap: 12px }
                 .modal { width: 96% }
-                .modal-top { flex-direction: column; align-items: center; margin-top: -60px }
-                .modal-poster { width: 100px; height: 150px }
-                .modal-header-block { text-align: center }
+                .modal-top { min-height: 80px }
+                .modal-poster { width: 90px; height: 135px; top: -45px }
+                .modal-header-block { padding-left: 106px }
                 .auth-card { padding: 28px 24px }
                 .nav-user-name { display: none }
                 .person-header { flex-direction: column; align-items: center; text-align: center }
