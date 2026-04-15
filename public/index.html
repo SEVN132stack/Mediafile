@@ -571,8 +571,15 @@
             }
 
             .modal-content {
-                padding: 24px 28px 28px;
-                position: relative
+                padding: 24px 28px 28px
+            }
+
+            .modal-top {
+                display: flex;
+                gap: 20px;
+                align-items: flex-end;
+                margin-top: -90px;
+                margin-bottom: 20px
             }
 
             .modal-poster {
@@ -581,26 +588,14 @@
                 border-radius: 10px;
                 object-fit: cover;
                 border: 3px solid var(--surface);
-                position: absolute;
-                top: -90px;
-                left: 28px;
+                flex-shrink: 0;
                 box-shadow: 0 8px 24px rgba(0,0,0,.5)
             }
 
-            .modal-info {
-                margin-left: 148px;
-                margin-top: -80px;
-                min-height: 110px
-            }
-
             .modal-header-block {
-                min-height: 110px;
-                padding-left: 148px;
-                position: relative;
-                margin-top: -80px;
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-end
+                flex: 1;
+                min-width: 0;
+                padding-bottom: 4px
             }
 
             .modal-title {
@@ -1360,8 +1355,9 @@
                 .nav-links button { padding: 6px 8px; font-size: 12px }
                 .media-grid { grid-template-columns: repeat(auto-fill,minmax(140px,1fr)); gap: 12px }
                 .modal { width: 96% }
-                .modal-header-block { padding-left: 0; margin-top: 12px; min-height: unset }
-                .modal-poster { position: static; margin: -60px auto 0; display: block }
+                .modal-top { flex-direction: column; align-items: center; margin-top: -60px }
+                .modal-poster { width: 100px; height: 150px }
+                .modal-header-block { text-align: center }
                 .auth-card { padding: 28px 24px }
                 .nav-user-name { display: none }
                 .person-header { flex-direction: column; align-items: center; text-align: center }
@@ -1934,12 +1930,7 @@ ${data.results && data.results.length >= 20 ? '<div class="load-more-wrap"><butt
                         act = `<button class="btn btn-primary" id="reqBtn" onclick="reqMedia('${type}',${id},'${esc(t).replace(/'/g,"\\'")}','${d.poster_path||""}','${gids.join(",")}')">${futureLabel}</button>`
                     }
 
-                    content.innerHTML = `<button class="modal-close" onclick="closeModal()">✕</button>${bg?`<img class="modal-backdrop-img" src="${bg}" />`:'<div style="height:100px"></div>'}<div class="modal-content">${po?`<img class="modal-poster" src="${po}" />`:''}
-<div class="modal-header-block">
-  <div class="modal-title">${esc(t)}</div>
-  <div class="modal-subtitle">${y} · ${g} · ⭐ ${rat}${d.number_of_seasons?' · '+d.number_of_seasons+' seizoenen':''}</div>
-  ${releaseBadge}
-</div>
+                    content.innerHTML = `<button class="modal-close" onclick="closeModal()">✕</button>${bg?`<img class="modal-backdrop-img" src="${bg}" />`:'<div style="height:100px"></div>'}<div class="modal-content"><div class="modal-top">${po?`<img class="modal-poster" src="${po}" />`:''}<div class="modal-header-block"><div class="modal-title">${esc(t)}</div><div class="modal-subtitle">${y} · ${g} · ⭐ ${rat}${d.number_of_seasons?' · '+d.number_of_seasons+' seizoenen':''}</div>${releaseBadge}</div></div>
 <div class="modal-overview">${esc(d.overview||"Geen beschrijving.")}</div>
 ${castHTML}${trailerHTML}${seasonPickerHTML}
 <div class="modal-actions">${act}<button class="btn btn-outline" onclick="closeModal()">Sluiten</button></div></div>`;
