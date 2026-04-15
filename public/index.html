@@ -1,303 +1,2027 @@
 <!DOCTYPE html>
 <html lang="nl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MediaSeerr</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet" />
-  <style>
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-    :root{--bg:#0b0e17;--surface:#141826;--surface-hover:#1c2138;--border:#232840;--text:#e4e6f0;--text-dim:#7a7f9a;--accent:#6366f1;--accent-glow:rgba(99,102,241,.25);--green:#22c55e;--green-glow:rgba(34,197,94,.15);--amber:#f59e0b;--amber-glow:rgba(245,158,11,.15);--red:#ef4444;--red-glow:rgba(239,68,68,.15);--blue:#3b82f6;--blue-glow:rgba(59,130,246,.15);--radius:12px}
-    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-    .auth-wrapper{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}.auth-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:40px;width:100%;max-width:400px;box-shadow:0 24px 48px rgba(0,0,0,.3)}.auth-logo{font-family:'Outfit',sans-serif;font-weight:900;font-size:28px;text-align:center;margin-bottom:8px;background:linear-gradient(135deg,var(--accent),#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.auth-subtitle{text-align:center;color:var(--text-dim);font-size:14px;margin-bottom:28px}.auth-field{margin-bottom:16px}.auth-field label{display:block;font-size:13px;font-weight:500;color:var(--text-dim);margin-bottom:6px}.auth-field input{width:100%;padding:12px 16px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:15px;outline:none}.auth-field input:focus{border-color:var(--accent)}.auth-btn{width:100%;padding:14px;border-radius:10px;font:700 15px/1 'DM Sans',sans-serif;border:none;cursor:pointer;margin-top:8px}.auth-btn-primary{background:var(--accent);color:#fff}.auth-btn-primary:hover{filter:brightness(1.15)}.auth-btn:disabled{opacity:.5}.auth-error{background:var(--red-glow);color:var(--red);padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:16px;display:none}.auth-error.show{display:block}
-    nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:16px;padding:0 32px;height:64px;background:rgba(11,14,23,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}.logo{font-family:'Outfit',sans-serif;font-weight:900;font-size:22px;background:linear-gradient(135deg,var(--accent),#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.5px}.nav-links{display:flex;gap:4px;margin-left:24px}.nav-links button{background:none;border:none;color:var(--text-dim);font:500 14px/1 'DM Sans',sans-serif;padding:8px 16px;border-radius:8px;cursor:pointer;transition:all .2s}.nav-links button:hover,.nav-links button.active{color:var(--text);background:var(--surface)}.search-wrapper{margin-left:auto;position:relative;width:280px}.search-wrapper input{width:100%;padding:10px 16px 10px 40px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;outline:none}.search-wrapper input:focus{border-color:var(--accent)}.search-wrapper svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;stroke:var(--text-dim)}.nav-user{display:flex;align-items:center;gap:10px;margin-left:12px;flex-shrink:0}.nav-user-avatar{width:32px;height:32px;border-radius:50%;background:var(--accent-glow);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--accent)}.nav-user-name{font-size:13px;color:var(--text-dim);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.btn-logout{background:none;border:1px solid var(--border);color:var(--text-dim);font:500 12px/1 'DM Sans',sans-serif;padding:6px 12px;border-radius:6px;cursor:pointer}.btn-logout:hover{border-color:var(--red);color:var(--red)}
-    main{max-width:1200px;margin:0 auto;padding:32px 24px}.section-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:24px;margin-bottom:20px;display:flex;align-items:center;gap:10px}.section-title .badge{font-size:12px;font-weight:500;background:var(--accent-glow);color:var(--accent);padding:4px 10px;border-radius:20px}
-    .sub-nav{display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap}.sub-nav button{background:var(--surface);border:1px solid var(--border);color:var(--text-dim);font:500 13px/1 'DM Sans',sans-serif;padding:8px 18px;border-radius:20px;cursor:pointer;white-space:nowrap}.sub-nav button:hover{border-color:var(--text-dim);color:var(--text)}.sub-nav button.active{background:var(--accent);border-color:var(--accent);color:#fff}
-    .genre-bar{display:flex;gap:8px;margin-bottom:24px;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}.genre-chip{background:var(--surface);border:1px solid var(--border);color:var(--text-dim);font:500 12px/1 'DM Sans',sans-serif;padding:7px 14px;border-radius:16px;cursor:pointer;white-space:nowrap;flex-shrink:0}.genre-chip:hover{border-color:var(--text-dim);color:var(--text)}.genre-chip.active{background:var(--accent-glow);border-color:var(--accent);color:var(--accent)}
-    .media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:20px}
-    /* Card with status badge */
-    .card{background:var(--surface);border-radius:var(--radius);overflow:hidden;cursor:pointer;border:1px solid transparent;transition:transform .25s,border-color .25s,box-shadow .25s;position:relative}.card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 12px 32px rgba(0,0,0,.4),0 0 0 1px var(--accent)}
-    .card-poster{aspect-ratio:2/3;width:100%;object-fit:cover;display:block;background:var(--surface-hover)}.card-body{padding:12px}.card-title{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card-meta{font-size:12px;color:var(--text-dim);margin-top:4px;display:flex;align-items:center;gap:6px}
-    .type-badge{font-size:10px;text-transform:uppercase;font-weight:700;padding:2px 6px;border-radius:4px;background:var(--accent-glow);color:var(--accent)}.type-badge.tv{background:var(--green-glow);color:var(--green)}.type-badge.person{background:var(--amber-glow);color:var(--amber)}
-    /* Status badge on card */
-    .card-status{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;z-index:2;backdrop-filter:blur(4px);box-shadow:0 2px 8px rgba(0,0,0,.4)}
-    .card-status-available{background:rgba(34,197,94,.9)}.card-status-sent,.card-status-downloading{background:rgba(245,158,11,.9)}.card-status-sending{background:rgba(59,130,246,.9)}.card-status-failed,.card-status-not_configured{background:rgba(239,68,68,.9)}
-    .media-row{display:flex;gap:16px;overflow-x:auto;padding-bottom:12px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}.media-row .card{min-width:170px;max-width:170px;flex-shrink:0}.row-header{display:flex;align-items:center;margin-bottom:14px;margin-top:32px}.row-header:first-child{margin-top:0}.row-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:20px}
-    .load-more-wrap{text-align:center;margin-top:28px}.btn-load-more{padding:10px 32px;border-radius:10px;font:600 14px/1 'DM Sans',sans-serif;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer}.btn-load-more:hover{border-color:var(--accent);color:var(--accent)}
-    .modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);align-items:center;justify-content:center}.modal-overlay.open{display:flex}.modal{background:var(--surface);border-radius:16px;width:90%;max-width:720px;max-height:85vh;overflow-y:auto;position:relative;border:1px solid var(--border);box-shadow:0 32px 64px rgba(0,0,0,.5)}.modal-backdrop-img{height:260px;width:100%;object-fit:cover;border-radius:16px 16px 0 0;display:block;filter:brightness(.6)}.modal-content{padding:24px 28px 28px;position:relative}.modal-poster{width:120px;height:180px;border-radius:10px;object-fit:cover;border:3px solid var(--surface);position:absolute;top:-90px;left:28px;box-shadow:0 8px 24px rgba(0,0,0,.5)}.modal-info{margin-left:148px;margin-top:-80px}.modal-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:26px;line-height:1.2}.modal-subtitle{color:var(--text-dim);font-size:14px;margin-top:4px}.modal-overview{margin-top:20px;font-size:14px;line-height:1.7;color:var(--text-dim)}.modal-actions{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}.btn{padding:10px 24px;border-radius:10px;font:600 14px/1 'DM Sans',sans-serif;border:none;cursor:pointer;transition:all .2s}.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{filter:brightness(1.15)}.btn-primary:disabled{background:var(--surface-hover);color:var(--text-dim);cursor:default}.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}.btn-outline:hover{border-color:var(--text-dim)}.btn-sm{padding:6px 14px;font-size:12px;border-radius:8px}.btn-danger{background:var(--red-glow);color:var(--red);border:1px solid rgba(239,68,68,.3)}.btn-danger:hover{background:var(--red);color:#fff}.btn-retry{background:var(--amber-glow);color:var(--amber);border:1px solid rgba(245,158,11,.3)}.btn-retry:hover{background:var(--amber);color:#fff}.modal-close{position:absolute;top:16px;right:16px;z-index:10;background:rgba(0,0,0,.5);border:none;color:#fff;width:36px;height:36px;border-radius:50%;font-size:20px;cursor:pointer;backdrop-filter:blur(4px)}
-    /* Release date badge */
-    .release-badge{display:inline-flex;align-items:center;gap:5px;background:var(--blue-glow);color:var(--blue);padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;margin-top:10px}
-    /* Trailer */
-    .trailer-section{margin-top:20px}
-    .trailer-toggle{display:flex;align-items:center;gap:8px;background:none;border:1px solid var(--border);color:var(--text);padding:10px 18px;border-radius:10px;font:600 14px/1 'DM Sans',sans-serif;cursor:pointer;transition:all .2s;width:100%}.trailer-toggle:hover{border-color:var(--red);color:var(--red)}.trailer-toggle.open{border-color:var(--red);color:var(--red);border-radius:10px 10px 0 0;border-bottom:none}
-    .trailer-container{border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;overflow:hidden;background:#000}
-    .trailer-container iframe{width:100%;aspect-ratio:16/9;display:block;border:none}
-    .trailer-tabs{display:flex;gap:0;background:var(--bg);border-bottom:1px solid var(--border);overflow-x:auto}
-    .trailer-tab{padding:8px 16px;font:500 12px/1 'DM Sans',sans-serif;color:var(--text-dim);background:none;border:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s}.trailer-tab:hover{color:var(--text)}.trailer-tab.active{color:var(--red);border-bottom-color:var(--red)}
-    /* Cast */
-    .cast-section{margin-top:20px}.cast-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:16px;margin-bottom:12px}
-    .cast-scroll{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}.cast-scroll::-webkit-scrollbar{height:4px}.cast-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
-    .cast-item{flex-shrink:0;width:90px;text-align:center;cursor:pointer;transition:transform .2s}.cast-item:hover{transform:translateY(-2px)}
-    .cast-photo{width:72px;height:72px;border-radius:50%;object-fit:cover;margin:0 auto 6px;display:block;background:var(--surface-hover);border:2px solid var(--border);transition:border-color .2s}.cast-item:hover .cast-photo{border-color:var(--accent)}
-    .cast-photo-placeholder{width:72px;height:72px;border-radius:50%;margin:0 auto 6px;background:var(--surface-hover);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--text-dim)}
-    .cast-name{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cast-char{font-size:11px;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .status{font-size:12px;font-weight:600;padding:4px 10px;border-radius:6px;display:inline-flex;align-items:center;gap:5px}.status-sending{background:var(--blue-glow);color:var(--blue)}.status-sent{background:var(--accent-glow);color:var(--accent)}.status-downloading{background:var(--amber-glow);color:var(--amber)}.status-available{background:var(--green-glow);color:var(--green)}.status-failed{background:var(--red-glow);color:var(--red)}.status-not_configured{background:var(--red-glow);color:var(--red)}.status-msg{font-size:12px;color:var(--text-dim);margin-top:4px;max-width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .season-picker{margin-top:16px;padding:16px;background:var(--bg);border:1px solid var(--border);border-radius:10px}.season-picker-title{font-weight:700;font-size:14px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}.season-picker-title button{font-size:12px;color:var(--accent);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif}.season-picker-title button:hover{text-decoration:underline}.season-grid{display:flex;flex-wrap:wrap;gap:8px}.season-chip{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;border:1px solid var(--border);background:var(--surface);color:var(--text-dim);cursor:pointer;user-select:none}.season-chip:hover{border-color:var(--accent);color:var(--text)}.season-chip.selected{background:var(--accent);border-color:var(--accent);color:#fff}
-    /* Person card */
-    .person-card{background:var(--surface);border-radius:var(--radius);overflow:hidden;cursor:pointer;border:1px solid transparent;transition:transform .25s,border-color .25s}.person-card:hover{transform:translateY(-4px);border-color:var(--amber);box-shadow:0 12px 32px rgba(0,0,0,.4)}.person-photo{aspect-ratio:2/3;width:100%;object-fit:cover;display:block;background:var(--surface-hover)}.person-body{padding:12px}.person-name{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.person-dept{font-size:12px;color:var(--text-dim);margin-top:2px}
-    /* Person detail */
-    .person-header{display:flex;gap:24px;margin-bottom:28px}.person-portrait{width:180px;height:270px;border-radius:var(--radius);object-fit:cover;flex-shrink:0;background:var(--surface)}.person-bio{flex:1}.person-bio h1{font-family:'Outfit',sans-serif;font-weight:900;font-size:28px;margin-bottom:4px}.person-bio .meta{color:var(--text-dim);font-size:14px;margin-bottom:12px}.person-bio .bio-text{font-size:14px;line-height:1.7;color:var(--text-dim);max-height:200px;overflow-y:auto}
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>MediaSeerr</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet"/>
+        <style>
+            *,*::before,*::after {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box
+            }
 
-    .req-list{display:flex;flex-direction:column;gap:12px}.req-card{display:flex;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px}.req-card:hover{border-color:var(--accent)}.req-thumb{width:50px;height:75px;border-radius:8px;object-fit:cover;flex-shrink:0;background:var(--surface-hover)}.req-info{flex:1;min-width:0}.req-title{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.req-meta{font-size:12px;color:var(--text-dim);margin-top:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}.req-actions{display:flex;gap:8px;flex-shrink:0}.req-user{font-size:11px;color:var(--text-dim);background:var(--surface-hover);padding:2px 8px;border-radius:4px}
-    .settings-page{max-width:720px}.settings-group{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:20px}.settings-group-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}.settings-group-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:18px;display:flex;align-items:center;gap:10px}.settings-group-title .icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}.icon-tmdb{background:rgba(1,180,228,.15)}.icon-radarr{background:rgba(255,165,0,.15)}.icon-sonarr{background:rgba(52,152,219,.15)}.icon-jellyfin{background:rgba(0,164,220,.15)}.icon-plex{background:rgba(229,160,13,.15)}.icon-users{background:rgba(99,102,241,.15)}.form-row{margin-bottom:14px}.form-row:last-child{margin-bottom:0}.form-label{display:block;font-size:13px;font-weight:500;color:var(--text-dim);margin-bottom:6px}.form-input,.form-select{width:100%;padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none}.form-input:focus,.form-select:focus{border-color:var(--accent)}.form-input::placeholder{color:var(--text-dim);opacity:.5}.form-hint{font-size:12px;color:var(--text-dim);margin-top:4px;opacity:.7}.btn-test{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;border:1px solid var(--border);background:var(--surface-hover);color:var(--text);cursor:pointer}.btn-test:hover{border-color:var(--accent);color:var(--accent)}.btn-test.testing{opacity:.5;pointer-events:none}.btn-test.success{border-color:var(--green);color:var(--green);background:var(--green-glow)}.btn-test.fail{border-color:var(--red);color:var(--red);background:var(--red-glow)}.settings-footer{display:flex;gap:12px;align-items:center;margin-top:8px}.save-status{font-size:13px;font-weight:500;opacity:0;transition:opacity .3s}.save-status.visible{opacity:1}.save-status.ok{color:var(--green)}.save-status.err{color:var(--red)}.user-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}.user-row:last-child{border-bottom:none}.user-avatar{width:36px;height:36px;border-radius:50%;background:var(--accent-glow);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent);font-size:14px;flex-shrink:0}.user-info{flex:1}.user-info strong{font-size:14px}.user-info span{font-size:12px;color:var(--text-dim);margin-left:8px}.user-role{font-size:11px;padding:3px 8px;border-radius:4px;font-weight:600}.user-role-admin{background:var(--accent-glow);color:var(--accent)}.user-role-user{background:var(--surface-hover);color:var(--text-dim)}.add-user-form{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}.add-user-form input,.add-user-form select{padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none}.add-user-form input:focus,.add-user-form select:focus{border-color:var(--accent)}
-    .empty-state{text-align:center;padding:80px 20px;color:var(--text-dim)}.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:40px auto}@keyframes spin{to{transform:rotate(360deg)}}.setup-banner{background:linear-gradient(135deg,rgba(99,102,241,.12),rgba(167,139,250,.08));border:1px solid rgba(99,102,241,.25);border-radius:var(--radius);padding:20px 24px;margin-bottom:28px;display:flex;align-items:center;gap:16px}.setup-banner-icon{width:48px;height:48px;border-radius:12px;background:var(--accent-glow);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}.setup-banner-text{flex:1}.setup-banner-text strong{display:block;font-size:15px;margin-bottom:2px}.setup-banner-text span{font-size:13px;color:var(--text-dim)}
-    @media(max-width:640px){nav{padding:0 12px;gap:6px}.search-wrapper{width:120px}.nav-links button{padding:6px 8px;font-size:12px}.media-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}.modal{width:96%}.modal-info{margin-left:0;margin-top:12px}.modal-poster{position:static;margin:-60px auto 0;display:block}.auth-card{padding:28px 24px}.nav-user-name{display:none}.person-header{flex-direction:column;align-items:center;text-align:center}.person-portrait{width:140px;height:210px}}
-  </style>
-</head>
-<body>
-<div id="root"></div>
-<div class="modal-overlay" id="modal"><div class="modal" id="modalContent"></div></div>
-<script>
-const TMDB_IMG="https://image.tmdb.org/t/p";
-let currentPage="discover",searchTimeout=null,settings={},genresMovie=[],genresTv=[];
-let activeGenre=null,browseType="movie",browsePage=1,browseCollection=null;
-let currentUser=null,token=localStorage.getItem("ms_token")||"";
-let selectedSeasons=new Set();
-let requestStatusMap={}; // tmdb_id-type -> status
+            :root {
+                --bg: #0b0e17;
+                --surface: #141826;
+                --surface-hover: #1c2138;
+                --border: #232840;
+                --text: #e4e6f0;
+                --text-dim: #7a7f9a;
+                --accent: #6366f1;
+                --accent-glow: rgba(99,102,241,.25);
+                --green: #22c55e;
+                --green-glow: rgba(34,197,94,.15);
+                --amber: #f59e0b;
+                --amber-glow: rgba(245,158,11,.15);
+                --red: #ef4444;
+                --red-glow: rgba(239,68,68,.15);
+                --blue: #3b82f6;
+                --blue-glow: rgba(59,130,246,.15);
+                --radius: 12px
+            }
 
-const ST={sending:{i:"⏳",l:"Verstuurd"},sent:{i:"📤",l:"Verstuurd"},downloading:{i:"⬇️",l:"Downloaden"},available:{i:"✅",l:"Beschikbaar"},failed:{i:"❌",l:"Mislukt"},not_configured:{i:"⚠️",l:"Niet geconfigureerd"}};
-function stHTML(s){const m=ST[s]||{i:"?",l:s};return `<span class="status status-${s}">${m.i} ${m.l}</span>`}
-const STATUS_ICONS={available:"✅",sent:"📤",sending:"⏳",downloading:"⬇️",failed:"❌",not_configured:"⚠️"};
+            body {
+                font-family: 'DM Sans',sans-serif;
+                background: var(--bg);
+                color: var(--text);
+                min-height: 100vh
+            }
 
-// Load request statuses for card badges
-async function loadStatusMap(){try{requestStatusMap=await apiFetch("/api/requests/statusmap")}catch{requestStatusMap={}}}
+            .auth-wrapper {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+                padding: 20px
+            }
 
-// ══════ AUTH ══════
-async function checkAuth(){const s=await fetch("/api/auth/status").then(r=>r.json());if(!s.has_users){showSetup();return}if(!token){showLogin();return}try{currentUser=await apiFetch("/api/auth/me");await loadStatusMap();showApp()}catch{token="";localStorage.removeItem("ms_token");showLogin()}}
-function showSetup(){el("root").innerHTML=`<div class="auth-wrapper"><div class="auth-card"><div class="auth-logo">MediaSeerr</div><div class="auth-subtitle">Maak een admin account aan</div><div class="auth-error" id="authErr"></div><div class="auth-field"><label>Naam</label><input id="setupName" placeholder="Jouw naam" /></div><div class="auth-field"><label>Gebruikersnaam</label><input id="setupUser" placeholder="admin" /></div><div class="auth-field"><label>Wachtwoord</label><input id="setupPass" type="password" placeholder="Wachtwoord" /></div><button class="auth-btn auth-btn-primary" onclick="doSetup()">Account aanmaken</button></div></div>`}
-async function doSetup(){const n=el("setupName").value.trim(),u=el("setupUser").value.trim(),p=el("setupPass").value;if(!u||!p){showAuthErr("Vul alles in");return}try{const d=await fetch("/api/auth/setup",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:u,password:p,display_name:n||u})}).then(r=>r.json());if(d.token){token=d.token;localStorage.setItem("ms_token",token);currentUser=d.user;showApp()}else showAuthErr(d.error||"Fout")}catch(e){showAuthErr(e.message)}}
-function showLogin(){el("root").innerHTML=`<div class="auth-wrapper"><div class="auth-card"><div class="auth-logo">MediaSeerr</div><div class="auth-subtitle">Log in om verder te gaan</div><div class="auth-error" id="authErr"></div><div class="auth-field"><label>Gebruikersnaam</label><input id="loginUser" placeholder="Gebruikersnaam" /></div><div class="auth-field"><label>Wachtwoord</label><input id="loginPass" type="password" placeholder="Wachtwoord" /></div><button class="auth-btn auth-btn-primary" onclick="doLogin()">Inloggen</button></div></div>`;["loginUser","loginPass"].forEach(id=>{const e=el(id);if(e)e.addEventListener("keydown",e=>{if(e.key==="Enter")doLogin()})})}
-async function doLogin(){const u=el("loginUser").value.trim(),p=el("loginPass").value;if(!u||!p){showAuthErr("Vul alles in");return}try{const d=await fetch("/api/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:u,password:p})}).then(r=>r.json());if(d.token){token=d.token;localStorage.setItem("ms_token",token);currentUser=d.user;await loadStatusMap();showApp()}else showAuthErr(d.error||"Mislukt")}catch(e){showAuthErr(e.message)}}
-function logout(){token="";localStorage.removeItem("ms_token");currentUser=null;showLogin()}
-function showAuthErr(m){const e=el("authErr");if(e){e.textContent=m;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),5000)}}
-function isAdmin(){return currentUser&&currentUser.role==="admin"}
+            .auth-card {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 16px;
+                padding: 40px;
+                width: 100%;
+                max-width: 400px;
+                box-shadow: 0 24px 48px rgba(0,0,0,.3)
+            }
 
-function showApp(){
-  el("root").innerHTML=`<nav><div class="logo">MediaSeerr</div><div class="nav-links"><button class="active" data-page="discover" onclick="navigate('discover')">Ontdekken</button><button data-page="movies" onclick="navigate('movies')">🎬 Films</button><button data-page="tv" onclick="navigate('tv')">📺 Series</button><button data-page="upcoming" onclick="navigate('upcoming')">🗓 Binnenkort</button><button data-page="requests" onclick="navigate('requests')">Verzoeken</button>${isAdmin()?'<button data-page="settings" onclick="navigate(\'settings\')">⚙</button>':''}</div><div class="search-wrapper"><svg fill="none" viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" id="searchInput" placeholder="Zoek films, series of acteurs…" /></div><div class="nav-user"><div class="nav-user-avatar">${(currentUser.display_name||currentUser.username)[0].toUpperCase()}</div><span class="nav-user-name">${esc(currentUser.display_name||currentUser.username)}</span><button class="btn-logout" onclick="logout()">Uit</button></div></nav><main id="app"><div class="spinner"></div></main>`;
-  el("searchInput").addEventListener("input",e=>{clearTimeout(searchTimeout);const q=e.target.value.trim();if(!q){if(currentPage==="discover")loadDiscover();return}searchTimeout=setTimeout(()=>{currentPage="search";document.querySelectorAll(".nav-links button").forEach(b=>b.classList.remove("active"));searchMedia(q)},400)});
-  navigate("discover");
-}
+            .auth-logo {
+                font-family: 'Outfit',sans-serif;
+                font-weight: 900;
+                font-size: 28px;
+                text-align: center;
+                margin-bottom: 8px;
+                background: linear-gradient(135deg,var(--accent),#a78bfa);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent
+            }
 
-function navigate(p){currentPage=p;activeGenre=null;browsePage=1;browseCollection=null;document.querySelectorAll(".nav-links button").forEach(b=>b.classList.toggle("active",b.dataset.page===p));const s=el("searchInput");if(s)s.value="";({discover:loadDiscover,movies:()=>{browseType="movie";loadBrowse()},tv:()=>{browseType="tv";loadBrowse()},upcoming:loadUpcoming,requests:loadRequests,settings:loadSettings})[p]()}
+            .auth-subtitle {
+                text-align: center;
+                color: var(--text-dim);
+                font-size: 14px;
+                margin-bottom: 28px
+            }
 
-// ══════ SEARCH (with persons) ══════
-async function searchMedia(q){const a=el("app");a.innerHTML='<div class="spinner"></div>';
-  try{const d=await apiFetch(`/api/search?query=${encodeURIComponent(q)}`);
-    const media=d.results.filter(r=>r.media_type==="movie"||r.media_type==="tv");
-    const persons=d.results.filter(r=>r.media_type==="person");
-    let html='';
-    if(persons.length>0){
-      html+=`<div class="section-title">🎭 Acteurs</div><div class="media-grid">${persons.map(p=>`<div class="person-card" onclick="openPerson(${p.id})"><img class="person-photo" src="${p.profile_path?TMDB_IMG+'/w342'+p.profile_path:''}" alt="${esc(p.name)}" loading="lazy" onerror="this.style.display='none'" /><div class="person-body"><div class="person-name">${esc(p.name)}</div><div class="person-dept">${esc(p.known_for_department||'')}</div></div></div>`).join("")}</div>`;
-    }
-    if(media.length>0){
-      html+=`<div class="section-title" style="margin-top:${persons.length?'32px':'0'}">🎬 Films & Series <span class="badge">${media.length}</span></div><div class="media-grid">${media.map(cardHTML).join("")}</div>`;
-    }
-    if(!html) html='<div class="empty-state"><p>Geen resultaten gevonden.</p></div>';
-    a.innerHTML=html;
-  }catch{a.innerHTML='<div class="empty-state"><p>Zoeken mislukt.</p></div>'}}
+            .auth-field {
+                margin-bottom: 16px
+            }
 
-// ══════ PERSON / ACTOR ══════
-async function openPerson(id){
-  const a=el("app");a.innerHTML='<div class="spinner"></div>';currentPage="person";
-  document.querySelectorAll(".nav-links button").forEach(b=>b.classList.remove("active"));
-  try{const p=await apiFetch(`/api/person/${id}`);
-    const credits=p.combined_credits||{};
-    let allCredits=[...(credits.cast||[]),...(credits.crew||[]).filter(c=>c.job==="Director")];
-    // Dedup en sorteer op populariteit
-    const seen=new Set();const uniq=[];for(const c of allCredits){if(!seen.has(c.id)&&(c.media_type==="movie"||c.media_type==="tv")){seen.add(c.id);uniq.push(c)}}
-    uniq.sort((a,b)=>(b.vote_count||0)-(a.vote_count||0));
+            .auth-field label {
+                display: block;
+                font-size: 13px;
+                font-weight: 500;
+                color: var(--text-dim);
+                margin-bottom: 6px
+            }
 
-    const bio=p.biography?p.biography.slice(0,600)+(p.biography.length>600?'…':''):'';
-    const born=p.birthday?new Date(p.birthday).toLocaleDateString('nl-NL',{year:'numeric',month:'long',day:'numeric'}):'';
-    const place=p.place_of_birth||'';
+            .auth-field input {
+                width: 100%;
+                padding: 12px 16px;
+                background: var(--bg);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                color: var(--text);
+                font-size: 15px;
+                outline: none
+            }
 
-    a.innerHTML=`<div class="person-header">
-      <img class="person-portrait" src="${p.profile_path?TMDB_IMG+'/w342'+p.profile_path:''}" alt="" onerror="this.style.display='none'" />
-      <div class="person-bio"><h1>${esc(p.name)}</h1><div class="meta">${p.known_for_department||''}${born?' · '+born:''}${place?' · '+place:''}</div>${bio?`<div class="bio-text">${esc(bio)}</div>`:''}</div>
+            .auth-field input:focus {
+                border-color: var(--accent)
+            }
+
+            .auth-btn {
+                width: 100%;
+                padding: 14px;
+                border-radius: 10px;
+                font: 700 15px/1 'DM Sans',sans-serif;
+                border: none;
+                cursor: pointer;
+                margin-top: 8px
+            }
+
+            .auth-btn-primary {
+                background: var(--accent);
+                color: #fff
+            }
+
+            .auth-btn-primary:hover {
+                filter: brightness(1.15)
+            }
+
+            .auth-btn:disabled {
+                opacity: .5
+            }
+
+            .auth-error {
+                background: var(--red-glow);
+                color: var(--red);
+                padding: 10px 14px;
+                border-radius: 8px;
+                font-size: 13px;
+                margin-bottom: 16px;
+                display: none
+            }
+
+            .auth-error.show {
+                display: block
+            }
+
+            nav {
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                padding: 0 32px;
+                height: 64px;
+                background: rgba(11,14,23,.85);
+                backdrop-filter: blur(16px);
+                border-bottom: 1px solid var(--border)
+            }
+
+            .logo {
+                font-family: 'Outfit',sans-serif;
+                font-weight: 900;
+                font-size: 22px;
+                background: linear-gradient(135deg,var(--accent),#a78bfa);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                letter-spacing: -.5px
+            }
+
+            .nav-links {
+                display: flex;
+                gap: 4px;
+                margin-left: 24px
+            }
+
+            .nav-links button {
+                background: none;
+                border: none;
+                color: var(--text-dim);
+                font: 500 14px/1 'DM Sans',sans-serif;
+                padding: 8px 16px;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all .2s
+            }
+
+            .nav-links button:hover,.nav-links button.active {
+                color: var(--text);
+                background: var(--surface)
+            }
+
+            .search-wrapper {
+                margin-left: auto;
+                position: relative;
+                width: 280px
+            }
+
+            .search-wrapper input {
+                width: 100%;
+                padding: 10px 16px 10px 40px;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                color: var(--text);
+                font-size: 14px;
+                outline: none
+            }
+
+            .search-wrapper input:focus {
+                border-color: var(--accent)
+            }
+
+            .search-wrapper svg {
+                position: absolute;
+                left: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 18px;
+                height: 18px;
+                stroke: var(--text-dim)
+            }
+
+            .nav-user {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-left: 12px;
+                flex-shrink: 0
+            }
+
+            .nav-user-avatar {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: var(--accent-glow);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+                font-weight: 700;
+                color: var(--accent)
+            }
+
+            .nav-user-name {
+                font-size: 13px;
+                color: var(--text-dim);
+                max-width: 100px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap
+            }
+
+            .btn-logout {
+                background: none;
+                border: 1px solid var(--border);
+                color: var(--text-dim);
+                font: 500 12px/1 'DM Sans',sans-serif;
+                padding: 6px 12px;
+                border-radius: 6px;
+                cursor: pointer
+            }
+
+            .btn-logout:hover {
+                border-color: var(--red);
+                color: var(--red)
+            }
+
+            main {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 32px 24px
+            }
+
+            .section-title {
+                font-family: 'Outfit',sans-serif;
+                font-weight: 700;
+                font-size: 24px;
+                margin-bottom: 20px;
+                display: flex;
+                align-items: center;
+                gap: 10px
+            }
+
+            .section-title .badge {
+                font-size: 12px;
+                font-weight: 500;
+                background: var(--accent-glow);
+                color: var(--accent);
+                padding: 4px 10px;
+                border-radius: 20px
+            }
+
+            .sub-nav {
+                display: flex;
+                gap: 6px;
+                margin-bottom: 24px;
+                flex-wrap: wrap
+            }
+
+            .sub-nav button {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                color: var(--text-dim);
+                font: 500 13px/1 'DM Sans',sans-serif;
+                padding: 8px 18px;
+                border-radius: 20px;
+                cursor: pointer;
+                white-space: nowrap
+            }
+
+            .sub-nav button:hover {
+                border-color: var(--text-dim);
+                color: var(--text)
+            }
+
+            .sub-nav button.active {
+                background: var(--accent);
+                border-color: var(--accent);
+                color: #fff
+            }
+
+            .genre-bar {
+                display: flex;
+                gap: 8px;
+                margin-bottom: 24px;
+                overflow-x: auto;
+                padding-bottom: 8px;
+                scrollbar-width: thin;
+                scrollbar-color: var(--border) transparent
+            }
+
+            .genre-chip {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                color: var(--text-dim);
+                font: 500 12px/1 'DM Sans',sans-serif;
+                padding: 7px 14px;
+                border-radius: 16px;
+                cursor: pointer;
+                white-space: nowrap;
+                flex-shrink: 0
+            }
+
+            .genre-chip:hover {
+                border-color: var(--text-dim);
+                color: var(--text)
+            }
+
+            .genre-chip.active {
+                background: var(--accent-glow);
+                border-color: var(--accent);
+                color: var(--accent)
+            }
+
+            .media-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill,minmax(180px,1fr));
+                gap: 20px
+            }
+
+            .card {
+                background: var(--surface);
+                border-radius: var(--radius);
+                overflow: hidden;
+                cursor: pointer;
+                border: 1px solid transparent;
+                transition: transform .25s,border-color .25s,box-shadow .25s;
+                position: relative
+            }
+
+            .card:hover {
+                transform: translateY(-4px);
+                border-color: var(--accent);
+                box-shadow: 0 12px 32px rgba(0,0,0,.4),0 0 0 1px var(--accent)
+            }
+
+            .card-poster {
+                aspect-ratio: 2/3;
+                width: 100%;
+                object-fit: cover;
+                display: block;
+                background: var(--surface-hover)
+            }
+
+            .card-body {
+                padding: 12px
+            }
+
+            .card-title {
+                font-weight: 700;
+                font-size: 14px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis
+            }
+
+            .card-meta {
+                font-size: 12px;
+                color: var(--text-dim);
+                margin-top: 4px;
+                display: flex;
+                align-items: center;
+                gap: 6px
+            }
+
+            .type-badge {
+                font-size: 10px;
+                text-transform: uppercase;
+                font-weight: 700;
+                padding: 2px 6px;
+                border-radius: 4px;
+                background: var(--accent-glow);
+                color: var(--accent)
+            }
+
+            .type-badge.tv {
+                background: var(--green-glow);
+                color: var(--green)
+            }
+
+            .type-badge.person {
+                background: var(--amber-glow);
+                color: var(--amber)
+            }
+
+            .card-status {
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+                z-index: 2;
+                backdrop-filter: blur(4px);
+                box-shadow: 0 2px 8px rgba(0,0,0,.4)
+            }
+
+            .card-status-available {
+                background: rgba(34,197,94,.9)
+            }
+
+            .card-status-sent,.card-status-downloading {
+                background: rgba(245,158,11,.9)
+            }
+
+            .card-status-sending {
+                background: rgba(59,130,246,.9)
+            }
+
+            .card-status-failed,.card-status-not_configured {
+                background: rgba(239,68,68,.9)
+            }
+
+            .media-row {
+                display: flex;
+                gap: 16px;
+                overflow-x: auto;
+                padding-bottom: 12px;
+                scrollbar-width: thin;
+                scrollbar-color: var(--border) transparent
+            }
+
+            .media-row .card {
+                min-width: 170px;
+                max-width: 170px;
+                flex-shrink: 0
+            }
+
+            /* Load more button inside row */
+            .row-load-more-wrap {
+                display: flex;
+                align-items: center;
+                padding: 0 4px;
+                flex-shrink: 0
+            }
+
+            .row-load-more-btn {
+                padding: 10px 16px;
+                border-radius: 10px;
+                font: 600 13px/1 'DM Sans',sans-serif;
+                border: 1px solid var(--border);
+                background: var(--surface);
+                color: var(--text);
+                cursor: pointer;
+                white-space: nowrap;
+                transition: all .2s
+            }
+
+            .row-load-more-btn:hover {
+                border-color: var(--accent);
+                color: var(--accent)
+            }
+
+            .row-load-more-btn:disabled {
+                opacity: .5;
+                pointer-events: none
+            }
+
+            .row-header {
+                display: flex;
+                align-items: center;
+                margin-bottom: 14px;
+                margin-top: 32px
+            }
+
+            .row-header:first-child {
+                margin-top: 0
+            }
+
+            .row-title {
+                font-family: 'Outfit',sans-serif;
+                font-weight: 700;
+                font-size: 20px
+            }
+
+            .load-more-wrap {
+                text-align: center;
+                margin-top: 28px
+            }
+
+            .btn-load-more {
+                padding: 10px 32px;
+                border-radius: 10px;
+                font: 600 14px/1 'DM Sans',sans-serif;
+                border: 1px solid var(--border);
+                background: var(--surface);
+                color: var(--text);
+                cursor: pointer
+            }
+
+            .btn-load-more:hover {
+                border-color: var(--accent);
+                color: var(--accent)
+            }
+
+            .modal-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                z-index: 200;
+                background: rgba(0,0,0,.7);
+                backdrop-filter: blur(8px);
+                align-items: center;
+                justify-content: center
+            }
+
+            .modal-overlay.open {
+                display: flex
+            }
+
+            .modal {
+                background: var(--surface);
+                border-radius: 16px;
+                width: 90%;
+                max-width: 720px;
+                max-height: 85vh;
+                overflow-y: auto;
+                position: relative;
+                border: 1px solid var(--border);
+                box-shadow: 0 32px 64px rgba(0,0,0,.5)
+            }
+
+            .modal-backdrop-img {
+                height: 260px;
+                width: 100%;
+                object-fit: cover;
+                border-radius: 16px 16px 0 0;
+                display: block;
+                filter: brightness(.6)
+            }
+
+            .modal-content {
+                padding: 24px 28px 28px;
+                position: relative
+            }
+
+            .modal-poster {
+                width: 120px;
+                height: 180px;
+                border-radius: 10px;
+                object-fit: cover;
+                border: 3px solid var(--surface);
+                position: absolute;
+                top: -90px;
+                left: 28px;
+                box-shadow: 0 8px 24px rgba(0,0,0,.5)
+            }
+
+            .modal-info {
+                margin-left: 148px;
+                margin-top: -80px;
+                min-height: 110px
+            }
+
+            .modal-title {
+                font-family: 'Outfit',sans-serif;
+                font-weight: 700;
+                font-size: 26px;
+                line-height: 1.2
+            }
+
+            .modal-subtitle {
+                color: var(--text-dim);
+                font-size: 14px;
+                margin-top: 4px
+            }
+
+            /* FIX: overview clear so it never overlaps the poster */
+            .modal-overview {
+                margin-top: 20px;
+                font-size: 14px;
+                line-height: 1.7;
+                color: var(--text-dim);
+                clear: left
+            }
+
+            .modal-actions {
+                margin-top: 20px;
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+                align-items: center
+            }
+
+            .btn {
+                padding: 10px 24px;
+                border-radius: 10px;
+                font: 600 14px/1 'DM Sans',sans-serif;
+                border: none;
+                cursor: pointer;
+                transition: all .2s
+            }
+
+            .btn-primary {
+                background: var(--accent);
+                color: #fff
+            }
+
+            .btn-primary:hover {
+                filter: brightness(1.15)
+            }
+
+            .btn-primary:disabled {
+                background: var(--surface-hover);
+                color: var(--text-dim);
+                cursor: default
+            }
+
+            .btn-outline {
+                background: transparent;
+                border: 1px solid var(--border);
+                color: var(--text)
+            }
+
+            .btn-outline:hover {
+                border-color: var(--text-dim)
+            }
+
+            .btn-sm {
+                padding: 6px 14px;
+                font-size: 12px;
+                border-radius: 8px
+            }
+
+            .btn-danger {
+                background: var(--red-glow);
+                color: var(--red);
+                border: 1px solid rgba(239,68,68,.3)
+            }
+
+            .btn-danger:hover {
+                background: var(--red);
+                color: #fff
+            }
+
+            .btn-retry {
+                background: var(--amber-glow);
+                color: var(--amber);
+                border: 1px solid rgba(245,158,11,.3)
+            }
+
+            .btn-retry:hover {
+                background: var(--amber);
+                color: #fff
+            }
+
+            .modal-close {
+                position: absolute;
+                top: 16px;
+                right: 16px;
+                z-index: 10;
+                background: rgba(0,0,0,.5);
+                border: none;
+                color: #fff;
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                font-size: 20px;
+                cursor: pointer;
+                backdrop-filter: blur(4px)
+            }
+
+            .release-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                background: var(--blue-glow);
+                color: var(--blue);
+                padding: 6px 12px;
+                border-radius: 8px;
+                font-size: 12px;
+                font-weight: 600;
+                margin-top: 10px
+            }
+
+            .trailer-section {
+                margin-top: 20px
+            }
+
+            .trailer-toggle {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                background: none;
+                border: 1px solid var(--border);
+                color: var(--text);
+                padding: 10px 18px;
+                border-radius: 10px;
+                font: 600 14px/1 'DM Sans',sans-serif;
+                cursor: pointer;
+                transition: all .2s;
+                width: 100%
+            }
+
+            .trailer-toggle:hover {
+                border-color: var(--red);
+                color: var(--red)
+            }
+
+            .trailer-toggle.open {
+                border-color: var(--red);
+                color: var(--red);
+                border-radius: 10px 10px 0 0;
+                border-bottom: none
+            }
+
+            .trailer-container {
+                border: 1px solid var(--border);
+                border-top: none;
+                border-radius: 0 0 10px 10px;
+                overflow: hidden;
+                background: #000
+            }
+
+            .trailer-container iframe {
+                width: 100%;
+                aspect-ratio: 16/9;
+                display: block;
+                border: none
+            }
+
+            .trailer-tabs {
+                display: flex;
+                gap: 0;
+                background: var(--bg);
+                border-bottom: 1px solid var(--border);
+                overflow-x: auto
+            }
+
+            .trailer-tab {
+                padding: 8px 16px;
+                font: 500 12px/1 'DM Sans',sans-serif;
+                color: var(--text-dim);
+                background: none;
+                border: none;
+                cursor: pointer;
+                white-space: nowrap;
+                border-bottom: 2px solid transparent;
+                transition: all .2s
+            }
+
+            .trailer-tab:hover {
+                color: var(--text)
+            }
+
+            .trailer-tab.active {
+                color: var(--red);
+                border-bottom-color: var(--red)
+            }
+
+            .cast-section {
+                margin-top: 20px
+            }
+
+            .cast-title {
+                font-family: 'Outfit',sans-serif;
+                font-weight: 700;
+                font-size: 16px;
+                margin-bottom: 12px
+            }
+
+            .cast-scroll {
+                display: flex;
+                gap: 12px;
+                overflow-x: auto;
+                padding-bottom: 8px;
+                scrollbar-width: thin;
+                scrollbar-color: var(--border) transparent
+            }
+
+            .cast-scroll::-webkit-scrollbar {
+                height: 4px
+            }
+
+            .cast-scroll::-webkit-scrollbar-thumb {
+                background: var(--border);
+                border-radius: 4px
+            }
+
+            .cast-item {
+                flex-shrink: 0;
+                width: 90px;
+                text-align: center;
+                cursor: pointer;
+                transition: transform .2s
+            }
+
+            .cast-item:hover {
+                transform: translateY(-2px)
+            }
+
+            .cast-photo {
+                width: 72px;
+                height: 72px;
+                border-radius: 50%;
+                object-fit: cover;
+                margin: 0 auto 6px;
+                display: block;
+                background: var(--surface-hover);
+                border: 2px solid var(--border);
+                transition: border-color .2s
+            }
+
+            .cast-item:hover .cast-photo {
+                border-color: var(--accent)
+            }
+
+            .cast-photo-placeholder {
+                width: 72px;
+                height: 72px;
+                border-radius: 50%;
+                margin: 0 auto 6px;
+                background: var(--surface-hover);
+                border: 2px solid var(--border);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+                color: var(--text-dim)
+            }
+
+            .cast-name {
+                font-size: 12px;
+                font-weight: 600;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis
+            }
+
+            .cast-char {
+                font-size: 11px;
+                color: var(--text-dim);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis
+            }
+
+            .status {
+                font-size: 12px;
+                font-weight: 600;
+                padding: 4px 10px;
+                border-radius: 6px;
+                display: inline-flex;
+                align-items: center;
+                gap: 5px
+            }
+
+            .status-sending {
+                background: var(--blue-glow);
+                color: var(--blue)
+            }
+
+            .status-sent {
+                background: var(--accent-glow);
+                color: var(--accent)
+            }
+
+            .status-downloading {
+                background: var(--amber-glow);
+                color: var(--amber)
+            }
+
+            .status-available {
+                background: var(--green-glow);
+                color: var(--green)
+            }
+
+            .status-failed {
+                background: var(--red-glow);
+                color: var(--red)
+            }
+
+            .status-not_configured {
+                background: var(--red-glow);
+                color: var(--red)
+            }
+
+            .status-msg {
+                font-size: 12px;
+                color: var(--text-dim);
+                margin-top: 4px;
+                max-width: 400px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap
+            }
+
+            .season-picker {
+                margin-top: 16px;
+                padding: 16px;
+                background: var(--bg);
+                border: 1px solid var(--border);
+                border-radius: 10px
+            }
+
+            .season-picker-title {
+                font-weight: 700;
+                font-size: 14px;
+                margin-bottom: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between
+            }
+
+            .season-picker-title button {
+                font-size: 12px;
+                color: var(--accent);
+                background: none;
+                border: none;
+                cursor: pointer;
+                font-family: 'DM Sans',sans-serif
+            }
+
+            .season-picker-title button:hover {
+                text-decoration: underline
+            }
+
+            .season-grid {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px
+            }
+
+            .season-chip {
+                padding: 8px 14px;
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: 600;
+                border: 1px solid var(--border);
+                background: var(--surface);
+                color: var(--text-dim);
+                cursor: pointer;
+                user-select: none
+            }
+
+            .season-chip:hover {
+                border-color: var(--accent);
+                color: var(--text)
+            }
+
+            .season-chip.selected {
+                background: var(--accent);
+                border-color: var(--accent);
+                color: #fff
+            }
+
+            .person-card {
+                background: var(--surface);
+                border-radius: var(--radius);
+                overflow: hidden;
+                cursor: pointer;
+                border: 1px solid transparent;
+                transition: transform .25s,border-color .25s
+            }
+
+            .person-card:hover {
+                transform: translateY(-4px);
+                border-color: var(--amber);
+                box-shadow: 0 12px 32px rgba(0,0,0,.4)
+            }
+
+            .person-photo {
+                aspect-ratio: 2/3;
+                width: 100%;
+                object-fit: cover;
+                display: block;
+                background: var(--surface-hover)
+            }
+
+            .person-body {
+                padding: 12px
+            }
+
+            .person-name {
+                font-weight: 700;
+                font-size: 14px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis
+            }
+
+            .person-dept {
+                font-size: 12px;
+                color: var(--text-dim);
+                margin-top: 2px
+            }
+
+            .person-header {
+                display: flex;
+                gap: 24px;
+                margin-bottom: 28px
+            }
+
+            .person-portrait {
+                width: 180px;
+                height: 270px;
+                border-radius: var(--radius);
+                object-fit: cover;
+                flex-shrink: 0;
+                background: var(--surface)
+            }
+
+            .person-bio {
+                flex: 1
+            }
+
+            .person-bio h1 {
+                font-family: 'Outfit',sans-serif;
+                font-weight: 900;
+                font-size: 28px;
+                margin-bottom: 4px
+            }
+
+            .person-bio .meta {
+                color: var(--text-dim);
+                font-size: 14px;
+                margin-bottom: 12px
+            }
+
+            .person-bio .bio-text {
+                font-size: 14px;
+                line-height: 1.7;
+                color: var(--text-dim);
+                max-height: 200px;
+                overflow-y: auto
+            }
+
+            .req-list {
+                display: flex;
+                flex-direction: column;
+                gap: 12px
+            }
+
+            .req-card {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 16px
+            }
+
+            .req-card:hover {
+                border-color: var(--accent)
+            }
+
+            .req-thumb {
+                width: 50px;
+                height: 75px;
+                border-radius: 8px;
+                object-fit: cover;
+                flex-shrink: 0;
+                background: var(--surface-hover)
+            }
+
+            .req-info {
+                flex: 1;
+                min-width: 0
+            }
+
+            .req-title {
+                font-weight: 700;
+                font-size: 15px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis
+            }
+
+            .req-meta {
+                font-size: 12px;
+                color: var(--text-dim);
+                margin-top: 2px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: wrap
+            }
+
+            .req-actions {
+                display: flex;
+                gap: 8px;
+                flex-shrink: 0
+            }
+
+            .req-user {
+                font-size: 11px;
+                color: var(--text-dim);
+                background: var(--surface-hover);
+                padding: 2px 8px;
+                border-radius: 4px
+            }
+
+            .settings-page {
+                max-width: 720px
+            }
+
+            .settings-group {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 24px;
+                margin-bottom: 20px
+            }
+
+            .settings-group-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 18px
+            }
+
+            .settings-group-title {
+                font-family: 'Outfit',sans-serif;
+                font-weight: 700;
+                font-size: 18px;
+                display: flex;
+                align-items: center;
+                gap: 10px
+            }
+
+            .settings-group-title .icon {
+                width: 36px;
+                height: 36px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px
+            }
+
+            .icon-tmdb { background: rgba(1,180,228,.15) }
+            .icon-radarr { background: rgba(255,165,0,.15) }
+            .icon-sonarr { background: rgba(52,152,219,.15) }
+            .icon-jellyfin { background: rgba(0,164,220,.15) }
+            .icon-plex { background: rgba(229,160,13,.15) }
+            .icon-users { background: rgba(99,102,241,.15) }
+
+            .form-row { margin-bottom: 14px }
+            .form-row:last-child { margin-bottom: 0 }
+
+            .form-label {
+                display: block;
+                font-size: 13px;
+                font-weight: 500;
+                color: var(--text-dim);
+                margin-bottom: 6px
+            }
+
+            .form-input,.form-select {
+                width: 100%;
+                padding: 10px 14px;
+                background: var(--bg);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                color: var(--text);
+                font-size: 14px;
+                font-family: 'DM Sans',sans-serif;
+                outline: none
+            }
+
+            .form-input:focus,.form-select:focus { border-color: var(--accent) }
+            .form-input::placeholder { color: var(--text-dim); opacity: .5 }
+
+            .form-hint {
+                font-size: 12px;
+                color: var(--text-dim);
+                margin-top: 4px;
+                opacity: .7
+            }
+
+            .btn-test {
+                padding: 8px 16px;
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: 600;
+                border: 1px solid var(--border);
+                background: var(--surface-hover);
+                color: var(--text);
+                cursor: pointer
+            }
+
+            .btn-test:hover { border-color: var(--accent); color: var(--accent) }
+            .btn-test.testing { opacity: .5; pointer-events: none }
+            .btn-test.success { border-color: var(--green); color: var(--green); background: var(--green-glow) }
+            .btn-test.fail { border-color: var(--red); color: var(--red); background: var(--red-glow) }
+
+            .settings-footer {
+                display: flex;
+                gap: 12px;
+                align-items: center;
+                margin-top: 8px
+            }
+
+            .save-status {
+                font-size: 13px;
+                font-weight: 500;
+                opacity: 0;
+                transition: opacity .3s
+            }
+
+            .save-status.visible { opacity: 1 }
+            .save-status.ok { color: var(--green) }
+            .save-status.err { color: var(--red) }
+
+            .user-row {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 12px 0;
+                border-bottom: 1px solid var(--border)
+            }
+
+            .user-row:last-child { border-bottom: none }
+
+            .user-avatar {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                background: var(--accent-glow);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 700;
+                color: var(--accent);
+                font-size: 14px;
+                flex-shrink: 0
+            }
+
+            .user-info { flex: 1 }
+            .user-info strong { font-size: 14px }
+            .user-info span { font-size: 12px; color: var(--text-dim); margin-left: 8px }
+
+            .user-role {
+                font-size: 11px;
+                padding: 3px 8px;
+                border-radius: 4px;
+                font-weight: 600
+            }
+
+            .user-role-admin { background: var(--accent-glow); color: var(--accent) }
+            .user-role-user { background: var(--surface-hover); color: var(--text-dim) }
+
+            .add-user-form {
+                display: flex;
+                gap: 8px;
+                margin-top: 16px;
+                flex-wrap: wrap
+            }
+
+            .add-user-form input,.add-user-form select {
+                padding: 8px 12px;
+                background: var(--bg);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                color: var(--text);
+                font-size: 13px;
+                outline: none
+            }
+
+            .add-user-form input:focus,.add-user-form select:focus { border-color: var(--accent) }
+
+            .empty-state {
+                text-align: center;
+                padding: 80px 20px;
+                color: var(--text-dim)
+            }
+
+            .spinner {
+                width: 32px;
+                height: 32px;
+                border: 3px solid var(--border);
+                border-top-color: var(--accent);
+                border-radius: 50%;
+                animation: spin .7s linear infinite;
+                margin: 40px auto
+            }
+
+            @keyframes spin { to { transform: rotate(360deg) } }
+
+            .setup-banner {
+                background: linear-gradient(135deg,rgba(99,102,241,.12),rgba(167,139,250,.08));
+                border: 1px solid rgba(99,102,241,.25);
+                border-radius: var(--radius);
+                padding: 20px 24px;
+                margin-bottom: 28px;
+                display: flex;
+                align-items: center;
+                gap: 16px
+            }
+
+            .setup-banner-icon {
+                width: 48px;
+                height: 48px;
+                border-radius: 12px;
+                background: var(--accent-glow);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+                flex-shrink: 0
+            }
+
+            .setup-banner-text { flex: 1 }
+            .setup-banner-text strong { display: block; font-size: 15px; margin-bottom: 2px }
+            .setup-banner-text span { font-size: 13px; color: var(--text-dim) }
+
+            @media(max-width: 640px) {
+                nav { padding: 0 12px; gap: 6px }
+                .search-wrapper { width: 120px }
+                .nav-links button { padding: 6px 8px; font-size: 12px }
+                .media-grid { grid-template-columns: repeat(auto-fill,minmax(140px,1fr)); gap: 12px }
+                .modal { width: 96% }
+                .modal-info { margin-left: 0; margin-top: 12px; min-height: unset }
+                .modal-poster { position: static; margin: -60px auto 0; display: block }
+                .auth-card { padding: 28px 24px }
+                .nav-user-name { display: none }
+                .person-header { flex-direction: column; align-items: center; text-align: center }
+                .person-portrait { width: 140px; height: 210px }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="root"></div>
+        <div class="modal-overlay" id="modal">
+            <div class="modal" id="modalContent"></div>
+        </div>
+        <script>
+            const TMDB_IMG = "https://image.tmdb.org/t/p";
+            let currentPage = "discover"
+              , searchTimeout = null
+              , settings = {}
+              , genresMovie = []
+              , genresTv = [];
+            let activeGenre = null
+              , browseType = "movie"
+              , browsePage = 1
+              , browseCollection = null;
+            let currentUser = null
+              , token = localStorage.getItem("ms_token") || "";
+            let selectedSeasons = new Set();
+            let requestStatusMap = {};
+
+            const ST = {
+                sending: { i: "⏳", l: "Verstuurd" },
+                sent: { i: "📤", l: "Verstuurd" },
+                downloading: { i: "⬇️", l: "Downloaden" },
+                available: { i: "✅", l: "Beschikbaar" },
+                failed: { i: "❌", l: "Mislukt" },
+                not_configured: { i: "⚠️", l: "Niet geconfigureerd" }
+            };
+
+            function stHTML(s) {
+                const m = ST[s] || { i: "?", l: s };
+                return `<span class="status status-${s}">${m.i} ${m.l}</span>`
+            }
+
+            const STATUS_ICONS = {
+                available: "✅",
+                sent: "📤",
+                sending: "⏳",
+                downloading: "⬇️",
+                failed: "❌",
+                not_configured: "⚠️"
+            };
+
+            async function loadStatusMap() {
+                try {
+                    requestStatusMap = await apiFetch("/api/requests/statusmap")
+                } catch {
+                    requestStatusMap = {}
+                }
+            }
+
+            // ══════ AUTH ══════
+            async function checkAuth() {
+                const s = await fetch("/api/auth/status").then(r => r.json());
+                if (!s.has_users) { showSetup(); return }
+                if (!token) { showLogin(); return }
+                try {
+                    currentUser = await apiFetch("/api/auth/me");
+                    await loadStatusMap();
+                    showApp()
+                } catch {
+                    token = "";
+                    localStorage.removeItem("ms_token");
+                    showLogin()
+                }
+            }
+
+            function showSetup() {
+                el("root").innerHTML = `<div class="auth-wrapper"><div class="auth-card"><div class="auth-logo">MediaSeerr</div><div class="auth-subtitle">Maak een admin account aan</div><div class="auth-error" id="authErr"></div><div class="auth-field"><label>Naam</label><input id="setupName" placeholder="Jouw naam" /></div><div class="auth-field"><label>Gebruikersnaam</label><input id="setupUser" placeholder="admin" /></div><div class="auth-field"><label>Wachtwoord</label><input id="setupPass" type="password" placeholder="Wachtwoord" /></div><button class="auth-btn auth-btn-primary" onclick="doSetup()">Account aanmaken</button></div></div>`
+            }
+
+            async function doSetup() {
+                const n = el("setupName").value.trim(), u = el("setupUser").value.trim(), p = el("setupPass").value;
+                if (!u || !p) { showAuthErr("Vul alles in"); return }
+                try {
+                    const d = await fetch("/api/auth/setup", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ username: u, password: p, display_name: n || u })
+                    }).then(r => r.json());
+                    if (d.token) {
+                        token = d.token;
+                        localStorage.setItem("ms_token", token);
+                        currentUser = d.user;
+                        showApp()
+                    } else showAuthErr(d.error || "Fout")
+                } catch(e) { showAuthErr(e.message) }
+            }
+
+            function showLogin() {
+                el("root").innerHTML = `<div class="auth-wrapper"><div class="auth-card"><div class="auth-logo">MediaSeerr</div><div class="auth-subtitle">Log in om verder te gaan</div><div class="auth-error" id="authErr"></div><div class="auth-field"><label>Gebruikersnaam</label><input id="loginUser" placeholder="Gebruikersnaam" /></div><div class="auth-field"><label>Wachtwoord</label><input id="loginPass" type="password" placeholder="Wachtwoord" /></div><button class="auth-btn auth-btn-primary" onclick="doLogin()">Inloggen</button></div></div>`;
+                ["loginUser","loginPass"].forEach(id => {
+                    const e = el(id);
+                    if (e) e.addEventListener("keydown", e => { if (e.key === "Enter") doLogin() })
+                })
+            }
+
+            async function doLogin() {
+                const u = el("loginUser").value.trim(), p = el("loginPass").value;
+                if (!u || !p) { showAuthErr("Vul alles in"); return }
+                try {
+                    const d = await fetch("/api/auth/login", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ username: u, password: p })
+                    }).then(r => r.json());
+                    if (d.token) {
+                        token = d.token;
+                        localStorage.setItem("ms_token", token);
+                        currentUser = d.user;
+                        await loadStatusMap();
+                        showApp()
+                    } else showAuthErr(d.error || "Mislukt")
+                } catch(e) { showAuthErr(e.message) }
+            }
+
+            function logout() {
+                token = "";
+                localStorage.removeItem("ms_token");
+                currentUser = null;
+                showLogin()
+            }
+
+            function showAuthErr(m) {
+                const e = el("authErr");
+                if (e) {
+                    e.textContent = m;
+                    e.classList.add("show");
+                    setTimeout(() => e.classList.remove("show"), 5000)
+                }
+            }
+
+            function isAdmin() { return currentUser && currentUser.role === "admin" }
+
+            function showApp() {
+                el("root").innerHTML = `<nav><div class="logo">MediaSeerr</div><div class="nav-links"><button class="active" data-page="discover" onclick="navigate('discover')">Ontdekken</button><button data-page="movies" onclick="navigate('movies')">🎬 Films</button><button data-page="tv" onclick="navigate('tv')">📺 Series</button><button data-page="upcoming" onclick="navigate('upcoming')">🗓 Binnenkort</button><button data-page="requests" onclick="navigate('requests')">Verzoeken</button>${isAdmin() ? '<button data-page="settings" onclick="navigate(\'settings\')">⚙</button>' : ''}</div><div class="search-wrapper"><svg fill="none" viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" id="searchInput" placeholder="Zoek films, series of acteurs…" /></div><div class="nav-user"><div class="nav-user-avatar">${(currentUser.display_name || currentUser.username)[0].toUpperCase()}</div><span class="nav-user-name">${esc(currentUser.display_name || currentUser.username)}</span><button class="btn-logout" onclick="logout()">Uit</button></div></nav><main id="app"><div class="spinner"></div></main>`;
+                el("searchInput").addEventListener("input", e => {
+                    clearTimeout(searchTimeout);
+                    const q = e.target.value.trim();
+                    if (!q) { if (currentPage === "discover") loadDiscover(); return }
+                    searchTimeout = setTimeout(() => {
+                        currentPage = "search";
+                        document.querySelectorAll(".nav-links button").forEach(b => b.classList.remove("active"));
+                        searchMedia(q)
+                    }, 400)
+                });
+                navigate("discover")
+            }
+
+            function navigate(p) {
+                currentPage = p;
+                activeGenre = null;
+                browsePage = 1;
+                browseCollection = null;
+                document.querySelectorAll(".nav-links button").forEach(b => b.classList.toggle("active", b.dataset.page === p));
+                const s = el("searchInput");
+                if (s) s.value = "";
+                ({
+                    discover: loadDiscover,
+                    movies: () => { browseType = "movie"; loadBrowse() },
+                    tv: () => { browseType = "tv"; loadBrowse() },
+                    upcoming: loadUpcoming,
+                    requests: loadRequests,
+                    settings: loadSettings
+                })[p]()
+            }
+
+            // ══════ SEARCH ══════
+            async function searchMedia(q) {
+                const a = el("app");
+                a.innerHTML = '<div class="spinner"></div>';
+                try {
+                    const d = await apiFetch(`/api/search?query=${encodeURIComponent(q)}`);
+                    const media = d.results.filter(r => r.media_type === "movie" || r.media_type === "tv");
+                    const persons = d.results.filter(r => r.media_type === "person");
+                    let html = '';
+                    if (persons.length > 0) {
+                        html += `<div class="section-title">🎭 Acteurs</div><div class="media-grid">${persons.map(p => `<div class="person-card" onclick="openPerson(${p.id})"><img class="person-photo" src="${p.profile_path ? TMDB_IMG + '/w342' + p.profile_path : ''}" alt="${esc(p.name)}" loading="lazy" onerror="this.style.display='none'" /><div class="person-body"><div class="person-name">${esc(p.name)}</div><div class="person-dept">${esc(p.known_for_department || '')}</div></div></div>`).join("")}</div>`;
+                    }
+                    if (media.length > 0) {
+                        html += `<div class="section-title" style="margin-top:${persons.length ? '32px' : '0'}">🎬 Films & Series <span class="badge">${media.length}</span></div><div class="media-grid">${media.map(cardHTML).join("")}</div>`;
+                    }
+                    if (!html) html = '<div class="empty-state"><p>Geen resultaten gevonden.</p></div>';
+                    a.innerHTML = html;
+                } catch {
+                    a.innerHTML = '<div class="empty-state"><p>Zoeken mislukt.</p></div>'
+                }
+            }
+
+            // ══════ PERSON ══════
+            async function openPerson(id) {
+                const a = el("app");
+                a.innerHTML = '<div class="spinner"></div>';
+                currentPage = "person";
+                document.querySelectorAll(".nav-links button").forEach(b => b.classList.remove("active"));
+                try {
+                    const p = await apiFetch(`/api/person/${id}`);
+                    const credits = p.combined_credits || {};
+                    let allCredits = [...(credits.cast || []), ...(credits.crew || []).filter(c => c.job === "Director")];
+                    const seen = new Set();
+                    const uniq = [];
+                    for (const c of allCredits) {
+                        if (!seen.has(c.id) && (c.media_type === "movie" || c.media_type === "tv")) {
+                            seen.add(c.id);
+                            uniq.push(c)
+                        }
+                    }
+                    uniq.sort((a, b) => (b.vote_count || 0) - (a.vote_count || 0));
+                    const bio = p.biography ? p.biography.slice(0, 600) + (p.biography.length > 600 ? '…' : '') : '';
+                    const born = p.birthday ? new Date(p.birthday).toLocaleDateString('nl-NL', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
+                    const place = p.place_of_birth || '';
+                    a.innerHTML = `<div class="person-header">
+      <img class="person-portrait" src="${p.profile_path ? TMDB_IMG + '/w342' + p.profile_path : ''}" alt="" onerror="this.style.display='none'" />
+      <div class="person-bio"><h1>${esc(p.name)}</h1><div class="meta">${p.known_for_department || ''}${born ? ' · ' + born : ''}${place ? ' · ' + place : ''}</div>${bio ? `<div class="bio-text">${esc(bio)}</div>` : ''}</div>
     </div>
     <div class="section-title">Filmografie <span class="badge">${uniq.length}</span></div>
-    <div class="media-grid">${uniq.slice(0,40).map(cardHTML).join("")}</div>
-    ${uniq.length>40?'<div class="load-more-wrap"><button class="btn-load-more" onclick="showAllFilmography()">Toon alles ('+uniq.length+')</button></div>':''}`;
-    // Store for show all
-    window._personCredits=uniq;
-  }catch{a.innerHTML='<div class="empty-state"><p>Acteur laden mislukt.</p></div>'}}
+    <div class="media-grid">${uniq.slice(0, 40).map(cardHTML).join("")}</div>
+    ${uniq.length > 40 ? '<div class="load-more-wrap"><button class="btn-load-more" onclick="showAllFilmography()">Toon alles (' + uniq.length + ')</button></div>' : ''}`;
+                    window._personCredits = uniq;
+                } catch {
+                    a.innerHTML = '<div class="empty-state"><p>Acteur laden mislukt.</p></div>'
+                }
+            }
 
-function showAllFilmography(){const g=el("app").querySelector(".media-grid");if(g&&window._personCredits)g.innerHTML=window._personCredits.map(cardHTML).join("")}
+            function showAllFilmography() {
+                const g = el("app").querySelector(".media-grid");
+                if (g && window._personCredits) g.innerHTML = window._personCredits.map(cardHTML).join("")
+            }
 
-// ══════ DISCOVER ══════
-async function loadDiscover(){const a=el("app");a.innerHTML='<div class="spinner"></div>';try{settings=await apiFetch("/api/settings").catch(()=>({}));if(isAdmin()&&!settings.tmdb_api_key){a.innerHTML=`<div class="setup-banner"><div class="setup-banner-icon">🔑</div><div class="setup-banner-text"><strong>TMDB instellen</strong><span>Stel je API key in.</span></div><button class="btn btn-primary" onclick="navigate('settings')">Instellingen</button></div>`;return}}catch{}
-  try{let recsHTML="";try{const recs=await apiFetch("/api/recommendations");if(recs.results&&recs.results.length>0)recsHTML=rowHTML("✨ Aanbevolen voor jou",recs.results.slice(0,15),null)}catch{}
-    const[tm,tt,pm,tr]=await Promise.all([apiFetch("/api/trending/movie"),apiFetch("/api/trending/tv"),apiFetch("/api/collection/movie/popular"),apiFetch("/api/collection/movie/top_rated")]);
-    a.innerHTML=recsHTML+rowHTML("🔥 Trending Films",tm.results.slice(0,15),"movie")+rowHTML("🔥 Trending Series",tt.results.slice(0,15),"tv")+rowHTML("🎬 Populair",pm.results.slice(0,15),"movie")+rowHTML("⭐ Best Beoordeeld",tr.results.slice(0,15),"movie")}catch{a.innerHTML='<div class="empty-state"><p>Laden mislukt.</p></div>'}}
-function rowHTML(t,items,type){return `<div class="row-header"><span class="row-title">${t}</span></div><div class="media-row">${items.map(i=>cardHTML({...i,media_type:type||i.media_type})).join("")}</div>`}
+            // ══════ DISCOVER ══════
+            async function loadDiscover() {
+                const a = el("app");
+                a.innerHTML = '<div class="spinner"></div>';
+                try {
+                    settings = await apiFetch("/api/settings").catch(() => ({}));
+                    if (isAdmin() && !settings.tmdb_api_key) {
+                        a.innerHTML = `<div class="setup-banner"><div class="setup-banner-icon">🔑</div><div class="setup-banner-text"><strong>TMDB instellen</strong><span>Stel je API key in.</span></div><button class="btn btn-primary" onclick="navigate('settings')">Instellingen</button></div>`;
+                        return
+                    }
+                } catch {}
+                try {
+                    let recsHTML = "";
+                    try {
+                        const recs = await apiFetch("/api/recommendations");
+                        if (recs.results && recs.results.length > 0)
+                            recsHTML = rowHTML("✨ Aanbevolen voor jou", recs.results.slice(0, 15), null)
+                    } catch {}
+                    const [tm, tt, pm, tr] = await Promise.all([
+                        apiFetch("/api/trending/movie"),
+                        apiFetch("/api/trending/tv"),
+                        apiFetch("/api/collection/movie/popular"),
+                        apiFetch("/api/collection/movie/top_rated")
+                    ]);
+                    a.innerHTML = recsHTML
+                        + rowHTML("🔥 Trending Films", tm.results.slice(0, 15), "movie")
+                        + rowHTML("🔥 Trending Series", tt.results.slice(0, 15), "tv")
+                        + rowHTML("🎬 Populair", pm.results.slice(0, 15), "movie")
+                        + rowHTML("⭐ Best Beoordeeld", tr.results.slice(0, 15), "movie")
+                } catch {
+                    a.innerHTML = '<div class="empty-state"><p>Laden mislukt.</p></div>'
+                }
+            }
 
-// ══════ UPCOMING ══════
-async function loadUpcoming(){const a=el("app");a.innerHTML='<div class="spinner"></div>';
-  try{const d=await apiFetch("/api/upcoming?page=1");
-    a.innerHTML=`<div class="section-title">🗓 Binnenkort in de Bioscoop</div><div class="media-grid" id="browseGrid">${(d.results||[]).map(i=>{
-      const rd=i.release_date;const isFuture=rd&&new Date(rd)>new Date();
-      return cardHTML({...i,media_type:"movie",_future:isFuture,_release:rd});
-    }).join("")}</div>${d.total_pages>1?'<div class="load-more-wrap"><button class="btn-load-more" onclick="loadMoreUpcoming()">Meer laden</button></div>':''}`;
-    window._upcomingPage=1;window._upcomingTotal=d.total_pages;
-  }catch{a.innerHTML='<div class="empty-state"><p>Laden mislukt.</p></div>'}}
+            // ══════ ROW HTML with load more button ══════
+            function rowHTML(t, items, type) {
+                const rowId = 'row_' + Math.random().toString(36).slice(2, 9);
+                // Store meta for load more
+                window._rowMeta = window._rowMeta || {};
+                window._rowMeta[rowId] = { type, page: 1 };
+                return `<div class="row-header"><span class="row-title">${t}</span></div>
+<div class="media-row" id="${rowId}">
+  ${items.map(i => cardHTML({ ...i, media_type: type || i.media_type })).join("")}
+  <div class="row-load-more-wrap">
+    <button class="row-load-more-btn" onclick="loadMoreRow('${rowId}', this)">Meer →</button>
+  </div>
+</div>`
+            }
 
-async function loadMoreUpcoming(){window._upcomingPage++;if(window._upcomingPage>window._upcomingTotal)return;
-  try{const d=await apiFetch(`/api/upcoming?page=${window._upcomingPage}`);const g=el("browseGrid");if(g&&d.results)g.insertAdjacentHTML("beforeend",d.results.map(i=>cardHTML({...i,media_type:"movie"})).join(""))}catch{}}
+            // Load more items into a discover row
+            const _rowPages = {};
+            async function loadMoreRow(rowId, btn) {
+                const meta = (window._rowMeta || {})[rowId];
+                if (!meta) return;
+                _rowPages[rowId] = (_rowPages[rowId] || 1) + 1;
+                const page = _rowPages[rowId];
+                btn.textContent = '…';
+                btn.disabled = true;
+                try {
+                    let endpoint;
+                    if (meta.type === "movie") {
+                        endpoint = `/api/trending/movie?page=${page}`;
+                    } else if (meta.type === "tv") {
+                        endpoint = `/api/trending/tv?page=${page}`;
+                    } else {
+                        endpoint = `/api/trending/movie?page=${page}`;
+                    }
+                    const d = await apiFetch(endpoint);
+                    const row = el(rowId);
+                    const btnWrap = row.querySelector('.row-load-more-wrap');
+                    (d.results || []).slice(0, 15).forEach(i => {
+                        const tmp = document.createElement('div');
+                        tmp.innerHTML = cardHTML({ ...i, media_type: meta.type || i.media_type });
+                        row.insertBefore(tmp.firstChild, btnWrap);
+                    });
+                } catch {}
+                btn.textContent = 'Meer →';
+                btn.disabled = false;
+            }
 
-// ══════ BROWSE ══════
-async function loadBrowse(){const a=el("app");a.innerHTML='<div class="spinner"></div>';try{if(browseType==="movie"&&!genresMovie.length)genresMovie=(await apiFetch("/api/genres/movie")).genres||[];if(browseType==="tv"&&!genresTv.length)genresTv=(await apiFetch("/api/genres/tv")).genres||[]}catch{}
-  const genres=browseType==="movie"?genresMovie:genresTv;const cols=browseType==="movie"?[[null,"Alles"],["popular","Populair"],["top_rated","Best Beoordeeld"],["now_playing","In Bioscoop"],["upcoming","Binnenkort"]]:[[null,"Alles"],["popular","Populair"],["top_rated","Best Beoordeeld"],["airing_today","Vandaag"],["on_the_air","Nu Uitgezonden"]];
-  const ep=browseCollection?`/api/collection/${browseType}/${browseCollection}?page=${browsePage}`:`/api/discover/${browseType}?page=${browsePage}${activeGenre?'&genre='+activeGenre:''}`;
-  try{const data=await apiFetch(ep);a.innerHTML=`<div class="section-title">${browseType==="movie"?"🎬 Films":"📺 Series"}</div><div class="sub-nav">${cols.map(([id,l])=>`<button class="${browseCollection===id&&!activeGenre?'active':''}" onclick="selCol(${id?`'${id}'`:'null'})">${l}</button>`).join("")}</div><div class="genre-bar"><span class="genre-chip ${!activeGenre&&!browseCollection?'active':''}" onclick="selGen(null)">Alle genres</span>${genres.map(g=>`<span class="genre-chip ${activeGenre==g.id?'active':''}" onclick="selGen(${g.id})">${g.name}</span>`).join("")}</div><div class="media-grid" id="browseGrid">${(data.results||[]).map(i=>cardHTML({...i,media_type:browseType})).join("")}</div>${data.results&&data.results.length>=20?'<div class="load-more-wrap"><button class="btn-load-more" onclick="loadMore()">Meer laden</button></div>':''}`}catch{a.innerHTML='<div class="empty-state"><p>Laden mislukt.</p></div>'}}
-function selGen(id){activeGenre=id;browseCollection=null;browsePage=1;loadBrowse()}
-function selCol(id){browseCollection=id;activeGenre=null;browsePage=1;loadBrowse()}
-async function loadMore(){browsePage++;const ep=browseCollection?`/api/collection/${browseType}/${browseCollection}?page=${browsePage}`:`/api/discover/${browseType}?page=${browsePage}${activeGenre?'&genre='+activeGenre:''}`;try{const d=await apiFetch(ep);const g=el("browseGrid");if(g&&d.results)g.insertAdjacentHTML("beforeend",d.results.map(i=>cardHTML({...i,media_type:browseType})).join(""))}catch{}}
+            // ══════ UPCOMING ══════
+            async function loadUpcoming() {
+                const a = el("app");
+                a.innerHTML = '<div class="spinner"></div>';
+                try {
+                    const d = await apiFetch("/api/upcoming?page=1");
+                    a.innerHTML = `<div class="section-title">🗓 Binnenkort in de Bioscoop</div><div class="media-grid" id="browseGrid">${(d.results || []).map(i => {
+                        const rd = i.release_date;
+                        const isFuture = rd && new Date(rd) > new Date();
+                        return cardHTML({ ...i, media_type: "movie", _future: isFuture, _release: rd });
+                    }).join("")}</div>${d.total_pages > 1 ? '<div class="load-more-wrap"><button class="btn-load-more" onclick="loadMoreUpcoming()">Meer laden</button></div>' : ''}`;
+                    window._upcomingPage = 1;
+                    window._upcomingTotal = d.total_pages;
+                } catch {
+                    a.innerHTML = '<div class="empty-state"><p>Laden mislukt.</p></div>'
+                }
+            }
 
-// ══════ REQUESTS ══════
-async function loadRequests(){const a=el("app");a.innerHTML='<div class="spinner"></div>';try{const rows=await apiFetch("/api/requests");if(!rows.length){a.innerHTML='<div class="empty-state"><p>Nog geen verzoeken.</p></div>';return}
-  a.innerHTML=`<div class="section-title">Verzoeken <span class="badge">${rows.length}</span></div><div class="req-list">${rows.map(r=>{const si=r.seasons?` · S${r.seasons}`:'';return`<div class="req-card"><img class="req-thumb" src="${r.poster_path?TMDB_IMG+'/w92'+r.poster_path:''}" alt="" onerror="this.style.visibility='hidden'" /><div class="req-info"><div class="req-title">${esc(r.title)}</div><div class="req-meta"><span class="type-badge ${r.media_type}">${r.media_type==='movie'?'Film':'Serie'}</span>${stHTML(r.status)}<span class="req-user">👤 ${esc(r.requested_by)}</span>${si?`<span style="color:var(--accent)">${si}</span>`:''}<span>${new Date(r.requested_at).toLocaleDateString('nl-NL')}</span></div>${r.status_message?`<div class="status-msg" title="${esc(r.status_message)}">${esc(r.status_message)}</div>`:''}</div><div class="req-actions">${r.status==='failed'||r.status==='not_configured'?`<button class="btn btn-sm btn-retry" onclick="retryReq(${r.id})">🔄</button>`:''}<button class="btn btn-sm btn-danger" onclick="delReq(${r.id})">🗑</button></div></div>`}).join("")}</div>`}catch{a.innerHTML='<div class="empty-state"><p>Fout.</p></div>'}}
-async function retryReq(id){try{await apiFetch(`/api/requests/${id}/retry`,{method:"POST"});await loadStatusMap();loadRequests()}catch{}}
-async function delReq(id){if(!confirm("Verwijderen?"))return;try{await apiFetch(`/api/requests/${id}`,{method:"DELETE"});await loadStatusMap();loadRequests()}catch{}}
+            async function loadMoreUpcoming() {
+                window._upcomingPage++;
+                if (window._upcomingPage > window._upcomingTotal) return;
+                try {
+                    const d = await apiFetch(`/api/upcoming?page=${window._upcomingPage}`);
+                    const g = el("browseGrid");
+                    if (g && d.results) g.insertAdjacentHTML("beforeend", d.results.map(i => cardHTML({ ...i, media_type: "movie" })).join(""))
+                } catch {}
+            }
 
-// ══════ SETTINGS ══════
-async function loadSettings(){if(!isAdmin()){el("app").innerHTML='<div class="empty-state"><p>Alleen beheerders.</p></div>';return}const a=el("app");a.innerHTML='<div class="spinner"></div>';try{settings=await apiFetch("/api/settings")}catch{settings={}}
-  let rp=[],rf=[],sp=[],sf=[];try{const r=await apiFetch("/api/settings/radarr-profiles");if(!r.error){rp=r.profiles||[];rf=r.folders||[]}}catch{}try{const r=await apiFetch("/api/settings/sonarr-profiles");if(!r.error){sp=r.profiles||[];sf=r.folders||[]}}catch{}
-  let users=[];try{users=await apiFetch("/api/users")}catch{}
-  const F=(k,l,p,h)=>`<div class="form-row"><label class="form-label">${l}</label><input class="form-input" id="set_${k}" type="${k.includes('key')||k.includes('token')?'password':'text'}" value="${esc(settings[k]||'')}" placeholder="${p}" />${h?`<div class="form-hint">${h}</div>`:''}</div>`;
-  const S=(k,l,opts)=>`<div class="form-row"><label class="form-label">${l}</label><select class="form-select" id="set_${k}">${opts.map(o=>`<option value="${o[0]}" ${String(settings[k])===String(o[0])?'selected':''}>${o[1]}</option>`).join("")}</select></div>`;
-  a.innerHTML=`<div class="settings-page"><div class="section-title">⚙ Instellingen</div>
-    <div class="settings-group"><div class="settings-group-header"><div class="settings-group-title"><span class="icon icon-users">👥</span> Gebruikers</div></div>${users.map(u=>`<div class="user-row"><div class="user-avatar">${(u.display_name||u.username)[0].toUpperCase()}</div><div class="user-info"><strong>${esc(u.display_name||u.username)}</strong><span>@${esc(u.username)}</span></div><span class="user-role user-role-${u.role}">${u.role}</span>${u.id!==currentUser.id?`<button class="btn btn-sm btn-danger" onclick="delUser(${u.id})">🗑</button>`:''}</div>`).join("")}<div class="add-user-form"><input id="newUser" placeholder="Gebruikersnaam" style="flex:1" /><input id="newPass" placeholder="Wachtwoord" type="password" style="flex:1" /><select id="newRole"><option value="user">Gebruiker</option><option value="admin">Admin</option></select><button class="btn btn-sm btn-primary" onclick="addUser()">+</button></div></div>
-    <div class="settings-group"><div class="settings-group-header"><div class="settings-group-title"><span class="icon icon-tmdb">🎬</span> TMDB</div><button class="btn-test" onclick="testC('tmdb',this)">Test</button></div>${F("tmdb_api_key","API Key","TMDB key",'<a href="https://www.themoviedb.org/settings/api" target="_blank" style="color:var(--accent)">themoviedb.org</a>')}</div>
-    <div class="settings-group"><div class="settings-group-header"><div class="settings-group-title"><span class="icon icon-radarr">🟧</span> Radarr</div><button class="btn-test" onclick="testC('radarr',this)">Test</button></div>${F("radarr_url","URL","http://radarr:7878","")}${F("radarr_api_key","API Key","Key","")}${rp.length?S("radarr_quality_profile","Quality",[["","Standaard"],...rp.map(p=>[p.id,p.name])]):F("radarr_quality_profile","Quality ID","","")}${rf.length?S("radarr_root_folder","Root Folder",[["","Standaard"],...rf.map(f=>[f.path,f.path])]):F("radarr_root_folder","Root Folder","","")}</div>
-    <div class="settings-group"><div class="settings-group-header"><div class="settings-group-title"><span class="icon icon-sonarr">🟦</span> Sonarr</div><button class="btn-test" onclick="testC('sonarr',this)">Test</button></div>${F("sonarr_url","URL","http://sonarr:8989","")}${F("sonarr_api_key","API Key","Key","")}${sp.length?S("sonarr_quality_profile","Quality",[["","Standaard"],...sp.map(p=>[p.id,p.name])]):F("sonarr_quality_profile","Quality ID","","")}${sf.length?S("sonarr_root_folder","Root Folder",[["","Standaard"],...sf.map(f=>[f.path,f.path])]):F("sonarr_root_folder","Root Folder","","")}</div>
-    <div class="settings-group"><div class="settings-group-header"><div class="settings-group-title"><span class="icon icon-jellyfin">🟦</span> Jellyfin</div><button class="btn-test" onclick="testC('jellyfin',this)">Test</button></div>${F("jellyfin_url","URL","http://jellyfin:8096","")}${F("jellyfin_api_key","API Key","Key","")}</div>
-    <div class="settings-group"><div class="settings-group-header"><div class="settings-group-title"><span class="icon icon-plex">🟨</span> Plex</div><button class="btn-test" onclick="testC('plex',this)">Test</button></div>${F("plex_url","URL","http://plex:32400","")}${F("plex_token","Token","Token","")}</div>
-    <div class="settings-footer"><button class="btn btn-primary" onclick="saveS()" id="saveBtn">💾 Opslaan</button><span class="save-status" id="saveStatus"></span></div></div>`;
-  document.querySelectorAll('.form-input[type="password"]').forEach(i=>{i.onfocus=()=>i.type="text";i.onblur=()=>i.type="password"})}
-async function addUser(){const u=el("newUser").value.trim(),p=el("newPass").value,r=el("newRole").value;if(!u||!p){alert("Vul in");return}try{await apiFetch("/api/users",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:u,password:p,role:r})});loadSettings()}catch(e){alert(e.message)}}
-async function delUser(id){if(!confirm("Verwijderen?"))return;try{await apiFetch(`/api/users/${id}`,{method:"DELETE"});loadSettings()}catch(e){alert(e.message)}}
-const KEYS=["tmdb_api_key","jellyfin_url","jellyfin_api_key","plex_url","plex_token","radarr_url","radarr_api_key","radarr_quality_profile","radarr_root_folder","sonarr_url","sonarr_api_key","sonarr_quality_profile","sonarr_root_folder"];
-function gather(){const p={};for(const k of KEYS){const e=el("set_"+k);if(e)p[k]=e.value.trim()}return p}
-async function saveS(){const b=el("saveBtn"),st=el("saveStatus");b.disabled=true;b.textContent="⏳";try{const d=await apiFetch("/api/settings",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(gather())});if(d.success){settings=d.settings;st.textContent="✓";st.className="save-status visible ok";setTimeout(()=>loadSettings(),1500)}else throw new Error(d.error)}catch(e){st.textContent="✗ "+e.message;st.className="save-status visible err"}b.disabled=false;b.textContent="💾 Opslaan";setTimeout(()=>{st.className="save-status"},4000)}
-async function testC(svc,btn){btn.className="btn-test testing";btn.textContent="...";await apiFetch("/api/settings",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(gather())}).catch(()=>{});try{const d=await apiFetch("/api/settings/test",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({service:svc})});btn.className=d.ok?"btn-test success":"btn-test fail";btn.textContent=d.ok?"✓":"✗"}catch{btn.className="btn-test fail";btn.textContent="✗"}setTimeout(()=>{btn.className="btn-test";btn.textContent="Test"},4000)}
+            // ══════ BROWSE ══════
+            async function loadBrowse() {
+                const a = el("app");
+                a.innerHTML = '<div class="spinner"></div>';
+                try {
+                    if (browseType === "movie" && !genresMovie.length) genresMovie = (await apiFetch("/api/genres/movie")).genres || [];
+                    if (browseType === "tv" && !genresTv.length) genresTv = (await apiFetch("/api/genres/tv")).genres || []
+                } catch {}
+                const genres = browseType === "movie" ? genresMovie : genresTv;
+                const cols = browseType === "movie"
+                    ? [[null,"Alles"],["popular","Populair"],["top_rated","Best Beoordeeld"],["now_playing","In Bioscoop"],["upcoming","Binnenkort"]]
+                    : [[null,"Alles"],["popular","Populair"],["top_rated","Best Beoordeeld"],["airing_today","Vandaag"],["on_the_air","Nu Uitgezonden"]];
+                const ep = browseCollection
+                    ? `/api/collection/${browseType}/${browseCollection}?page=${browsePage}`
+                    : `/api/discover/${browseType}?page=${browsePage}${activeGenre ? '&genre=' + activeGenre : ''}`;
+                try {
+                    const data = await apiFetch(ep);
+                    a.innerHTML = `<div class="section-title">${browseType === "movie" ? "🎬 Films" : "📺 Series"}</div>
+<div class="sub-nav">${cols.map(([id,l]) => `<button class="${browseCollection === id && !activeGenre ? 'active' : ''}" onclick="selCol(${id ? `'${id}'` : 'null'})">${l}</button>`).join("")}</div>
+<div class="genre-bar"><span class="genre-chip ${!activeGenre && !browseCollection ? 'active' : ''}" onclick="selGen(null)">Alle genres</span>${genres.map(g => `<span class="genre-chip ${activeGenre == g.id ? 'active' : ''}" onclick="selGen(${g.id})">${g.name}</span>`).join("")}</div>
+<div class="media-grid" id="browseGrid">${(data.results || []).map(i => cardHTML({ ...i, media_type: browseType })).join("")}</div>
+${data.results && data.results.length >= 20 ? '<div class="load-more-wrap"><button class="btn-load-more" onclick="loadMore()">Meer laden</button></div>' : ''}`
+                } catch {
+                    a.innerHTML = '<div class="empty-state"><p>Laden mislukt.</p></div>'
+                }
+            }
 
-// ══════ CARDS with status badge ══════
-function cardHTML(item){
-  const t=item.title||item.name||"?",y=(item.release_date||item.first_air_date||"").slice(0,4),
-    p=item.poster_path?`${TMDB_IMG}/w342${item.poster_path}`:"",type=item.media_type||browseType||"movie",
-    r=item.vote_average?item.vote_average.toFixed(1):"";
-  // Status badge
-  const statusKey=`${type}-${item.id}`;
-  const st=requestStatusMap[statusKey];
-  const badgeHTML=st?`<div class="card-status card-status-${st}" title="${(ST[st]||{l:st}).l}">${STATUS_ICONS[st]||'?'}</div>`:'';
+            function selGen(id) { activeGenre = id; browseCollection = null; browsePage = 1; loadBrowse() }
+            function selCol(id) { browseCollection = id; activeGenre = null; browsePage = 1; loadBrowse() }
 
-  return `<div class="card" onclick="openDetail('${type}',${item.id})">${badgeHTML}<img class="card-poster" src="${p}" alt="${esc(t)}" loading="lazy" onerror="this.style.display='none'" /><div class="card-body"><div class="card-title">${esc(t)}</div><div class="card-meta"><span class="type-badge ${type}">${type==='movie'?'Film':'Serie'}</span>${y}${r?' · ⭐'+r:''}</div></div></div>`;
-}
+            async function loadMore() {
+                browsePage++;
+                const ep = browseCollection
+                    ? `/api/collection/${browseType}/${browseCollection}?page=${browsePage}`
+                    : `/api/discover/${browseType}?page=${browsePage}${activeGenre ? '&genre=' + activeGenre : ''}`;
+                try {
+                    const d = await apiFetch(ep);
+                    const g = el("browseGrid");
+                    if (g && d.results) g.insertAdjacentHTML("beforeend", d.results.map(i => cardHTML({ ...i, media_type: browseType })).join(""))
+                } catch {}
+            }
 
-// ══════ DETAIL MODAL ══════
-async function openDetail(type,id){
-  const modal=el("modal"),content=el("modalContent");modal.classList.add("open");content.innerHTML='<div class="spinner" style="margin:60px auto"></div>';
-  selectedSeasons=new Set();
-  try{const d=await apiFetch(`/api/details/${type}/${id}`);
-    const t=d.title||d.name,y=(d.release_date||d.first_air_date||"").slice(0,4),g=(d.genres||[]).map(g=>g.name).join(", "),gids=(d.genres||[]).map(g=>g.id);
-    const bg=d.backdrop_path?`${TMDB_IMG}/w1280${d.backdrop_path}`:"",po=d.poster_path?`${TMDB_IMG}/w342${d.poster_path}`:"",req=d._request,rat=d.vote_average?d.vote_average.toFixed(1):"—";
+            // ══════ REQUESTS ══════
+            async function loadRequests() {
+                const a = el("app");
+                a.innerHTML = '<div class="spinner"></div>';
+                try {
+                    const rows = await apiFetch("/api/requests");
+                    if (!rows.length) { a.innerHTML = '<div class="empty-state"><p>Nog geen verzoeken.</p></div>'; return }
+                    a.innerHTML = `<div class="section-title">Verzoeken <span class="badge">${rows.length}</span></div><div class="req-list">${rows.map(r => {
+                        const si = r.seasons ? ` · S${r.seasons}` : '';
+                        return `<div class="req-card"><img class="req-thumb" src="${r.poster_path ? TMDB_IMG + '/w92' + r.poster_path : ''}" alt="" onerror="this.style.visibility='hidden'" /><div class="req-info"><div class="req-title">${esc(r.title)}</div><div class="req-meta"><span class="type-badge ${r.media_type}">${r.media_type === 'movie' ? 'Film' : 'Serie'}</span>${stHTML(r.status)}<span class="req-user">👤 ${esc(r.requested_by)}</span>${si ? `<span style="color:var(--accent)">${si}</span>` : ''}<span>${new Date(r.requested_at).toLocaleDateString('nl-NL')}</span></div>${r.status_message ? `<div class="status-msg" title="${esc(r.status_message)}">${esc(r.status_message)}</div>` : ''}</div><div class="req-actions">${r.status === 'failed' || r.status === 'not_configured' ? `<button class="btn btn-sm btn-retry" onclick="retryReq(${r.id})">🔄</button>` : ''}<button class="btn btn-sm btn-danger" onclick="delReq(${r.id})">🗑</button></div></div>`
+                    }).join("")}</div>`
+                } catch {
+                    a.innerHTML = '<div class="empty-state"><p>Fout.</p></div>'
+                }
+            }
 
-    // Release date
-    const releaseDate=d.release_date||d.first_air_date||"";
-    const isFuture=releaseDate&&new Date(releaseDate)>new Date();
-    const releaseBadge=releaseDate?`<div class="release-badge">${isFuture?'🗓 Verwacht':'📅 Uitgebracht'}: ${new Date(releaseDate).toLocaleDateString('nl-NL',{year:'numeric',month:'long',day:'numeric'})}</div>`:'';
+            async function retryReq(id) {
+                try { await apiFetch(`/api/requests/${id}/retry`, { method: "POST" }); await loadStatusMap(); loadRequests() } catch {}
+            }
 
-    // Trailers — filter YouTube videos, prioritize official trailers
-    const videos=(d.videos&&d.videos.results||[]).filter(v=>v.site==="YouTube"&&v.key);
-    const trailers=videos.filter(v=>v.type==="Trailer");
-    const teasers=videos.filter(v=>v.type==="Teaser");
-    const clips=videos.filter(v=>v.type!=="Trailer"&&v.type!=="Teaser");
-    const allVids=[...trailers,...teasers,...clips];
-    let trailerHTML="";
-    if(allVids.length>0){
-      const first=allVids[0];
-      trailerHTML=`<div class="trailer-section">
-        <button class="trailer-toggle" onclick="toggleTrailer(this)" id="trailerToggle">▶ Trailer bekijken (${allVids.length} video${allVids.length>1?'s':''})</button>
+            async function delReq(id) {
+                if (!confirm("Verwijderen?")) return;
+                try { await apiFetch(`/api/requests/${id}`, { method: "DELETE" }); await loadStatusMap(); loadRequests() } catch {}
+            }
+
+            // ══════ SETTINGS ══════
+            async function loadSettings() {
+                if (!isAdmin()) { el("app").innerHTML = '<div class="empty-state"><p>Alleen beheerders.</p></div>'; return }
+                const a = el("app");
+                a.innerHTML = '<div class="spinner"></div>';
+                try { settings = await apiFetch("/api/settings") } catch { settings = {} }
+                let rp = [], rf = [], sp = [], sf = [];
+                try { const r = await apiFetch("/api/settings/radarr-profiles"); if (!r.error) { rp = r.profiles || []; rf = r.folders || [] } } catch {}
+                try { const r = await apiFetch("/api/settings/sonarr-profiles"); if (!r.error) { sp = r.profiles || []; sf = r.folders || [] } } catch {}
+                let users = [];
+                try { users = await apiFetch("/api/users") } catch {}
+                const F = (k,l,p,h) => `<div class="form-row"><label class="form-label">${l}</label><input class="form-input" id="set_${k}" type="${k.includes('key')||k.includes('token')?'password':'text'}" value="${esc(settings[k]||'')}" placeholder="${p}" />${h?`<div class="form-hint">${h}</div>`:''}</div>`;
+                const S = (k,l,opts) => `<div class="form-row"><label class="form-label">${l}</label><select class="form-select" id="set_${k}">${opts.map(o=>`<option value="${o[0]}" ${String(settings[k])===String(o[0])?'selected':''}>${o[1]}</option>`).join("")}</select></div>`;
+                a.innerHTML = `<div class="settings-page"><div class="section-title">⚙ Instellingen</div>
+<div class="settings-group"><div class="settings-group-header"><div class="settings-group-title"><span class="icon icon-users">👥</span> Gebruikers</div></div>${users.map(u=>`<div class="user-row"><div class="user-avatar">${(u.display_name||u.username)[0].toUpperCase()}</div><div class="user-info"><strong>${esc(u.display_name||u.username)}</strong><span>@${esc(u.username)}</span></div><span class="user-role user-role-${u.role}">${u.role}</span>${u.id!==currentUser.id?`<button class="btn btn-sm btn-danger" onclick="delUser(${u.id})">🗑</button>`:''}</div>`).join("")}<div class="add-user-form"><input id="newUser" placeholder="Gebruikersnaam" style="flex:1" /><input id="newPass" placeholder="Wachtwoord" type="password" style="flex:1" /><select id="newRole"><option value="user">Gebruiker</option><option value="admin">Admin</option></select><button class="btn btn-sm btn-primary" onclick="addUser()">+</button></div></div>
+<div class="settings-group"><div class="settings-group-header"><div class="settings-group-title"><span class="icon icon-tmdb">🎬</span> TMDB</div><button class="btn-test" onclick="testC('tmdb',this)">Test</button></div>${F("tmdb_api_key","API Key","TMDB key",'<a href="https://www.themoviedb.org/settings/api" target="_blank" style="color:var(--accent)">themoviedb.org</a>')}</div>
+<div class="settings-group"><div class="settings-group-header"><div class="settings-group-title"><span class="icon icon-radarr">🟧</span> Radarr</div><button class="btn-test" onclick="testC('radarr',this)">Test</button></div>${F("radarr_url","URL","http://radarr:7878","")}${F("radarr_api_key","API Key","Key","")}${rp.length?S("radarr_quality_profile","Quality",[["","Standaard"],...rp.map(p=>[p.id,p.name])]):F("radarr_quality_profile","Quality ID","","")}${rf.length?S("radarr_root_folder","Root Folder",[["","Standaard"],...rf.map(f=>[f.path,f.path])]):F("radarr_root_folder","Root Folder","","")}</div>
+<div class="settings-group"><div class="settings-group-header"><div class="settings-group-title"><span class="icon icon-sonarr">🟦</span> Sonarr</div><button class="btn-test" onclick="testC('sonarr',this)">Test</button></div>${F("sonarr_url","URL","http://sonarr:8989","")}${F("sonarr_api_key","API Key","Key","")}${sp.length?S("sonarr_quality_profile","Quality",[["","Standaard"],...sp.map(p=>[p.id,p.name])]):F("sonarr_quality_profile","Quality ID","","")}${sf.length?S("sonarr_root_folder","Root Folder",[["","Standaard"],...sf.map(f=>[f.path,f.path])]):F("sonarr_root_folder","Root Folder","","")}</div>
+<div class="settings-group"><div class="settings-group-header"><div class="settings-group-title"><span class="icon icon-jellyfin">🟦</span> Jellyfin</div><button class="btn-test" onclick="testC('jellyfin',this)">Test</button></div>${F("jellyfin_url","URL","http://jellyfin:8096","")}${F("jellyfin_api_key","API Key","Key","")}</div>
+<div class="settings-group"><div class="settings-group-header"><div class="settings-group-title"><span class="icon icon-plex">🟨</span> Plex</div><button class="btn-test" onclick="testC('plex',this)">Test</button></div>${F("plex_url","URL","http://plex:32400","")}${F("plex_token","Token","Token","")}</div>
+<div class="settings-footer"><button class="btn btn-primary" onclick="saveS()" id="saveBtn">💾 Opslaan</button><span class="save-status" id="saveStatus"></span></div></div>`;
+                document.querySelectorAll('.form-input[type="password"]').forEach(i => {
+                    i.onfocus = () => i.type = "text";
+                    i.onblur = () => i.type = "password"
+                })
+            }
+
+            async function addUser() {
+                const u = el("newUser").value.trim(), p = el("newPass").value, r = el("newRole").value;
+                if (!u || !p) { alert("Vul in"); return }
+                try {
+                    await apiFetch("/api/users", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ username: u, password: p, role: r }) });
+                    loadSettings()
+                } catch(e) { alert(e.message) }
+            }
+
+            async function delUser(id) {
+                if (!confirm("Verwijderen?")) return;
+                try { await apiFetch(`/api/users/${id}`, { method: "DELETE" }); loadSettings() } catch(e) { alert(e.message) }
+            }
+
+            const KEYS = ["tmdb_api_key","jellyfin_url","jellyfin_api_key","plex_url","plex_token","radarr_url","radarr_api_key","radarr_quality_profile","radarr_root_folder","sonarr_url","sonarr_api_key","sonarr_quality_profile","sonarr_root_folder"];
+
+            function gather() {
+                const p = {};
+                for (const k of KEYS) { const e = el("set_" + k); if (e) p[k] = e.value.trim() }
+                return p
+            }
+
+            async function saveS() {
+                const b = el("saveBtn"), st = el("saveStatus");
+                b.disabled = true; b.textContent = "⏳";
+                try {
+                    const d = await apiFetch("/api/settings", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(gather()) });
+                    if (d.success) {
+                        settings = d.settings;
+                        st.textContent = "✓";
+                        st.className = "save-status visible ok";
+                        setTimeout(() => loadSettings(), 1500)
+                    } else throw new Error(d.error)
+                } catch(e) {
+                    st.textContent = "✗ " + e.message;
+                    st.className = "save-status visible err"
+                }
+                b.disabled = false; b.textContent = "💾 Opslaan";
+                setTimeout(() => { st.className = "save-status" }, 4000)
+            }
+
+            async function testC(svc, btn) {
+                btn.className = "btn-test testing"; btn.textContent = "...";
+                await apiFetch("/api/settings", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(gather()) }).catch(() => {});
+                try {
+                    const d = await apiFetch("/api/settings/test", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ service: svc }) });
+                    btn.className = d.ok ? "btn-test success" : "btn-test fail";
+                    btn.textContent = d.ok ? "✓" : "✗"
+                } catch {
+                    btn.className = "btn-test fail"; btn.textContent = "✗"
+                }
+                setTimeout(() => { btn.className = "btn-test"; btn.textContent = "Test" }, 4000)
+            }
+
+            // ══════ CARDS ══════
+            function cardHTML(item) {
+                const t = item.title || item.name || "?"
+                  , y = (item.release_date || item.first_air_date || "").slice(0, 4)
+                  , p = item.poster_path ? `${TMDB_IMG}/w342${item.poster_path}` : ""
+                  , type = item.media_type || browseType || "movie"
+                  , r = item.vote_average ? item.vote_average.toFixed(1) : "";
+                const statusKey = `${type}-${item.id}`;
+                const st = requestStatusMap[statusKey];
+                const badgeHTML = st ? `<div class="card-status card-status-${st}" title="${(ST[st]||{l:st}).l}">${STATUS_ICONS[st]||'?'}</div>` : '';
+                return `<div class="card" onclick="openDetail('${type}',${item.id})">${badgeHTML}<img class="card-poster" src="${p}" alt="${esc(t)}" loading="lazy" onerror="this.style.display='none'" /><div class="card-body"><div class="card-title">${esc(t)}</div><div class="card-meta"><span class="type-badge ${type}">${type==='movie'?'Film':'Serie'}</span>${y}${r?' · ⭐'+r:''}</div></div></div>`;
+            }
+
+            // ══════ DETAIL MODAL ══════
+            async function openDetail(type, id) {
+                const modal = el("modal"), content = el("modalContent");
+                modal.classList.add("open");
+                content.innerHTML = '<div class="spinner" style="margin:60px auto"></div>';
+                selectedSeasons = new Set();
+                try {
+                    const d = await apiFetch(`/api/details/${type}/${id}`);
+                    const t = d.title || d.name
+                      , y = (d.release_date || d.first_air_date || "").slice(0, 4)
+                      , g = (d.genres || []).map(g => g.name).join(", ")
+                      , gids = (d.genres || []).map(g => g.id);
+                    const bg = d.backdrop_path ? `${TMDB_IMG}/w1280${d.backdrop_path}` : ""
+                      , po = d.poster_path ? `${TMDB_IMG}/w342${d.poster_path}` : ""
+                      , req = d._request
+                      , rat = d.vote_average ? d.vote_average.toFixed(1) : "—";
+
+                    const releaseDate = d.release_date || d.first_air_date || "";
+                    const isFuture = releaseDate && new Date(releaseDate) > new Date();
+                    const releaseBadge = releaseDate ? `<div class="release-badge">${isFuture ? '🗓 Verwacht' : '📅 Uitgebracht'}: ${new Date(releaseDate).toLocaleDateString('nl-NL', { year: 'numeric', month: 'long', day: 'numeric' })}</div>` : '';
+
+                    const videos = (d.videos && d.videos.results || []).filter(v => v.site === "YouTube" && v.key);
+                    const trailers = videos.filter(v => v.type === "Trailer");
+                    const teasers = videos.filter(v => v.type === "Teaser");
+                    const clips = videos.filter(v => v.type !== "Trailer" && v.type !== "Teaser");
+                    const allVids = [...trailers, ...teasers, ...clips];
+                    let trailerHTML = "";
+                    if (allVids.length > 0) {
+                        const first = allVids[0];
+                        trailerHTML = `<div class="trailer-section">
+        <button class="trailer-toggle" onclick="toggleTrailer(this)" id="trailerToggle">▶ Trailer bekijken (${allVids.length} video${allVids.length > 1 ? 's' : ''})</button>
         <div class="trailer-container" id="trailerBox" style="display:none">
-          ${allVids.length>1?`<div class="trailer-tabs" id="trailerTabs">${allVids.map((v,i)=>`<button class="trailer-tab ${i===0?'active':''}" onclick="switchTrailer('${v.key}',${i})">${esc(v.type)}${v.name&&v.name!==v.type?' — '+esc(v.name.slice(0,30)):''}</button>`).join("")}</div>`:''}
+          ${allVids.length > 1 ? `<div class="trailer-tabs" id="trailerTabs">${allVids.map((v,i) => `<button class="trailer-tab ${i===0?'active':''}" onclick="switchTrailer('${v.key}',${i})">${esc(v.type)}${v.name&&v.name!==v.type?' — '+esc(v.name.slice(0,30)):''}</button>`).join("")}</div>` : ''}
           <iframe id="trailerFrame" src="" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>
         </div>
       </div>`;
-      // Store first key for lazy load
-      window._firstTrailerKey=first.key;
-    }
+                        window._firstTrailerKey = first.key;
+                    }
 
-    // Cast
-    const cast=(d.credits&&d.credits.cast||[]).slice(0,20);
-    let castHTML="";
-    if(cast.length>0){
-      castHTML=`<div class="cast-section"><div class="cast-title">🎭 Cast</div><div class="cast-scroll">${cast.map(c=>{
-        const photo=c.profile_path?`<img class="cast-photo" src="${TMDB_IMG}/w185${c.profile_path}" alt="${esc(c.name)}" loading="lazy" onerror="this.outerHTML='<div class=\\'cast-photo-placeholder\\'>👤</div>'" />`:`<div class="cast-photo-placeholder">👤</div>`;
-        return `<div class="cast-item" onclick="openPerson(${c.id})" title="${esc(c.name)} als ${esc(c.character||'')}">${photo}<div class="cast-name">${esc(c.name)}</div><div class="cast-char">${esc(c.character||'')}</div></div>`;
-      }).join("")}</div></div>`;
-    }
+                    const cast = (d.credits && d.credits.cast || []).slice(0, 20);
+                    let castHTML = "";
+                    if (cast.length > 0) {
+                        castHTML = `<div class="cast-section"><div class="cast-title">🎭 Cast</div><div class="cast-scroll">${cast.map(c => {
+                            const photo = c.profile_path ? `<img class="cast-photo" src="${TMDB_IMG}/w185${c.profile_path}" alt="${esc(c.name)}" loading="lazy" onerror="this.outerHTML='<div class=\\'cast-photo-placeholder\\'>👤</div>'" />` : `<div class="cast-photo-placeholder">👤</div>`;
+                            return `<div class="cast-item" onclick="openPerson(${c.id})" title="${esc(c.name)} als ${esc(c.character||'')}">${photo}<div class="cast-name">${esc(c.name)}</div><div class="cast-char">${esc(c.character||'')}</div></div>`;
+                        }).join("")}</div></div>`;
+                    }
 
-    // Season picker
-    let seasonPickerHTML="";
-    if(type==="tv"&&d.seasons&&d.seasons.length>0&&!req){
-      const real=d.seasons.filter(s=>s.season_number>0);
-      if(real.length>0){real.forEach(s=>selectedSeasons.add(s.season_number));
-        seasonPickerHTML=`<div class="season-picker"><div class="season-picker-title"><span>📺 Seizoenen</span><button onclick="toggleAllSeasons(${JSON.stringify(real.map(s=>s.season_number))})">Alles aan/uit</button></div><div class="season-grid">${real.map(s=>`<div class="season-chip selected" data-sn="${s.season_number}" onclick="toggleSeason(${s.season_number},this)">S${s.season_number} <span style="font-weight:400;font-size:11px;opacity:.7">${s.episode_count} afl.</span></div>`).join("")}</div></div>`;
-      }
-    }
+                    let seasonPickerHTML = "";
+                    if (type === "tv" && d.seasons && d.seasons.length > 0 && !req) {
+                        const real = d.seasons.filter(s => s.season_number > 0);
+                        if (real.length > 0) {
+                            real.forEach(s => selectedSeasons.add(s.season_number));
+                            seasonPickerHTML = `<div class="season-picker"><div class="season-picker-title"><span>📺 Seizoenen</span><button onclick="toggleAllSeasons(${JSON.stringify(real.map(s=>s.season_number))})">Alles aan/uit</button></div><div class="season-grid">${real.map(s=>`<div class="season-chip selected" data-sn="${s.season_number}" onclick="toggleSeason(${s.season_number},this)">S${s.season_number} <span style="font-weight:400;font-size:11px;opacity:.7">${s.episode_count} afl.</span></div>`).join("")}</div></div>`;
+                        }
+                    }
 
-    let act;
-    if(req){const si=req.seasons?` (S${req.seasons})`:'';act=`${stHTML(req.status)}<span style="font-size:12px;color:var(--text-dim)">${esc(req.status_message||'')}${si}</span>${req.status==='failed'||req.status==='not_configured'?`<button class="btn btn-sm btn-retry" onclick="retryReload(${req.id},'${type}',${id})">🔄</button>`:''}`}
-    else{const futureLabel=isFuture?'🗓 Vooruit aanvragen':'🎬 Aanvragen';act=`<button class="btn btn-primary" id="reqBtn" onclick="reqMedia('${type}',${id},'${esc(t).replace(/'/g,"\\'")}','${d.poster_path||""}','${gids.join(",")}')">${futureLabel}</button>`}
+                    let act;
+                    if (req) {
+                        const si = req.seasons ? ` (S${req.seasons})` : '';
+                        act = `${stHTML(req.status)}<span style="font-size:12px;color:var(--text-dim)">${esc(req.status_message||'')}${si}</span>${req.status==='failed'||req.status==='not_configured'?`<button class="btn btn-sm btn-retry" onclick="retryReload(${req.id},'${type}',${id})">🔄</button>`:''}`
+                    } else {
+                        const futureLabel = isFuture ? '🗓 Vooruit aanvragen' : '🎬 Aanvragen';
+                        act = `<button class="btn btn-primary" id="reqBtn" onclick="reqMedia('${type}',${id},'${esc(t).replace(/'/g,"\\'")}','${d.poster_path||""}','${gids.join(",")}')">${futureLabel}</button>`
+                    }
 
-    content.innerHTML=`<button class="modal-close" onclick="closeModal()">✕</button>${bg?`<img class="modal-backdrop-img" src="${bg}" />`:'<div style="height:100px"></div>'}<div class="modal-content">${po?`<img class="modal-poster" src="${po}" />`:''}<div class="modal-info"><div class="modal-title">${esc(t)}</div><div class="modal-subtitle">${y} · ${g} · ⭐ ${rat}${d.number_of_seasons?' · '+d.number_of_seasons+' seizoenen':''}</div>${releaseBadge}</div><div class="modal-overview">${esc(d.overview||"Geen beschrijving.")}</div>${castHTML}${trailerHTML}${seasonPickerHTML}<div class="modal-actions">${act}<button class="btn btn-outline" onclick="closeModal()">Sluiten</button></div></div>`;
-  }catch{content.innerHTML='<div class="empty-state"><p>Laden mislukt.</p></div>'}}
+                    content.innerHTML = `<button class="modal-close" onclick="closeModal()">✕</button>${bg?`<img class="modal-backdrop-img" src="${bg}" />`:'<div style="height:100px"></div>'}<div class="modal-content">${po?`<img class="modal-poster" src="${po}" />`:''}
+<div class="modal-info">
+  <div class="modal-title">${esc(t)}</div>
+  <div class="modal-subtitle">${y} · ${g} · ⭐ ${rat}${d.number_of_seasons?' · '+d.number_of_seasons+' seizoenen':''}</div>
+  ${releaseBadge}
+</div>
+<div class="modal-overview">${esc(d.overview||"Geen beschrijving.")}</div>
+${castHTML}${trailerHTML}${seasonPickerHTML}
+<div class="modal-actions">${act}<button class="btn btn-outline" onclick="closeModal()">Sluiten</button></div></div>`;
+                } catch {
+                    content.innerHTML = '<div class="empty-state"><p>Laden mislukt.</p></div>'
+                }
+            }
 
-function toggleTrailer(btn){
-  const box=el("trailerBox"),frame=el("trailerFrame");
-  if(box.style.display==="none"){
-    box.style.display="block";btn.classList.add("open");btn.innerHTML="⏹ Trailer sluiten";
-    if(!frame.src||frame.src==="")frame.src=`https://www.youtube-nocookie.com/embed/${window._firstTrailerKey}?rel=0`;
-  }else{
-    box.style.display="none";btn.classList.remove("open");btn.innerHTML=`▶ Trailer bekijken`;
-    frame.src="";
-  }
-}
+            function toggleTrailer(btn) {
+                const box = el("trailerBox"), frame = el("trailerFrame");
+                if (box.style.display === "none") {
+                    box.style.display = "block";
+                    btn.classList.add("open");
+                    btn.innerHTML = "⏹ Trailer sluiten";
+                    if (!frame.src || frame.src === "") frame.src = `https://www.youtube-nocookie.com/embed/${window._firstTrailerKey}?rel=0`;
+                } else {
+                    box.style.display = "none";
+                    btn.classList.remove("open");
+                    btn.innerHTML = `▶ Trailer bekijken`;
+                    frame.src = "";
+                }
+            }
 
-function switchTrailer(key,idx){
-  const frame=el("trailerFrame");frame.src=`https://www.youtube-nocookie.com/embed/${key}?rel=0&autoplay=1`;
-  document.querySelectorAll(".trailer-tab").forEach((t,i)=>t.classList.toggle("active",i===idx));
-}
+            function switchTrailer(key, idx) {
+                const frame = el("trailerFrame");
+                frame.src = `https://www.youtube-nocookie.com/embed/${key}?rel=0&autoplay=1`;
+                document.querySelectorAll(".trailer-tab").forEach((t,i) => t.classList.toggle("active", i === idx));
+            }
 
-function toggleSeason(sn,chip){if(selectedSeasons.has(sn)){selectedSeasons.delete(sn);chip.classList.remove("selected")}else{selectedSeasons.add(sn);chip.classList.add("selected")}}
-function toggleAllSeasons(nums){const all=nums.every(n=>selectedSeasons.has(n));document.querySelectorAll(".season-chip").forEach(c=>{const sn=parseInt(c.dataset.sn);if(all){selectedSeasons.delete(sn);c.classList.remove("selected")}else if(nums.includes(sn)){selectedSeasons.add(sn);c.classList.add("selected")}})}
+            function toggleSeason(sn, chip) {
+                if (selectedSeasons.has(sn)) { selectedSeasons.delete(sn); chip.classList.remove("selected") }
+                else { selectedSeasons.add(sn); chip.classList.add("selected") }
+            }
 
-async function retryReload(rid,type,tmdbId){await apiFetch(`/api/requests/${rid}/retry`,{method:"POST"});await loadStatusMap();openDetail(type,tmdbId)}
-function closeModal(){el("modal").classList.remove("open");const f=el("trailerFrame");if(f)f.src=""}
-el("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal()});
+            function toggleAllSeasons(nums) {
+                const all = nums.every(n => selectedSeasons.has(n));
+                document.querySelectorAll(".season-chip").forEach(c => {
+                    const sn = parseInt(c.dataset.sn);
+                    if (all) { selectedSeasons.delete(sn); c.classList.remove("selected") }
+                    else if (nums.includes(sn)) { selectedSeasons.add(sn); c.classList.add("selected") }
+                })
+            }
 
-async function reqMedia(type,id,title,poster,genreIds){
-  const btn=el("reqBtn");if(btn){btn.disabled=true;btn.textContent="⏳ Bezig..."}
-  const seasons=type==="tv"?Array.from(selectedSeasons).filter(n=>n>0).sort((a,b)=>a-b):[];
-  try{const res=await fetch("/api/requests",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+token},body:JSON.stringify({tmdb_id:id,media_type:type,title,poster_path:poster,overview:"",genre_ids:genreIds?genreIds.split(","):[],seasons})});
-    if(res.ok){await loadStatusMap();openDetail(type,id)}else{const e=await res.json();alert(e.error||"Fout")}}catch{alert("Netwerkfout")}
-}
+            async function retryReload(rid, type, tmdbId) {
+                await apiFetch(`/api/requests/${rid}/retry`, { method: "POST" });
+                await loadStatusMap();
+                openDetail(type, tmdbId)
+            }
 
-function el(id){return document.getElementById(id)}
-function esc(s){const d=document.createElement("div");d.textContent=s||"";return d.innerHTML}
-async function apiFetch(url,opts={}){opts.headers={...opts.headers,Authorization:"Bearer "+token};const r=await fetch(url,opts);if(r.status===401){token="";localStorage.removeItem("ms_token");showLogin();throw new Error("Niet ingelogd")}if(!r.ok){const e=await r.json().catch(()=>({error:r.statusText}));throw new Error(e.error||r.statusText)}return r.json()}
-checkAuth();
-</script>
-</body>
+            function closeModal() {
+                el("modal").classList.remove("open");
+                const f = el("trailerFrame");
+                if (f) f.src = ""
+            }
+
+            el("modal").addEventListener("click", e => { if (e.target.id === "modal") closeModal() });
+
+            async function reqMedia(type, id, title, poster, genreIds) {
+                const btn = el("reqBtn");
+                if (btn) { btn.disabled = true; btn.textContent = "⏳ Bezig..." }
+                const seasons = type === "tv" ? Array.from(selectedSeasons).filter(n => n > 0).sort((a,b) => a-b) : [];
+                try {
+                    const res = await fetch("/api/requests", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+                        body: JSON.stringify({ tmdb_id: id, media_type: type, title, poster_path: poster, overview: "", genre_ids: genreIds ? genreIds.split(",") : [], seasons })
+                    });
+                    if (res.ok) { await loadStatusMap(); openDetail(type, id) }
+                    else { const e = await res.json(); alert(e.error || "Fout") }
+                } catch { alert("Netwerkfout") }
+            }
+
+            function el(id) { return document.getElementById(id) }
+            function esc(s) { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML }
+
+            async function apiFetch(url, opts={}) {
+                opts.headers = { ...opts.headers, Authorization: "Bearer " + token };
+                const r = await fetch(url, opts);
+                if (r.status === 401) {
+                    token = ""; localStorage.removeItem("ms_token"); showLogin();
+                    throw new Error("Niet ingelogd")
+                }
+                if (!r.ok) {
+                    const e = await r.json().catch(() => ({ error: r.statusText }));
+                    throw new Error(e.error || r.statusText)
+                }
+                return r.json()
+            }
+
+            checkAuth();
+        </script>
+    </body>
 </html>
