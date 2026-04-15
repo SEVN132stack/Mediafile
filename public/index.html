@@ -28,6 +28,20 @@
     .modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);align-items:center;justify-content:center}.modal-overlay.open{display:flex}.modal{background:var(--surface);border-radius:16px;width:90%;max-width:720px;max-height:85vh;overflow-y:auto;position:relative;border:1px solid var(--border);box-shadow:0 32px 64px rgba(0,0,0,.5)}.modal-backdrop-img{height:260px;width:100%;object-fit:cover;border-radius:16px 16px 0 0;display:block;filter:brightness(.6)}.modal-content{padding:24px 28px 28px;position:relative}.modal-poster{width:120px;height:180px;border-radius:10px;object-fit:cover;border:3px solid var(--surface);position:absolute;top:-90px;left:28px;box-shadow:0 8px 24px rgba(0,0,0,.5)}.modal-info{margin-left:148px;margin-top:-80px}.modal-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:26px;line-height:1.2}.modal-subtitle{color:var(--text-dim);font-size:14px;margin-top:4px}.modal-overview{margin-top:20px;font-size:14px;line-height:1.7;color:var(--text-dim)}.modal-actions{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}.btn{padding:10px 24px;border-radius:10px;font:600 14px/1 'DM Sans',sans-serif;border:none;cursor:pointer;transition:all .2s}.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{filter:brightness(1.15)}.btn-primary:disabled{background:var(--surface-hover);color:var(--text-dim);cursor:default}.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}.btn-outline:hover{border-color:var(--text-dim)}.btn-sm{padding:6px 14px;font-size:12px;border-radius:8px}.btn-danger{background:var(--red-glow);color:var(--red);border:1px solid rgba(239,68,68,.3)}.btn-danger:hover{background:var(--red);color:#fff}.btn-retry{background:var(--amber-glow);color:var(--amber);border:1px solid rgba(245,158,11,.3)}.btn-retry:hover{background:var(--amber);color:#fff}.modal-close{position:absolute;top:16px;right:16px;z-index:10;background:rgba(0,0,0,.5);border:none;color:#fff;width:36px;height:36px;border-radius:50%;font-size:20px;cursor:pointer;backdrop-filter:blur(4px)}
     /* Release date badge */
     .release-badge{display:inline-flex;align-items:center;gap:5px;background:var(--blue-glow);color:var(--blue);padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;margin-top:10px}
+    /* Trailer */
+    .trailer-section{margin-top:20px}
+    .trailer-toggle{display:flex;align-items:center;gap:8px;background:none;border:1px solid var(--border);color:var(--text);padding:10px 18px;border-radius:10px;font:600 14px/1 'DM Sans',sans-serif;cursor:pointer;transition:all .2s;width:100%}.trailer-toggle:hover{border-color:var(--red);color:var(--red)}.trailer-toggle.open{border-color:var(--red);color:var(--red);border-radius:10px 10px 0 0;border-bottom:none}
+    .trailer-container{border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;overflow:hidden;background:#000}
+    .trailer-container iframe{width:100%;aspect-ratio:16/9;display:block;border:none}
+    .trailer-tabs{display:flex;gap:0;background:var(--bg);border-bottom:1px solid var(--border);overflow-x:auto}
+    .trailer-tab{padding:8px 16px;font:500 12px/1 'DM Sans',sans-serif;color:var(--text-dim);background:none;border:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s}.trailer-tab:hover{color:var(--text)}.trailer-tab.active{color:var(--red);border-bottom-color:var(--red)}
+    /* Cast */
+    .cast-section{margin-top:20px}.cast-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:16px;margin-bottom:12px}
+    .cast-scroll{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}.cast-scroll::-webkit-scrollbar{height:4px}.cast-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+    .cast-item{flex-shrink:0;width:90px;text-align:center;cursor:pointer;transition:transform .2s}.cast-item:hover{transform:translateY(-2px)}
+    .cast-photo{width:72px;height:72px;border-radius:50%;object-fit:cover;margin:0 auto 6px;display:block;background:var(--surface-hover);border:2px solid var(--border);transition:border-color .2s}.cast-item:hover .cast-photo{border-color:var(--accent)}
+    .cast-photo-placeholder{width:72px;height:72px;border-radius:50%;margin:0 auto 6px;background:var(--surface-hover);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--text-dim)}
+    .cast-name{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cast-char{font-size:11px;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .status{font-size:12px;font-weight:600;padding:4px 10px;border-radius:6px;display:inline-flex;align-items:center;gap:5px}.status-sending{background:var(--blue-glow);color:var(--blue)}.status-sent{background:var(--accent-glow);color:var(--accent)}.status-downloading{background:var(--amber-glow);color:var(--amber)}.status-available{background:var(--green-glow);color:var(--green)}.status-failed{background:var(--red-glow);color:var(--red)}.status-not_configured{background:var(--red-glow);color:var(--red)}.status-msg{font-size:12px;color:var(--text-dim);margin-top:4px;max-width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .season-picker{margin-top:16px;padding:16px;background:var(--bg);border:1px solid var(--border);border-radius:10px}.season-picker-title{font-weight:700;font-size:14px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}.season-picker-title button{font-size:12px;color:var(--accent);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif}.season-picker-title button:hover{text-decoration:underline}.season-grid{display:flex;flex-wrap:wrap;gap:8px}.season-chip{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;border:1px solid var(--border);background:var(--surface);color:var(--text-dim);cursor:pointer;user-select:none}.season-chip:hover{border-color:var(--accent);color:var(--text)}.season-chip.selected{background:var(--accent);border-color:var(--accent);color:#fff}
     /* Person card */
@@ -199,10 +213,40 @@ async function openDetail(type,id){
     const t=d.title||d.name,y=(d.release_date||d.first_air_date||"").slice(0,4),g=(d.genres||[]).map(g=>g.name).join(", "),gids=(d.genres||[]).map(g=>g.id);
     const bg=d.backdrop_path?`${TMDB_IMG}/w1280${d.backdrop_path}`:"",po=d.poster_path?`${TMDB_IMG}/w342${d.poster_path}`:"",req=d._request,rat=d.vote_average?d.vote_average.toFixed(1):"—";
 
-    // Release date info
+    // Release date
     const releaseDate=d.release_date||d.first_air_date||"";
     const isFuture=releaseDate&&new Date(releaseDate)>new Date();
     const releaseBadge=releaseDate?`<div class="release-badge">${isFuture?'🗓 Verwacht':'📅 Uitgebracht'}: ${new Date(releaseDate).toLocaleDateString('nl-NL',{year:'numeric',month:'long',day:'numeric'})}</div>`:'';
+
+    // Trailers — filter YouTube videos, prioritize official trailers
+    const videos=(d.videos&&d.videos.results||[]).filter(v=>v.site==="YouTube"&&v.key);
+    const trailers=videos.filter(v=>v.type==="Trailer");
+    const teasers=videos.filter(v=>v.type==="Teaser");
+    const clips=videos.filter(v=>v.type!=="Trailer"&&v.type!=="Teaser");
+    const allVids=[...trailers,...teasers,...clips];
+    let trailerHTML="";
+    if(allVids.length>0){
+      const first=allVids[0];
+      trailerHTML=`<div class="trailer-section">
+        <button class="trailer-toggle" onclick="toggleTrailer(this)" id="trailerToggle">▶ Trailer bekijken (${allVids.length} video${allVids.length>1?'s':''})</button>
+        <div class="trailer-container" id="trailerBox" style="display:none">
+          ${allVids.length>1?`<div class="trailer-tabs" id="trailerTabs">${allVids.map((v,i)=>`<button class="trailer-tab ${i===0?'active':''}" onclick="switchTrailer('${v.key}',${i})">${esc(v.type)}${v.name&&v.name!==v.type?' — '+esc(v.name.slice(0,30)):''}</button>`).join("")}</div>`:''}
+          <iframe id="trailerFrame" src="" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>`;
+      // Store first key for lazy load
+      window._firstTrailerKey=first.key;
+    }
+
+    // Cast
+    const cast=(d.credits&&d.credits.cast||[]).slice(0,20);
+    let castHTML="";
+    if(cast.length>0){
+      castHTML=`<div class="cast-section"><div class="cast-title">🎭 Cast</div><div class="cast-scroll">${cast.map(c=>{
+        const photo=c.profile_path?`<img class="cast-photo" src="${TMDB_IMG}/w185${c.profile_path}" alt="${esc(c.name)}" loading="lazy" onerror="this.outerHTML='<div class=\\'cast-photo-placeholder\\'>👤</div>'" />`:`<div class="cast-photo-placeholder">👤</div>`;
+        return `<div class="cast-item" onclick="openPerson(${c.id})" title="${esc(c.name)} als ${esc(c.character||'')}">${photo}<div class="cast-name">${esc(c.name)}</div><div class="cast-char">${esc(c.character||'')}</div></div>`;
+      }).join("")}</div></div>`;
+    }
 
     // Season picker
     let seasonPickerHTML="";
@@ -217,14 +261,30 @@ async function openDetail(type,id){
     if(req){const si=req.seasons?` (S${req.seasons})`:'';act=`${stHTML(req.status)}<span style="font-size:12px;color:var(--text-dim)">${esc(req.status_message||'')}${si}</span>${req.status==='failed'||req.status==='not_configured'?`<button class="btn btn-sm btn-retry" onclick="retryReload(${req.id},'${type}',${id})">🔄</button>`:''}`}
     else{const futureLabel=isFuture?'🗓 Vooruit aanvragen':'🎬 Aanvragen';act=`<button class="btn btn-primary" id="reqBtn" onclick="reqMedia('${type}',${id},'${esc(t).replace(/'/g,"\\'")}','${d.poster_path||""}','${gids.join(",")}')">${futureLabel}</button>`}
 
-    content.innerHTML=`<button class="modal-close" onclick="closeModal()">✕</button>${bg?`<img class="modal-backdrop-img" src="${bg}" />`:'<div style="height:100px"></div>'}<div class="modal-content">${po?`<img class="modal-poster" src="${po}" />`:''}<div class="modal-info"><div class="modal-title">${esc(t)}</div><div class="modal-subtitle">${y} · ${g} · ⭐ ${rat}${d.number_of_seasons?' · '+d.number_of_seasons+' seizoenen':''}</div>${releaseBadge}</div><div class="modal-overview">${esc(d.overview||"Geen beschrijving.")}</div>${seasonPickerHTML}<div class="modal-actions">${act}<button class="btn btn-outline" onclick="closeModal()">Sluiten</button></div></div>`;
+    content.innerHTML=`<button class="modal-close" onclick="closeModal()">✕</button>${bg?`<img class="modal-backdrop-img" src="${bg}" />`:'<div style="height:100px"></div>'}<div class="modal-content">${po?`<img class="modal-poster" src="${po}" />`:''}<div class="modal-info"><div class="modal-title">${esc(t)}</div><div class="modal-subtitle">${y} · ${g} · ⭐ ${rat}${d.number_of_seasons?' · '+d.number_of_seasons+' seizoenen':''}</div>${releaseBadge}</div><div class="modal-overview">${esc(d.overview||"Geen beschrijving.")}</div>${castHTML}${trailerHTML}${seasonPickerHTML}<div class="modal-actions">${act}<button class="btn btn-outline" onclick="closeModal()">Sluiten</button></div></div>`;
   }catch{content.innerHTML='<div class="empty-state"><p>Laden mislukt.</p></div>'}}
+
+function toggleTrailer(btn){
+  const box=el("trailerBox"),frame=el("trailerFrame");
+  if(box.style.display==="none"){
+    box.style.display="block";btn.classList.add("open");btn.innerHTML="⏹ Trailer sluiten";
+    if(!frame.src||frame.src==="")frame.src=`https://www.youtube-nocookie.com/embed/${window._firstTrailerKey}?rel=0`;
+  }else{
+    box.style.display="none";btn.classList.remove("open");btn.innerHTML=`▶ Trailer bekijken`;
+    frame.src="";
+  }
+}
+
+function switchTrailer(key,idx){
+  const frame=el("trailerFrame");frame.src=`https://www.youtube-nocookie.com/embed/${key}?rel=0&autoplay=1`;
+  document.querySelectorAll(".trailer-tab").forEach((t,i)=>t.classList.toggle("active",i===idx));
+}
 
 function toggleSeason(sn,chip){if(selectedSeasons.has(sn)){selectedSeasons.delete(sn);chip.classList.remove("selected")}else{selectedSeasons.add(sn);chip.classList.add("selected")}}
 function toggleAllSeasons(nums){const all=nums.every(n=>selectedSeasons.has(n));document.querySelectorAll(".season-chip").forEach(c=>{const sn=parseInt(c.dataset.sn);if(all){selectedSeasons.delete(sn);c.classList.remove("selected")}else if(nums.includes(sn)){selectedSeasons.add(sn);c.classList.add("selected")}})}
 
 async function retryReload(rid,type,tmdbId){await apiFetch(`/api/requests/${rid}/retry`,{method:"POST"});await loadStatusMap();openDetail(type,tmdbId)}
-function closeModal(){el("modal").classList.remove("open")}
+function closeModal(){el("modal").classList.remove("open");const f=el("trailerFrame");if(f)f.src=""}
 el("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal()});
 
 async function reqMedia(type,id,title,poster,genreIds){
