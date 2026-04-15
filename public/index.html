@@ -593,6 +593,16 @@
                 min-height: 110px
             }
 
+            .modal-header-block {
+                min-height: 110px;
+                padding-left: 148px;
+                position: relative;
+                margin-top: -80px;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end
+            }
+
             .modal-title {
                 font-family: 'Outfit',sans-serif;
                 font-weight: 700;
@@ -606,13 +616,11 @@
                 margin-top: 4px
             }
 
-            /* FIX: overview clear so it never overlaps the poster */
             .modal-overview {
                 margin-top: 20px;
                 font-size: 14px;
                 line-height: 1.7;
-                color: var(--text-dim);
-                clear: left
+                color: var(--text-dim)
             }
 
             .modal-actions {
@@ -1352,7 +1360,7 @@
                 .nav-links button { padding: 6px 8px; font-size: 12px }
                 .media-grid { grid-template-columns: repeat(auto-fill,minmax(140px,1fr)); gap: 12px }
                 .modal { width: 96% }
-                .modal-info { margin-left: 0; margin-top: 12px; min-height: unset }
+                .modal-header-block { padding-left: 0; margin-top: 12px; min-height: unset }
                 .modal-poster { position: static; margin: -60px auto 0; display: block }
                 .auth-card { padding: 28px 24px }
                 .nav-user-name { display: none }
@@ -1927,7 +1935,7 @@ ${data.results && data.results.length >= 20 ? '<div class="load-more-wrap"><butt
                     }
 
                     content.innerHTML = `<button class="modal-close" onclick="closeModal()">✕</button>${bg?`<img class="modal-backdrop-img" src="${bg}" />`:'<div style="height:100px"></div>'}<div class="modal-content">${po?`<img class="modal-poster" src="${po}" />`:''}
-<div class="modal-info">
+<div class="modal-header-block">
   <div class="modal-title">${esc(t)}</div>
   <div class="modal-subtitle">${y} · ${g} · ⭐ ${rat}${d.number_of_seasons?' · '+d.number_of_seasons+' seizoenen':''}</div>
   ${releaseBadge}
