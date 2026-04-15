@@ -219,7 +219,7 @@ app.get("/api/settings/radarr-profiles", auth, adminOnly, async (_req,res) => { 
 app.get("/api/settings/sonarr-profiles", auth, adminOnly, async (_req,res) => { try{const[p,f]=await Promise.all([sonarrApi("GET","/qualityprofile"),sonarrApi("GET","/rootfolder")]);res.json({profiles:p,folders:f})}catch(e){res.json({error:e.message})} });
 
 // Media
-app.get("/api/search", auth, async (req,res) => { try{const{query,page=1}=req.query;if(!query)return res.status(400).json({error:"Query"});const d=await tmdbFetch("/search/multi",{query,page});d.results=(d.results||[]).filter(r=>r.media_type==="movie"||r.media_type==="tv");res.json(d)}catch(e){res.status(500).json({error:e.message})} });
+app.get("/api/search", auth, async (req,res) => { try{const{query,page=1}=req.query;if(!query)return res.status(400).json({error:"Query"});const d=await tmdbFetch("/search/multi",{query,page});d.results=(d.results||[]).filter(r=>r.media_type==="movie"||r.media_type==="tv"||r.media_type==="person");res.json(d)}catch(e){res.status(500).json({error:e.message})} });
 app.get("/api/trending/:type", auth, async (req,res) => { try{res.json(await tmdbFetch(`/trending/${req.params.type==="tv"?"tv":"movie"}/week`))}catch(e){res.status(500).json({error:e.message})} });
 app.get("/api/genres/:type", auth, async (req,res) => { try{res.json(await tmdbFetch(`/genre/${req.params.type==="tv"?"tv":"movie"}/list`))}catch(e){res.status(500).json({error:e.message})} });
 app.get("/api/discover/:type", auth, async (req,res) => { try{const t=req.params.type==="tv"?"tv":"movie";const{genre,page=1,sort="popularity.desc"}=req.query;const p={page,sort_by:sort};if(genre)p.with_genres=genre;res.json(await tmdbFetch(`/discover/${t}`,p))}catch(e){res.status(500).json({error:e.message})} });
@@ -287,6 +287,41 @@ app.get("/api/recommendations", auth, async (req,res) => {
     // Shuffle en neem top 20
     const shuffled = filtered.sort(()=>Math.random()-0.5).slice(0,20);
     res.json({results:shuffled, top_genres: topGenres});
+  } catch(e){res.status(500).json({error:e.message})}
+});
+
+// ── Bulk request statussen (voor kaart-iconen) ──
+app.get("/api/requests/statusmap", auth, (_req,res) => {
+  try {
+    const rows = db.prepare("SELECT tmdb_id, media_type, status FROM requests").all();
+    const map = {};
+    for(const r of rows) map[`${r.media_type}-${r.tmdb_id}`] = r.status;
+    res.json(map);
+  } catch(e){res.status(500).json({error:e.message})}
+});
+
+// ── Acteur zoeken en detail ──
+app.get("/api/person/search", auth, async (req,res) => {
+  try {
+    const{query,page=1}=req.query; if(!query) return res.status(400).json({error:"Query"});
+    const d=await tmdbFetch("/search/person",{query,page});
+    res.json(d);
+  } catch(e){res.status(500).json({error:e.message})}
+});
+
+app.get("/api/person/:id", auth, async (req,res) => {
+  try {
+    const d=await tmdbFetch(`/person/${req.params.id}`,{append_to_response:"combined_credits"});
+    res.json(d);
+  } catch(e){res.status(500).json({error:e.message})}
+});
+
+// ── Aankomende films ──
+app.get("/api/upcoming", auth, async (req,res) => {
+  try {
+    const{page=1}=req.query;
+    const d=await tmdbFetch("/movie/upcoming",{page,region:"NL"});
+    res.json(d);
   } catch(e){res.status(500).json({error:e.message})}
 });
 
