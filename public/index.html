@@ -620,6 +620,70 @@
                 color: var(--text-dim)
             }
 
+            .collection-section {
+                margin-top: 20px;
+                padding: 16px;
+                background: var(--bg);
+                border: 1px solid var(--border);
+                border-radius: 10px
+            }
+
+            .collection-title {
+                font-weight: 700;
+                font-size: 14px;
+                margin-bottom: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between
+            }
+
+            .collection-title button {
+                font-size: 12px;
+                color: var(--accent);
+                background: none;
+                border: none;
+                cursor: pointer;
+                font-family: 'DM Sans',sans-serif
+            }
+
+            .collection-title button:hover { text-decoration: underline }
+
+            .collection-grid {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin-bottom: 12px
+            }
+
+            .collection-chip {
+                padding: 8px 14px;
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: 600;
+                border: 1px solid var(--border);
+                background: var(--surface);
+                color: var(--text-dim);
+                cursor: pointer;
+                user-select: none;
+                transition: all .15s
+            }
+
+            .collection-chip:hover { border-color: var(--accent); color: var(--text) }
+
+            .collection-chip.selected {
+                background: var(--accent);
+                border-color: var(--accent);
+                color: #fff
+            }
+
+            .collection-chip.already {
+                background: var(--green-glow);
+                border-color: var(--green);
+                color: var(--green);
+                cursor: default;
+                opacity: .7
+            }
+
             .modal-actions {
                 margin-top: 20px;
                 display: flex;
@@ -1923,6 +1987,35 @@ ${data.results && data.results.length >= 20 ? '<div class="load-more-wrap"><butt
                         }
                     }
 
+                    // ── Collection picker (film reeks) ──
+                    let collectionHTML = "";
+                    if (type === "movie" && d.belongs_to_collection && !req) {
+                        const col = d.belongs_to_collection;
+                        try {
+                            const colData = await apiFetch(`/api/tmdb-collection/${col.id}`);
+                            const parts = (colData.parts || []).sort((a,b) => (a.release_date||"").localeCompare(b.release_date||""));
+                            if (parts.length > 1) {
+                                window._collectionParts = parts;
+                                window._selectedCollection = new Set(parts.map(p => p.id));
+                                const chips = parts.map(p => {
+                                    const alreadyReq = requestStatusMap[`movie-${p.id}`];
+                                    const yr = (p.release_date||"").slice(0,4);
+                                    const cls = alreadyReq ? "collection-chip already" : "collection-chip selected";
+                                    const onclick = alreadyReq ? "" : `onclick="toggleCollectionPart(${p.id},this)"`;
+                                    return `<div class="${cls}" data-cid="${p.id}" ${onclick}>${esc(p.title)}${yr?" ("+yr+")":""} ${alreadyReq ? "✅" : ""}</div>`;
+                                }).join("");
+                                collectionHTML = `<div class="collection-section">
+                                    <div class="collection-title">
+                                        <span>🎬 ${esc(col.name)}</span>
+                                        <button onclick="toggleAllCollection()">Alles aan/uit</button>
+                                    </div>
+                                    <div class="collection-grid">${chips}</div>
+                                    <button class="btn btn-primary" style="width:100%" onclick="reqCollection('${gids.join(",")}')">🎬 Geselecteerde films aanvragen</button>
+                                </div>`;
+                            }
+                        } catch(e) {}
+                    }
+
                     let act;
                     if (req) {
                         const si = req.seasons ? ` (S${req.seasons})` : '';
@@ -1934,7 +2027,7 @@ ${data.results && data.results.length >= 20 ? '<div class="load-more-wrap"><butt
 
                     content.innerHTML = `<button class="modal-close" onclick="closeModal()">✕</button>${bg?`<img class="modal-backdrop-img" src="${bg}" />`:'<div style="height:100px"></div>'}<div class="modal-content"><div class="modal-top">${po?`<img class="modal-poster" src="${po}" />`:''}<div class="modal-header-block"><div class="modal-title">${esc(t)}</div><div class="modal-subtitle">${y} · ${g} · ⭐ ${rat}${d.number_of_seasons?' · '+d.number_of_seasons+' seizoenen':''}</div>${releaseBadge}</div></div>
 <div class="modal-overview">${esc(d.overview||"Geen beschrijving.")}</div>
-${castHTML}${trailerHTML}${seasonPickerHTML}
+${castHTML}${trailerHTML}${seasonPickerHTML}${collectionHTML}
 <div class="modal-actions">${act}<button class="btn btn-outline" onclick="closeModal()">Sluiten</button></div></div>`;
                 } catch {
                     content.innerHTML = '<div class="empty-state"><p>Laden mislukt.</p></div>'
@@ -1980,6 +2073,76 @@ ${castHTML}${trailerHTML}${seasonPickerHTML}
                 await apiFetch(`/api/requests/${rid}/retry`, { method: "POST" });
                 await loadStatusMap();
                 openDetail(type, tmdbId)
+            }
+
+            function toggleCollectionPart(id, chip) {
+                if (window._selectedCollection.has(id)) {
+                    window._selectedCollection.delete(id);
+                    chip.classList.remove("selected")
+                } else {
+                    window._selectedCollection.add(id);
+                    chip.classList.add("selected")
+                }
+            }
+
+            function toggleAllCollection() {
+                const parts = window._collectionParts || [];
+                const selectableIds = parts
+                    .filter(p => !requestStatusMap[`movie-${p.id}`])
+                    .map(p => p.id);
+                const allSelected = selectableIds.every(id => window._selectedCollection.has(id));
+                document.querySelectorAll(".collection-chip:not(.already)").forEach(c => {
+                    const cid = parseInt(c.dataset.cid);
+                    if (allSelected) {
+                        window._selectedCollection.delete(cid);
+                        c.classList.remove("selected")
+                    } else {
+                        window._selectedCollection.add(cid);
+                        c.classList.add("selected")
+                    }
+                })
+            }
+
+            async function reqCollection(genreIds) {
+                const parts = window._collectionParts || [];
+                const selected = parts.filter(p =>
+                    window._selectedCollection.has(p.id) && !requestStatusMap[`movie-${p.id}`]
+                );
+                if (!selected.length) { alert("Geen films geselecteerd"); return }
+
+                const btn = document.querySelector(".collection-section .btn-primary");
+                if (btn) { btn.disabled = true; btn.textContent = "⏳ Bezig..." }
+
+                let successCount = 0;
+                for (const film of selected) {
+                    try {
+                        const res = await fetch("/api/requests", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+                            body: JSON.stringify({
+                                tmdb_id: film.id,
+                                media_type: "movie",
+                                title: film.title,
+                                poster_path: film.poster_path || "",
+                                overview: film.overview || "",
+                                genre_ids: genreIds ? genreIds.split(",") : [],
+                                seasons: []
+                            })
+                        });
+                        if (res.ok) successCount++;
+                    } catch {}
+                }
+                await loadStatusMap();
+                if (btn) { btn.disabled = false; btn.textContent = `✅ ${successCount} film(s) aangevraagd` }
+                // Refresh chips
+                document.querySelectorAll(".collection-chip:not(.already)").forEach(c => {
+                    const cid = parseInt(c.dataset.cid);
+                    if (requestStatusMap[`movie-${cid}`]) {
+                        c.className = "collection-chip already";
+                        c.onclick = null;
+                        c.innerHTML += " ✅"
+                    }
+                })
             }
 
             function closeModal() {

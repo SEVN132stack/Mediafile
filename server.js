@@ -369,5 +369,13 @@ app.post("/api/requests/:id/retry", auth, async (req,res) => {
 app.delete("/api/requests/:id", auth, (req,res) => { try{db.prepare("DELETE FROM requests WHERE id=?").run(req.params.id);res.json({success:true})}catch(e){res.status(500).json({error:e.message})} });
 app.get("/api/requests", auth, (_req,res) => { try{res.json(db.prepare("SELECT * FROM requests ORDER BY requested_at DESC").all())}catch(e){res.status(500).json({error:e.message})} });
 
+// ── TMDB Collection (film reeks) ──
+app.get("/api/tmdb-collection/:id", auth, async (req,res) => {
+  try {
+    const d = await tmdbFetch(`/collection/${req.params.id}`);
+    res.json(d);
+  } catch(e) { res.status(500).json({error:e.message}); }
+});
+
 app.get("*", (_req,res) => res.sendFile(path.join(__dirname,"public","index.html")));
 app.listen(PORT,"0.0.0.0", ()=>{ console.log(`\n  MediaSeerr v1.3.0 — http://localhost:${PORT}\n`); });
