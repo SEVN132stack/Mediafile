@@ -9,6 +9,7 @@ use App\Services\SonarrService;
 use App\Services\TmdbService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 
 class SettingController extends Controller
 {
@@ -27,14 +28,22 @@ class SettingController extends Controller
         return response()->json(['success' => true, 'settings' => Setting::all()]);
     }
 
-    public function test(Request $request, RadarrService $radarr, SonarrService $sonarr, TmdbService $tmdb)
+    public function test(Request $request)
     {
         $service = $request->input('service');
+
+        // Sla eerst de huidige instellingen op
+        foreach (Setting::$keys as $key) {
+            if ($request->has($key)) {
+                Setting::set($key, (string) $request->input($key));
+            }
+        }
+
         try {
             $ok = match ($service) {
-                'tmdb'     => (bool) $tmdb->get('/configuration'),
-                'radarr'   => $radarr->testConnection(),
-                'sonarr'   => $sonarr->testConnection(),
+                'tmdb'     => $this->testTmdb(),
+                'radarr'   => $this->testRadarr(),
+                'sonarr'   => $this->testSonarr(),
                 'jellyfin' => $this->testJellyfin(),
                 'plex'     => $this->testPlex(),
                 default    => false,
@@ -45,25 +54,78 @@ class SettingController extends Controller
         }
     }
 
-    public function radarrProfiles(RadarrService $radarr)
+    private function testTmdb(): bool
+    {
+        $key = Setting::get('tmdb_api_key');
+        if (!$key) return false;
+        $r = Http::timeout(10)->get("https://api.themoviedb.org/3/configuration", ['api_key' => $key]);
+        return $r->ok();
+    }
+
+    private function testRadarr(): bool
+    {
+        $url = Setting::get('radarr_url');
+        $key = Setting::get('radarr_api_key');
+        if (!$url || !$key) return false;
+        $r = Http::timeout(10)->withHeaders(['X-Api-Key' => $key])->get("{$url}/api/v3/system/status");
+        return $r->ok();
+    }
+
+    private function testSonarr(): bool
+    {
+        $url = Setting::get('sonarr_url');
+        $key = Setting::get('sonarr_api_key');
+        if (!$url || !$key) return false;
+        $r = Http::timeout(10)->withHeaders(['X-Api-Key' => $key])->get("{$url}/api/v3/system/status");
+        return $r->ok();
+    }
+
+    private function testJellyfin(): bool
+    {
+        $url = Setting::get('jellyfin_url');
+        $key = Setting::get('jellyfin_api_key');
+        if (!$url || !$key) return false;
+        $r = Http::timeout(10)->withHeaders(['X-Emby-Token' => $key])->get("{$url}/System/Info");
+        return $r->ok();
+    }
+
+    private function testPlex(): bool
+    {
+        $url = Setting::get('plex_url');
+        $token = Setting::get('plex_token');
+        if (!$url || !$token) return false;
+        $r = Http::timeout(10)->withHeaders(['X-Plex-Token' => $token, 'Accept' => 'application/json'])->get("{$url}/identity");
+        return $r->ok();
+    }
+
+    public function radarrProfiles()
     {
         try {
-            return response()->json(['profiles' => $radarr->qualityProfiles(), 'folders' => $radarr->rootFolders()]);
+            $url = Setting::get('radarr_url');
+            $key = Setting::get('radarr_api_key');
+            if (!$url || !$key) return response()->json(['error' => 'Radarr niet geconfigureerd']);
+            $profiles = Http::withHeaders(['X-Api-Key' => $key])->get("{$url}/api/v3/qualityprofile")->json();
+            $folders  = Http::withHeaders(['X-Api-Key' => $key])->get("{$url}/api/v3/rootfolder")->json();
+            return response()->json(['profiles' => $profiles, 'folders' => $folders]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()]);
         }
     }
 
-    public function sonarrProfiles(SonarrService $sonarr)
+    public function sonarrProfiles()
     {
         try {
-            return response()->json(['profiles' => $sonarr->qualityProfiles(), 'folders' => $sonarr->rootFolders()]);
+            $url = Setting::get('sonarr_url');
+            $key = Setting::get('sonarr_api_key');
+            if (!$url || !$key) return response()->json(['error' => 'Sonarr niet geconfigureerd']);
+            $profiles = Http::withHeaders(['X-Api-Key' => $key])->get("{$url}/api/v3/qualityprofile")->json();
+            $folders  = Http::withHeaders(['X-Api-Key' => $key])->get("{$url}/api/v3/rootfolder")->json();
+            return response()->json(['profiles' => $profiles, 'folders' => $folders]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()]);
         }
     }
 
-    // Users
     public function users()
     {
         return response()->json(User::orderBy('created_at')->get(['id', 'username', 'display_name', 'role', 'created_at']));
@@ -81,23 +143,5 @@ class SettingController extends Controller
         if ($request->user()->id === $id) abort(400, 'Kan jezelf niet verwijderen');
         User::findOrFail($id)->delete();
         return response()->json(['success' => true]);
-    }
-
-    private function testJellyfin(): bool
-    {
-        $url = Setting::get('jellyfin_url');
-        $key = Setting::get('jellyfin_api_key');
-        if (!$url || !$key) return false;
-        $r = \Illuminate\Support\Facades\Http::withHeaders(['X-Emby-Token' => $key])->get("{$url}/System/Info");
-        return $r->ok();
-    }
-
-    private function testPlex(): bool
-    {
-        $url = Setting::get('plex_url');
-        $token = Setting::get('plex_token');
-        if (!$url || !$token) return false;
-        $r = \Illuminate\Support\Facades\Http::withHeaders(['X-Plex-Token' => $token, 'Accept' => 'application/json'])->get("{$url}/identity");
-        return $r->ok();
     }
 }
