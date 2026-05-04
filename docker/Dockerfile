@@ -32,7 +32,7 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
 
 # Start script
-COPY docker/start.sh /start.sh
-RUN chmod +x /start.sh
+COPY docker/start.sh /var/www/html/start.sh
+RUN chmod +x /var/www/html/start.sh
 
-CMD ["/start.sh"]
+CMD ["/var/www/html/start.sh"]

@@ -50,7 +50,8 @@ services:
       dockerfile: docker/Dockerfile
     container_name: mediaseerr-queue
     restart: unless-stopped
-    command: php artisan queue:work --sleep=3 --tries=3
+    working_dir: /var/www/html
+    command: php /var/www/html/artisan queue:work --sleep=3 --tries=3
     volumes:
       - ./:/var/www/html
     environment:
@@ -66,7 +67,7 @@ services:
       - redis
 
   watchtower:
-    image: containrrr/watchtower
+    image: containrrr/watchtower:1.4.0
     container_name: watchtower
     restart: unless-stopped
     volumes:
