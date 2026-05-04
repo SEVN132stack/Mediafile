@@ -15,18 +15,22 @@ touch database/database.sqlite
 chown -R www-data:www-data storage bootstrap/cache database 2>/dev/null || true
 chmod -R 775 storage bootstrap/cache database 2>/dev/null || true
 
+# Verwijder gecachde config/routes (kunnen stale zijn)
+php artisan config:clear 2>/dev/null || true
+php artisan cache:clear 2>/dev/null || true
+php artisan route:clear 2>/dev/null || true
+php artisan view:clear 2>/dev/null || true
+
 # Genereer APP_KEY als die leeg is
-if grep -q "APP_KEY=$" .env || [ -z "$(grep APP_KEY .env | cut -d= -f2)" ]; then
+APP_KEY_VALUE=$(grep "^APP_KEY=" .env | cut -d= -f2-)
+if [ -z "$APP_KEY_VALUE" ] || [ "$APP_KEY_VALUE" = "" ]; then
     php artisan key:generate --force
 fi
 
 # Migraties
 php artisan migrate --force
 
-# Cache
-php artisan config:clear
-php artisan config:cache || true
-php artisan route:cache || true
-php artisan view:cache || true
+# Geen route:cache of config:cache - dit veroorzaakt de [files] fout
+# De app draait prima zonder cache in productie met sqlite
 
 exec php-fpm
