@@ -15,12 +15,12 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 
 # Kopieer composer bestanden en installeer dependencies
-COPY composer.json composer.lock ./
+COPY composer.json ./
 RUN composer install --no-dev --optimize-autoloader --no-scripts --no-interaction
 
 # Kopieer package bestanden en installeer/build frontend
-COPY package.json package-lock.json vite.config.js ./
-RUN npm ci && npm run build
+COPY package.json vite.config.js ./
+RUN npm install && npm run build
 
 # Kopieer de rest van de applicatie
 COPY . .
