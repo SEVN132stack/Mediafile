@@ -3,7 +3,7 @@ FROM php:8.3-fpm-alpine
 # Installeer benodigde PHP extensies en tools
 RUN apk add --no-cache \
     git curl zip unzip nodejs npm \
-    libpng-dev libzip-dev oniguruma-dev \
+    libpng-dev libzip-dev oniguruma-dev sqlite-dev \
     && docker-php-ext-install pdo pdo_sqlite mbstring zip bcmath pcntl
 
 # Installeer Redis extensie
