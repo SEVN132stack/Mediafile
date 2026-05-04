@@ -25,7 +25,7 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-script
 RUN php artisan package:discover --ansi || true
 
 # Build frontend
-RUN npm install && npm run build
+RUN npm install && npm run build && ls -la public/build/
 
 # Maak SQLite database aan
 RUN touch database/database.sqlite

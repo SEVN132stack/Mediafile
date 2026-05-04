@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet" />
     @vite(['resources/js/app.js'])
 </head>
-<body>
+<body style="margin:0;background:#0b0e17">
     <div id="app"></div>
 </body>
 </html>
