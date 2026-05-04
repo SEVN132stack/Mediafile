@@ -4,10 +4,11 @@ FROM php:8.3-fpm-alpine
 RUN apk add --no-cache \
     git curl zip unzip nodejs npm \
     libpng-dev libzip-dev oniguruma-dev sqlite-dev \
-    && docker-php-ext-install pdo pdo_sqlite mbstring zip bcmath pcntl
-
-# Installeer Redis extensie
-RUN pecl install redis && docker-php-ext-enable redis
+    autoconf g++ make \
+    && docker-php-ext-install pdo pdo_sqlite mbstring zip bcmath pcntl \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
+    && apk del autoconf g++ make
 
 # Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
