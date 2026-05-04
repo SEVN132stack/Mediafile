@@ -13,6 +13,4 @@ return [
     'key'             => env('APP_KEY'),
     'previous_keys'   => [],
     'maintenance'     => ['driver' => 'file'],
-    'providers'       => [],
-    'aliases'         => [],
 ];

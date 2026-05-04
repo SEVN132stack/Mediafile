@@ -1,6 +1,6 @@
 FROM php:8.3-fpm-alpine
 
-# Installeer benodigde PHP extensies en tools
+# Build tools + PHP extensies
 RUN apk add --no-cache \
     git curl zip unzip nodejs npm \
     libpng-dev libzip-dev oniguruma-dev sqlite-dev \
@@ -15,24 +15,24 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# Kopieer alles
+# 1. Installeer Laravel framework via composer
+COPY composer.json ./
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# 2. Kopieer applicatie bestanden
 COPY . .
 
-# Installeer PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-scripts --no-interaction
-
-# Installeer en build frontend
+# 3. Build frontend
 RUN npm install && npm run build
 
-# Maak SQLite database bestand aan als het niet bestaat
+# 4. Maak SQLite database aan
 RUN touch database/database.sqlite
 
-# Zet rechten
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
+# 5. Rechten
+RUN chown -R www-data:www-data storage bootstrap/cache database \
+    && chmod -R 775 storage bootstrap/cache database
 
 # Start script
-COPY docker/start.sh /var/www/html/start.sh
-RUN chmod +x /var/www/html/start.sh
+RUN chmod +x /var/www/html/docker/start.sh
 
-CMD ["/var/www/html/start.sh"]
+CMD ["/var/www/html/docker/start.sh"]
