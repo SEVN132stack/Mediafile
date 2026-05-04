@@ -34,7 +34,8 @@ RUN touch database/database.sqlite
 RUN chown -R www-data:www-data storage bootstrap/cache database \
     && chmod -R 775 storage bootstrap/cache database
 
-# Start script uitvoerbaar maken
-RUN chmod +x /var/www/html/docker/start.sh
+# Fix Windows line endings en maak start script uitvoerbaar
+RUN sed -i 's/\r//' /var/www/html/docker/start.sh \
+    && chmod +x /var/www/html/docker/start.sh
 
 CMD ["/var/www/html/docker/start.sh"]
