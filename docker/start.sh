@@ -6,6 +6,12 @@ cd /var/www/html
 # Zorg dat database bestaat
 touch database/database.sqlite
 
+# Installeer dependencies als vendor ontbreekt
+if [ ! -f vendor/autoload.php ]; then
+    echo "Installing composer dependencies..."
+    composer install --no-dev --optimize-autoloader --no-interaction
+fi
+
 # Zet rechten
 chown -R www-data:www-data storage bootstrap/cache database 2>/dev/null || true
 chmod -R 775 storage bootstrap/cache database 2>/dev/null || true

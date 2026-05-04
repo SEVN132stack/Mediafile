@@ -10,7 +10,8 @@ services:
     expose:
       - "9000"
     volumes:
-      - ./:/var/www/html
+      - ./database:/var/www/html/database
+      - ./storage:/var/www/html/storage
       - ./docker/php.ini:/usr/local/etc/php/conf.d/custom.ini
     environment:
       - APP_ENV=production
@@ -30,7 +31,7 @@ services:
     ports:
       - "8096:80"
     volumes:
-      - ./:/var/www/html
+      - ./public:/var/www/html/public
       - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
     networks:
       - mediaseerr-net
@@ -53,7 +54,8 @@ services:
     working_dir: /var/www/html
     command: php /var/www/html/artisan queue:work --sleep=3 --tries=3
     volumes:
-      - ./:/var/www/html
+      - ./database:/var/www/html/database
+      - ./storage:/var/www/html/storage
     environment:
       - APP_ENV=production
       - APP_KEY=${APP_KEY}
