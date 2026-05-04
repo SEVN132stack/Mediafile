@@ -15,16 +15,14 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# Kopieer composer bestanden en installeer dependencies
-COPY composer.json ./
+# Kopieer alles
+COPY . .
+
+# Installeer PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-scripts --no-interaction
 
-# Kopieer package bestanden en installeer/build frontend
-COPY package.json vite.config.js ./
+# Installeer en build frontend
 RUN npm install && npm run build
-
-# Kopieer de rest van de applicatie
-COPY . .
 
 # Maak SQLite database bestand aan als het niet bestaat
 RUN touch database/database.sqlite
