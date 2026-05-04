@@ -15,24 +15,26 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# 1. Installeer Laravel framework via composer
-COPY composer.json ./
-RUN composer install --no-dev --optimize-autoloader --no-interaction
-
-# 2. Kopieer applicatie bestanden
+# Kopieer ALLE bestanden eerst
 COPY . .
 
-# 3. Build frontend
+# Installeer PHP dependencies (geen scripts want artisan werkt nog niet)
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+
+# Draai package discovery handmatig
+RUN php artisan package:discover --ansi || true
+
+# Build frontend
 RUN npm install && npm run build
 
-# 4. Maak SQLite database aan
+# Maak SQLite database aan
 RUN touch database/database.sqlite
 
-# 5. Rechten
+# Rechten
 RUN chown -R www-data:www-data storage bootstrap/cache database \
     && chmod -R 775 storage bootstrap/cache database
 
-# Start script
+# Start script uitvoerbaar maken
 RUN chmod +x /var/www/html/docker/start.sh
 
 CMD ["/var/www/html/docker/start.sh"]
