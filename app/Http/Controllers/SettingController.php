@@ -4,9 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Setting;
 use App\Models\User;
-use App\Services\RadarrService;
-use App\Services\SonarrService;
-use App\Services\TmdbService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -15,7 +12,7 @@ class SettingController extends Controller
 {
     public function index()
     {
-        return response()->json(Setting::all());
+        return response()->json(Setting::getAll());
     }
 
     public function update(Request $request)
@@ -25,14 +22,14 @@ class SettingController extends Controller
                 Setting::set($key, (string) $request->input($key));
             }
         }
-        return response()->json(['success' => true, 'settings' => Setting::all()]);
+        return response()->json(['success' => true, 'settings' => Setting::getAll()]);
     }
 
     public function test(Request $request)
     {
         $service = $request->input('service');
 
-        // Sla eerst de huidige instellingen op
+        // Sla instellingen op voor de test
         foreach (Setting::$keys as $key) {
             if ($request->has($key)) {
                 Setting::set($key, (string) $request->input($key));
@@ -57,7 +54,7 @@ class SettingController extends Controller
     private function testTmdb(): bool
     {
         $key = Setting::get('tmdb_api_key');
-        if (!$key) return false;
+        if (!$key) throw new \Exception('TMDB API key niet ingesteld');
         $r = Http::timeout(10)->get("https://api.themoviedb.org/3/configuration", ['api_key' => $key]);
         return $r->ok();
     }
@@ -66,7 +63,7 @@ class SettingController extends Controller
     {
         $url = Setting::get('radarr_url');
         $key = Setting::get('radarr_api_key');
-        if (!$url || !$key) return false;
+        if (!$url || !$key) throw new \Exception('Radarr niet geconfigureerd');
         $r = Http::timeout(10)->withHeaders(['X-Api-Key' => $key])->get("{$url}/api/v3/system/status");
         return $r->ok();
     }
@@ -75,7 +72,7 @@ class SettingController extends Controller
     {
         $url = Setting::get('sonarr_url');
         $key = Setting::get('sonarr_api_key');
-        if (!$url || !$key) return false;
+        if (!$url || !$key) throw new \Exception('Sonarr niet geconfigureerd');
         $r = Http::timeout(10)->withHeaders(['X-Api-Key' => $key])->get("{$url}/api/v3/system/status");
         return $r->ok();
     }
@@ -84,7 +81,7 @@ class SettingController extends Controller
     {
         $url = Setting::get('jellyfin_url');
         $key = Setting::get('jellyfin_api_key');
-        if (!$url || !$key) return false;
+        if (!$url || !$key) throw new \Exception('Jellyfin niet geconfigureerd');
         $r = Http::timeout(10)->withHeaders(['X-Emby-Token' => $key])->get("{$url}/System/Info");
         return $r->ok();
     }
@@ -93,7 +90,7 @@ class SettingController extends Controller
     {
         $url = Setting::get('plex_url');
         $token = Setting::get('plex_token');
-        if (!$url || !$token) return false;
+        if (!$url || !$token) throw new \Exception('Plex niet geconfigureerd');
         $r = Http::timeout(10)->withHeaders(['X-Plex-Token' => $token, 'Accept' => 'application/json'])->get("{$url}/identity");
         return $r->ok();
     }
@@ -133,8 +130,16 @@ class SettingController extends Controller
 
     public function createUser(Request $request)
     {
-        $data = $request->validate(['username' => 'required|string|unique:users', 'password' => 'required|string|min:4', 'role' => 'in:admin,user']);
-        $user = User::create(['username' => $data['username'], 'password' => Hash::make($data['password']), 'role' => $data['role'] ?? 'user']);
+        $data = $request->validate([
+            'username' => 'required|string|unique:users',
+            'password' => 'required|string|min:4',
+            'role'     => 'in:admin,user',
+        ]);
+        $user = User::create([
+            'username' => $data['username'],
+            'password' => Hash::make($data['password']),
+            'role'     => $data['role'] ?? 'user',
+        ]);
         return response()->json($user->only('id', 'username', 'display_name', 'role'), 201);
     }
 

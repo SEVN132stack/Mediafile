@@ -143,8 +143,15 @@ onMounted(async () => {
 async function save() {
   saving.value = true
   try {
-    await axios.put('/settings', settings.value)
-    saveMsg.value = '✓ Opgeslagen'; saveOk.value = true
+    const { data } = await axios.put('/settings', settings.value)
+    if (data.success) {
+      saveMsg.value = '✓ Opgeslagen'; saveOk.value = true
+      if (data.settings && typeof data.settings === 'object' && !Array.isArray(data.settings)) {
+        settings.value = data.settings
+      }
+    } else {
+      saveMsg.value = '✗ Fout'; saveOk.value = false
+    }
   } catch { saveMsg.value = '✗ Fout'; saveOk.value = false }
   saving.value = false
   setTimeout(() => saveMsg.value = '', 3000)
