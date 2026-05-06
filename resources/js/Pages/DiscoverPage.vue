@@ -2,7 +2,7 @@
   <div>
     <div v-if="loading" class="spinner"></div>
     <template v-else>
-      <MediaRow v-if="recs.length"    title="✨ Aanbevolen voor jou" :items="recs"    type="movie"  endpoint="/recommendations"      :status-map="statusMap" @open="$emit('open',$event[0],$event[1])" />
+      <MediaRow v-if="recs.length"    title="✨ Aanbevolen voor jou" :items="recs"    type="movie"  endpoint="/recommendations"      :status-map="statusMap" @open="(t,id)=>$emit('open',t,id)" />
       <MediaRow                       title="🔥 Trending Films"      :items="trendM"  type="movie"  endpoint="/trending/movie"        :status-map="statusMap" @open="(t,id)=>$emit('open',t,id)" />
       <MediaRow                       title="🔥 Trending Series"     :items="trendT"  type="tv"     endpoint="/trending/tv"           :status-map="statusMap" @open="(t,id)=>$emit('open',t,id)" />
       <MediaRow                       title="🎬 Populair"            :items="popular" type="movie"  endpoint="/collection/movie/popular" :status-map="statusMap" @open="(t,id)=>$emit('open',t,id)" />
