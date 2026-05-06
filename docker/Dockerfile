@@ -5,12 +5,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 USER root
 
-# Node.js
-RUN apk add --no-cache nodejs npm
-
 WORKDIR /var/www/html
 
-# Kopieer alle bestanden
+# Kopieer alle bestanden inclusief pre-gebouwde public/build
 COPY . .
 
 # Installeer PHP dependencies
@@ -18,10 +15,6 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-script
 
 # Package discovery
 RUN php artisan package:discover --ansi || true
-
-# Build frontend met meer geheugen
-RUN NODE_OPTIONS="--max-old-space-size=512" npm install && \
-    NODE_OPTIONS="--max-old-space-size=512" npm run build
 
 # Database
 RUN touch database/database.sqlite
