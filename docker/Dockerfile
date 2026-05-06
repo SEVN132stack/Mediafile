@@ -1,29 +1,27 @@
-FROM php:8.3-fpm-alpine
-
-# PHP extensies - geen Redis compilatie nodig
-RUN apk add --no-cache \
-    git curl zip unzip nodejs npm \
-    libpng-dev libzip-dev oniguruma-dev sqlite-dev \
-    && docker-php-ext-install pdo pdo_sqlite mbstring zip bcmath pcntl
+FROM serversideup/php:8.3-fpm-alpine
 
 # Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Node.js
+USER root
+RUN apk add --no-cache nodejs npm
+
 WORKDIR /var/www/html
 
-# Kopieer ALLE bestanden eerst
+# Kopieer alle bestanden
 COPY . .
 
 # Installeer PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
-# Draai package discovery
+# Package discovery
 RUN php artisan package:discover --ansi || true
 
 # Build frontend
 RUN npm install && npm run build
 
-# Maak SQLite database aan
+# Database
 RUN touch database/database.sqlite
 
 # Rechten
