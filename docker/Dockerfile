@@ -3,8 +3,9 @@ FROM serversideup/php:8.3-fpm-alpine
 # Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Node.js
 USER root
+
+# Node.js
 RUN apk add --no-cache nodejs npm
 
 WORKDIR /var/www/html
@@ -18,8 +19,9 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-script
 # Package discovery
 RUN php artisan package:discover --ansi || true
 
-# Build frontend
-RUN npm install && npm run build
+# Build frontend met meer geheugen
+RUN NODE_OPTIONS="--max-old-space-size=512" npm install && \
+    NODE_OPTIONS="--max-old-space-size=512" npm run build
 
 # Database
 RUN touch database/database.sqlite

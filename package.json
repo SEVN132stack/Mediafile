@@ -6,7 +6,6 @@
         "build": "vite build"
     },
     "dependencies": {
-        "@inertiajs/vue3": "^1.0",
         "axios": "^1.6",
         "vue": "^3.4"
     },
