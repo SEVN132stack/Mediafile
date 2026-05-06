@@ -125,7 +125,13 @@ const Field = defineComponent({
   }
 })
 
-const settings = ref({})
+const settings = ref({
+  tmdb_api_key: '',
+  jellyfin_url: '', jellyfin_api_key: '',
+  plex_url: '', plex_token: '',
+  radarr_url: '', radarr_api_key: '', radarr_quality_profile: '', radarr_root_folder: '',
+  sonarr_url: '', sonarr_api_key: '', sonarr_quality_profile: '', sonarr_root_folder: '',
+})
 const users = ref([])
 const tests = ref({})
 const saving = ref(false); const saveMsg = ref(''); const saveOk = ref(true)
@@ -134,7 +140,12 @@ const sonarrProfiles = ref([]); const sonarrFolders = ref([])
 const newUser = ref({ username: '', password: '', role: 'user' })
 
 onMounted(async () => {
-  try { const { data } = await axios.get('/settings'); settings.value = data } catch {}
+  try {
+    const { data } = await axios.get('/settings')
+    if (data && typeof data === 'object' && !Array.isArray(data)) {
+      settings.value = { ...settings.value, ...data }
+    }
+  } catch {}
   try { const { data } = await axios.get('/users'); users.value = data } catch {}
   try { const { data } = await axios.get('/settings/radarr-profiles'); if (!data.error) { radarrProfiles.value = data.profiles||[]; radarrFolders.value = data.folders||[] } } catch {}
   try { const { data } = await axios.get('/settings/sonarr-profiles'); if (!data.error) { sonarrProfiles.value = data.profiles||[]; sonarrFolders.value = data.folders||[] } } catch {}
