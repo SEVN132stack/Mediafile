@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cache;
 
 class Setting extends Model
 {
@@ -19,17 +18,15 @@ class Setting extends Model
         'sonarr_url', 'sonarr_api_key', 'sonarr_quality_profile', 'sonarr_root_folder',
     ];
 
+    // Geen cache - lees altijd direct uit database
     public static function get(string $key): string
     {
-        return Cache::remember("setting_{$key}", 60, function () use ($key) {
-            return static::find($key)?->value ?? env(strtoupper($key), '');
-        });
+        return static::find($key)?->value ?? env(strtoupper($key), '');
     }
 
     public static function set(string $key, string $value): void
     {
         static::updateOrCreate(['key' => $key], ['value' => $value]);
-        Cache::forget("setting_{$key}");
     }
 
     public static function all($columns = ['*'])
