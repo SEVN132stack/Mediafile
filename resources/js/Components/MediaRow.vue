@@ -2,7 +2,7 @@
   <div class="row-section">
     <div class="row-header"><span class="row-title">{{ title }}</span></div>
     <div class="media-row" ref="rowEl">
-      <MediaCard v-for="item in items" :key="item.id" :item="item" :type="type||item.media_type" :status-map="statusMap" @open="(t,id)=>$emit('open',t,id)" />
+      <MediaCard v-for="item in localItems" :key="`${item.media_type||type}-${item.id}`" :item="item" :type="type||item.media_type||'movie'" :status-map="statusMap" @open="(t,id)=>$emit('open',t,id)" />
       <div class="row-load-more-wrap">
         <button class="row-load-more-btn" :disabled="loading" @click="loadMore">{{ loading ? '…' : 'Meer →' }}</button>
       </div>
@@ -11,16 +11,20 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import axios from 'axios'
 import MediaCard from './MediaCard.vue'
 
 const props = defineProps({ title: String, items: Array, type: String, endpoint: String, statusMap: Object })
 defineEmits(['open'])
 
-const localItems = ref([...props.items])
+const localItems = ref([...(props.items || [])])
 const loading    = ref(false)
 let page = 1
+
+watch(() => props.items, (val) => {
+  localItems.value = [...(val || [])]
+})
 
 async function loadMore() {
   if (loading.value) return
