@@ -4,14 +4,14 @@
     <div v-else-if="user" class="app-shell">
       <NavBar :user="user" :page="page" @navigate="navigate" @logout="logout" @search="onSearch" />
       <main class="main-content">
-        <DiscoverPage   v-if="page==='discover'"  :status-map="statusMap" @open="openDetail" @load-status="loadStatusMap" />
-        <BrowsePage     v-if="page==='movies'"    type="movie" :status-map="statusMap" @open="openDetail" />
-        <BrowsePage     v-if="page==='tv'"        type="tv"    :status-map="statusMap" @open="openDetail" />
-        <UpcomingPage   v-if="page==='upcoming'"  :status-map="statusMap" @open="openDetail" />
+        <DiscoverPage   v-if="page==='discover'"  :status-map="statusMap" @open="(t,id)=>openDetail(t,id)" @load-status="loadStatusMap" />
+        <BrowsePage     v-if="page==='movies'"    type="movie" :status-map="statusMap" @open="(t,id)=>openDetail(t,id)" />
+        <BrowsePage     v-if="page==='tv'"        type="tv"    :status-map="statusMap" @open="(t,id)=>openDetail(t,id)" />
+        <UpcomingPage   v-if="page==='upcoming'"  :status-map="statusMap" @open="(t,id)=>openDetail(t,id)" />
         <RequestsPage   v-if="page==='requests'"  @refresh="loadStatusMap" />
         <SettingsPage   v-if="page==='settings'"  :user="user" />
-        <SearchPage     v-if="page==='search'"    :query="searchQuery" :status-map="statusMap" @open="openDetail" @open-person="openPerson" />
-        <PersonPage     v-if="page==='person'"    :id="personId" :status-map="statusMap" @open="openDetail" />
+        <SearchPage     v-if="page==='search'"    :query="searchQuery" :status-map="statusMap" @open="(t,id)=>openDetail(t,id)" @open-person="openPerson" />
+        <PersonPage     v-if="page==='person'"    :id="personId" :status-map="statusMap" @open="(t,id)=>openDetail(t,id)" />
       </main>
     </div>
     <DetailModal v-if="modal" :type="modal.type" :id="modal.id" :status-map="statusMap" @close="modal=null" @refresh="loadStatusMap" @open-person="openPerson" />
