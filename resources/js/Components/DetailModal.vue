@@ -218,8 +218,8 @@ async function retry() {
 .modal-close { position: absolute; top: 16px; right: 16px; z-index: 10; background: rgba(0,0,0,.5); border: none; color: #fff; width: 36px; height: 36px; border-radius: 50%; font-size: 20px; cursor: pointer }
 .modal-backdrop { height: 220px; width: 100%; object-fit: cover; border-radius: 16px 16px 0 0; display: block; filter: brightness(.6) }
 .modal-content { padding: 24px 28px 28px }
-.modal-top { display: flex; gap: 20px; align-items: flex-end; margin-bottom: 20px; margin-top: -70px }
-.modal-poster { width: 120px; height: 180px; border-radius: 10px; object-fit: cover; border: 3px solid var(--surface); flex-shrink: 0; box-shadow: 0 8px 24px rgba(0,0,0,.5); margin-top: -60px }
+.modal-top { display: flex; gap: 20px; align-items: flex-end; margin-bottom: 20px }
+.modal-poster { width: 120px; height: 180px; border-radius: 10px; object-fit: cover; border: 3px solid var(--surface); flex-shrink: 0; box-shadow: 0 8px 24px rgba(0,0,0,.5); margin-top: -90px; position: relative; z-index: 5 }
 .modal-header-block { flex: 1; min-width: 0 }
 .modal-title { font-family: 'Outfit',sans-serif; font-weight: 700; font-size: 26px; line-height: 1.2 }
 .modal-subtitle { color: var(--text-dim); font-size: 14px; margin-top: 4px }
