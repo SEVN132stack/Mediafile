@@ -13,7 +13,7 @@ class MediaController extends Controller
     public function search(Request $request)
     {
         $request->validate(['query' => 'required|string']);
-        $data = $this->tmdb->search($request->query, $request->integer('page', 1));
+        $data = $this->tmdb->search($request->input('query'), $request->integer('page', 1));
         $data['results'] = collect($data['results'])->filter(fn($r) =>
             in_array($r['media_type'], ['movie', 'tv', 'person'])
         )->values()->toArray();

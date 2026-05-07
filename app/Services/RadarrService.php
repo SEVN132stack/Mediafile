@@ -21,7 +21,7 @@ class RadarrService
             default  => throw new \Exception("Ongeldig method: {$method}"),
         };
 
-        if (!$response->ok()) throw new \Exception("Radarr {$response->status()}: " . substr($response->body(), 0, 200));
+        if (!$response->ok() && $response->status() !== 201) throw new \Exception("Radarr {$response->status()}: " . substr($response->body(), 0, 200));
         return $response->json();
     }
 
@@ -57,14 +57,25 @@ class RadarrService
             $rootFolder = $folders[0]['path'] ?? null;
         }
 
-        $movie = $this->call('POST', '/movie', [
-            'tmdbId'           => $tmdbId,
-            'title'            => $title,
-            'qualityProfileId' => $profileId,
-            'rootFolderPath'   => $rootFolder,
-            'monitored'        => true,
-            'addOptions'       => ['searchForMovie' => true],
-        ]);
+        try {
+            $movie = $this->call('POST', '/movie', [
+                'tmdbId'           => $tmdbId,
+                'title'            => $title,
+                'qualityProfileId' => $profileId,
+                'rootFolderPath'   => $rootFolder,
+                'monitored'        => true,
+                'addOptions'       => ['searchForMovie' => true],
+            ]);
+        } catch (\Exception $e) {
+            // Film bestaat al in Radarr
+            if (str_contains($e->getMessage(), 'already been added') || str_contains($e->getMessage(), '400')) {
+                $existing = $this->call('GET', "/movie?tmdbId={$tmdbId}");
+                if (!empty($existing)) {
+                    return ['status' => 'sent', 'message' => 'Film staat al in Radarr', 'radarr_id' => $existing[0]['id']];
+                }
+            }
+            throw $e;
+        }
 
         return ['status' => 'sent', 'message' => 'Film naar Radarr gestuurd — download gestart', 'radarr_id' => $movie['id']];
     }

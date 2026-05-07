@@ -61,6 +61,7 @@ class RequestController extends Controller
                 $mr->update(['status' => $result['status'], 'status_message' => $result['message'], 'sonarr_id' => $result['sonarr_id'] ?? null]);
             }
         } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Request store failed: ' . $e->getMessage());
             $mr->update(['status' => 'failed', 'status_message' => substr($e->getMessage(), 0, 500)]);
         }
 
@@ -82,6 +83,7 @@ class RequestController extends Controller
                 $mr->update(['status' => $result['status'], 'status_message' => $result['message'], 'sonarr_id' => $result['sonarr_id'] ?? null]);
             }
         } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Request store failed: ' . $e->getMessage());
             $mr->update(['status' => 'failed', 'status_message' => substr($e->getMessage(), 0, 500)]);
         }
 

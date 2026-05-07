@@ -21,7 +21,7 @@ class SonarrService
             default => throw new \Exception("Ongeldig method: {$method}"),
         };
 
-        if (!$response->ok()) throw new \Exception("Sonarr {$response->status()}: " . substr($response->body(), 0, 200));
+        if (!$response->ok() && $response->status() !== 201) throw new \Exception("Sonarr {$response->status()}: " . substr($response->body(), 0, 200));
         return $response->json();
     }
 
@@ -93,14 +93,27 @@ class SonarrService
             ])->toArray();
         }
 
-        $series = $this->call('POST', '/series', [
-            ...$seriesData,
-            'qualityProfileId' => $profileId,
-            'rootFolderPath'   => $rootFolder,
-            'monitored'        => true,
-            'seasonFolder'     => true,
-            'addOptions'       => ['monitor' => $monitorOption, 'searchForMissingEpisodes' => true],
-        ]);
+        try {
+            $series = $this->call('POST', '/series', [
+                ...$seriesData,
+                'qualityProfileId' => $profileId,
+                'rootFolderPath'   => $rootFolder,
+                'monitored'        => true,
+                'seasonFolder'     => true,
+                'addOptions'       => ['monitor' => $monitorOption, 'searchForMissingEpisodes' => true],
+            ]);
+        } catch (\Exception $e) {
+            // Serie bestaat al in Sonarr
+            if (str_contains($e->getMessage(), 'already been added') || str_contains($e->getMessage(), '400')) {
+                // Zoek de bestaande serie
+                $all = $this->call('GET', '/series');
+                $existing = collect($all)->firstWhere('tvdbId', $tvdbId);
+                if ($existing) {
+                    return ['status' => 'sent', 'message' => 'Serie staat al in Sonarr', 'sonarr_id' => $existing['id']];
+                }
+            }
+            throw $e;
+        }
 
         $label = !empty($seasons) ? (count($seasons) > 1 ? 'Seizoenen ' . implode(', ', $seasons) : 'Seizoen ' . $seasons[0]) : 'Alle seizoenen';
         return ['status' => 'sent', 'message' => "{$label} naar Sonarr gestuurd", 'sonarr_id' => $series['id']];
